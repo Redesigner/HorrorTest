@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3 uid="uid://cxlg8lsvfwsqg"]
+
+[ext_resource type="Script" path="res://Objects/Characters/Player/Player.cs" id="1_4f575"]
+[ext_resource type="CapsuleMesh" uid="uid://b4u23j5tjm1t6" path="res://Objects/Characters/Player/capsule_mesh.tres" id="1_dqbrb"]
+[ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="3_4ly3d"]
+[ext_resource type="Script" path="res://Objects/Characters/Player/CameraArm.cs" id="3_y6r0u"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thjgr"]
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_xcm8x"]
+material = SubResource("StandardMaterial3D_thjgr")
+radius = 0.05
+height = 0.1
+
+[node name="Player" type="Node3D"]
+script = ExtResource("1_4f575")
+_walkSpeed = 5.0
+_turnSpeed = 360.0
+
+[node name="PlayerMesh" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_dqbrb")
+
+[node name="FaceMesh" type="MeshInstance3D" parent="PlayerMesh"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5, -0.5)
+mesh = ExtResource("3_4ly3d")
+
+[node name="CameraArm" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0.5, 0)
+script = ExtResource("3_y6r0u")
+
+[node name="Camera3D" type="Camera3D" parent="CameraArm"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, -2.98023e-08, 3)
+
+[node name="InputVectorDisplay" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+mesh = SubResource("SphereMesh_xcm8x")

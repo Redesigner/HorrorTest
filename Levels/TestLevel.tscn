@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://c6r2oh536jldu"]
+
+[ext_resource type="PackedScene" uid="uid://cxlg8lsvfwsqg" path="res://Objects/Characters/Player/player.tscn" id="1_hc275"]
+[ext_resource type="Environment" uid="uid://ct1w5mwhqf4in" path="res://Shared Resources/Environments/test_environment.tres" id="2_jpsu0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c40pq"]
+albedo_color = Color(0.109804, 0.160784, 0.113725, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_s52ry"]
+material = SubResource("StandardMaterial3D_c40pq")
+size = Vector2(10, 10)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_akuic"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hnfii"]
+size = Vector3(10, 0.001, 10)
+
+[node name="TestLevel" type="Node3D"]
+
+[node name="Player" parent="." instance=ExtResource("1_hc275")]
+
+[node name="SunLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 2, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_jpsu0")
+
+[node name="FloorMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("PlaneMesh_s52ry")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="FloorMesh"]
+physics_material_override = SubResource("PhysicsMaterial_akuic")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FloorMesh/StaticBody3D"]
+shape = SubResource("BoxShape3D_hnfii")
