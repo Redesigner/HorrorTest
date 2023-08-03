@@ -8,6 +8,7 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thjgr"]
 shading_mode = 0
 albedo_color = Color(1, 0, 0, 1)
+disable_receive_shadows = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_xcm8x"]
 material = SubResource("StandardMaterial3D_thjgr")
@@ -16,7 +17,6 @@ height = 0.1
 
 [node name="Player" type="Node3D"]
 script = ExtResource("1_4f575")
-_walkSpeed = 5.0
 _turnSpeed = 360.0
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="."]
@@ -35,4 +35,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, -2.98
 
 [node name="InputVectorDisplay" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+cast_shadow = 0
 mesh = SubResource("SphereMesh_xcm8x")

@@ -27,4 +27,28 @@ public class CustomMath
 		// GD.Print("Angle between '", angle1, "' and '", angle2, "' is '", deltaAngle, "'");
 		return deltaAngle;
 	}
+
+	public static Vector3 ClampVectorToLength(Vector3 vector, float length)
+	{
+		float lengthSquared = length * length;
+		float vectorLengthSquared = vector.LengthSquared();
+
+		if (vectorLengthSquared > lengthSquared )
+		{
+			return vector.Normalized() * length;
+		}
+		return vector;
+	}
+
+	public static Vector3 ConstantInterpToV(Vector3 vectorFrom, Vector3 vectorTo, float rate, float delta)
+	{
+		Vector3 deltaVector = vectorTo - vectorFrom;
+		deltaVector.Normalized();
+		return vectorFrom + deltaVector * rate * delta;
+	}
+
+	public static bool IsNearlyZero(Vector3 vector, float epsilon = 0.001f)
+	{
+		return vector.LengthSquared() < epsilon;
+	}
 }
