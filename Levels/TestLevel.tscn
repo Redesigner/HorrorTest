@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://c6r2oh536jldu"]
+[gd_scene load_steps=9 format=3 uid="uid://c6r2oh536jldu"]
 
 [ext_resource type="PackedScene" uid="uid://cxlg8lsvfwsqg" path="res://Objects/Characters/Player/player.tscn" id="1_hc275"]
 [ext_resource type="Environment" uid="uid://ct1w5mwhqf4in" path="res://Shared Resources/Environments/test_environment.tres" id="2_jpsu0"]
 [ext_resource type="PackedScene" uid="uid://cn8o1emfnht1t" path="res://Objects/Geometry/wall.tscn" id="3_bp2e2"]
+[ext_resource type="PackedScene" uid="uid://elcgphpx0dh7" path="res://Objects/Characters/NPCs/NPC.tscn" id="4_ousnx"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_akuic"]
 
@@ -43,3 +44,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 0)
 
 [node name="Wall2" parent="." instance=ExtResource("3_bp2e2")]
 transform = Transform3D(0.5, -0.866025, 0, 0.866025, 0.5, 0, 0, 0, 1, -4.5, -0.75, 0)
+
+[node name="NPC" parent="." instance=ExtResource("4_ousnx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.09904)

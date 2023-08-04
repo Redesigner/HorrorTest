@@ -1,4 +1,5 @@
 using Godot;
+using Godot.Collections;
 using System;
 
 public partial class Player : CharacterBody3D
@@ -6,6 +7,7 @@ public partial class Player : CharacterBody3D
 	private Node3D _cameraArm;
 	private Node3D _inputVectorDisplay;
 	private MeshInstance3D _playerMesh;
+	private Area3D _interactVolume;
 
 	[Export]
 	private float _lookSpeedVertical = 1.0f;
@@ -30,13 +32,18 @@ public partial class Player : CharacterBody3D
 
 	private Vector2 _inputVector;
 
+	[Signal]
+	public delegate void DialogChangedEventHandler(String dialog);
+
 	public override void _Ready()
 	{
 		_cameraArm = (Node3D) GetNode("CameraArm");
 		_inputVectorDisplay = (Node3D) GetNode("InputVectorDisplay");
 		_playerMesh = (MeshInstance3D) GetNode("PlayerMesh");
+		_interactVolume = (Area3D)GetNode("PlayerMesh/InteractVolume");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
+
 	}
 
 	public override void _Input(InputEvent @event)
@@ -50,6 +57,12 @@ public partial class Player : CharacterBody3D
 		if (@event.IsActionPressed("ui_cancel"))
 		{
 			GetTree().Quit();
+			return;
+		}
+
+		if (@event.IsActionPressed("interact"))
+		{
+			Interact();
 			return;
 		}
 	}
@@ -152,5 +165,25 @@ public partial class Player : CharacterBody3D
 		Vector3 postPhysicsRotationDegrees = _playerMesh.RotationDegrees;
 		postPhysicsRotationDegrees.Y -= yawOffset;
 		_playerMesh.RotationDegrees = postPhysicsRotationDegrees;
+	}
+
+	private void Interact()
+	{
+		Array<Area3D> hitVolumes = _interactVolume.GetOverlappingAreas();
+		foreach (Area3D volume in hitVolumes)
+		{
+			if (volume.Owner is not NPC)
+			{
+				continue;
+			}
+
+			NPC hitNpc = (NPC)volume.Owner;
+			hitNpc.TriggerInteraction(this);
+		}
+	}
+
+	public void SetDialog(String dialog)
+	{
+		EmitSignal(SignalName.DialogChanged);
 	}
 }
