@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://cxlg8lsvfwsqg"]
+[gd_scene load_steps=8 format=3 uid="uid://cxlg8lsvfwsqg"]
 
 [ext_resource type="Script" path="res://Objects/Characters/Player/Player.cs" id="1_4f575"]
 [ext_resource type="CapsuleMesh" uid="uid://b4u23j5tjm1t6" path="res://Objects/Characters/Player/capsule_mesh.tres" id="1_dqbrb"]
 [ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="3_4ly3d"]
 [ext_resource type="Script" path="res://Objects/Characters/Player/CameraArm.cs" id="3_y6r0u"]
+[ext_resource type="Shape3D" uid="uid://nj41qu6eu7j8" path="res://Objects/Characters/Player/capsule_shape_3d.tres" id="5_nx85o"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thjgr"]
 shading_mode = 0
@@ -15,7 +16,7 @@ material = SubResource("StandardMaterial3D_thjgr")
 radius = 0.05
 height = 0.1
 
-[node name="Player" type="Node3D"]
+[node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_4f575")
 _turnSpeed = 360.0
 
@@ -37,3 +38,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, -2.98
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 cast_shadow = 0
 mesh = SubResource("SphereMesh_xcm8x")
+
+[node name="PlayerCapsule" type="CollisionShape3D" parent="."]
+shape = ExtResource("5_nx85o")

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Player : Node3D
+public partial class Player : CharacterBody3D
 {
     private Node3D _cameraArm;
     private Node3D _inputVectorDisplay;
@@ -14,21 +14,19 @@ public partial class Player : Node3D
 
     /// Max walk speed in units/s
     [Export]
-    private float _maxWalkSpeed = 2.0f;
+    private float _maxWalkSpeed = 4.0f;
 
     /// Acceleration rate in units/s2
     [Export]
-    private float _groundAcceleration = 2.0f;
+    private float _groundAcceleration = 8.0f;
 
     /// Ground friction acceleration in units/s2
     [Export]
-    private float _groundFriction = 4.0f;
+    private float _groundFriction = 16.0f;
 
     /// Turning speed in degrees/s
     [Export]
     private float _turnSpeed = 90.0f;
-
-    private Vector3 _velocity;
 
     private Vector2 _inputVector;
 
@@ -70,20 +68,30 @@ public partial class Player : Node3D
 
         if (InputPressed())
         {
-            Vector3 desiredVelocity = _maxWalkSpeed * new Vector3(_inputVector.X, 0.0f, _inputVector.Y);
-            _velocity = CustomMath.ConstantInterpToV(_velocity, desiredVelocity, _groundAcceleration, (float)delta);
+            Vector2 desiredVelocity = _maxWalkSpeed * _inputVector;
+            Vector2 currentGroundVelocity = new Vector2(Velocity.X, Velocity.Z);
+            Vector2 groundVelocity = CustomMath.ConstantInterpToV(currentGroundVelocity, desiredVelocity, _groundAcceleration, (float)delta);
+            Velocity = new Vector3(groundVelocity.X, Velocity.Y, groundVelocity.Y);
         }
-        else
+        else if (IsOnFloor())
         {
-            _velocity = CustomMath.ConstantInterpToV(_velocity, Vector3.Zero, _groundFriction, (float)delta);
-            if (CustomMath.IsNearlyZero(_velocity))
+            Vector3 groundVelocity = Velocity;
+            groundVelocity.Y = 0.0f;
+            Velocity = CustomMath.ConstantInterpToV(groundVelocity, Vector3.Zero, _groundFriction, (float)delta) + new Vector3(0.0f, Velocity.Y, 0.0f);
+            if (CustomMath.IsNearlyZero(Velocity))
             {
-                _velocity = Vector3.Zero;
+                Velocity = Vector3.Zero;
             }
         }
-        Position += _velocity * (float)delta;
-
+        // MoveAndCollide(Velocity * (float)delta);
+        Velocity += new Vector3(0.0f, -9.8f * (float)delta, 0.0f);
+        MoveAndSlide();
         LookAtWalkDirection(delta);
+        if (Position.Y < -100.0f)
+        {
+            Position = new Vector3(0.0f, 5.0f, 0.0f);
+            Velocity = Vector3.Zero;
+        }
     }
 
     public void RotateCamera(Vector2 input)
@@ -132,8 +140,7 @@ public partial class Player : Node3D
         {
             return;
         }
-        Vector2 velocity2D = new Vector2(_velocity.X, _velocity.Z);
-        Vector2 normalizedDirection = velocity2D.Normalized();
+        Vector2 normalizedDirection = _inputVector.Normalized();
         float desiredYaw = Mathf.RadToDeg(Mathf.Atan2(normalizedDirection.Y, normalizedDirection.X));
         float deltaYaw = CustomMath.AngleBetween(-_playerMesh.RotationDegrees.Y - 90.0f, desiredYaw);
         float yawOffset = (float)Mathf.Sign(deltaYaw) * _turnSpeed * (float)delta;

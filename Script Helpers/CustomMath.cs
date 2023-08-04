@@ -43,7 +43,13 @@ public class CustomMath
 	public static Vector3 ConstantInterpToV(Vector3 vectorFrom, Vector3 vectorTo, float rate, float delta)
 	{
 		Vector3 deltaVector = vectorTo - vectorFrom;
-		deltaVector.Normalized();
+		deltaVector = deltaVector.Normalized();
+		return vectorFrom + deltaVector * rate * delta;
+	}
+	public static Vector2 ConstantInterpToV(Vector2 vectorFrom, Vector2 vectorTo, float rate, float delta)
+	{
+		Vector2 deltaVector = vectorTo - vectorFrom;
+		deltaVector = deltaVector.Normalized();
 		return vectorFrom + deltaVector * rate * delta;
 	}
 
