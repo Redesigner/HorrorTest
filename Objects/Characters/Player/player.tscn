@@ -52,4 +52,10 @@ shape = ExtResource("5_nx85o")
 
 [node name="ActiveUI" parent="." instance=ExtResource("7_1jga6")]
 
+[node name="DebugText" type="RichTextLabel" parent="."]
+offset_right = 510.0
+offset_bottom = 92.0
+text = "V: 5.0m/s"
+scroll_active = false
+
 [connection signal="DialogChanged" from="." to="ActiveUI" method="UpdateText"]

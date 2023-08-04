@@ -42,15 +42,23 @@ public class CustomMath
 
 	public static Vector3 ConstantInterpToV(Vector3 vectorFrom, Vector3 vectorTo, float rate, float delta)
 	{
-		Vector3 deltaVector = vectorTo - vectorFrom;
-		deltaVector = deltaVector.Normalized();
-		return vectorFrom + deltaVector * rate * delta;
-	}
+        float movement = rate * delta;
+        Vector3 deltaVector = vectorTo - vectorFrom;
+        if (deltaVector.LengthSquared() < movement * movement)
+        {
+            return vectorTo;
+        }
+        return vectorFrom + deltaVector.Normalized() * movement;
+    }
 	public static Vector2 ConstantInterpToV(Vector2 vectorFrom, Vector2 vectorTo, float rate, float delta)
 	{
+		float movement = rate * delta;
 		Vector2 deltaVector = vectorTo - vectorFrom;
-		deltaVector = deltaVector.Normalized();
-		return vectorFrom + deltaVector * rate * delta;
+		if (deltaVector.LengthSquared() < movement * movement)
+		{
+            return vectorTo;
+		}
+        return vectorFrom + deltaVector.Normalized() * movement;
 	}
 
 	public static bool IsNearlyZero(Vector3 vector, float epsilon = 0.001f)

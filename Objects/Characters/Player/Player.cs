@@ -9,6 +9,8 @@ public partial class Player : CharacterBody3D
 	private MeshInstance3D _playerMesh;
 	private Area3D _interactVolume;
 
+	private RichTextLabel _debugText;
+
 	[Export]
 	private float _lookSpeedVertical = 1.0f;
 	[Export]
@@ -42,8 +44,9 @@ public partial class Player : CharacterBody3D
 		_playerMesh = (MeshInstance3D) GetNode("PlayerMesh");
 		_interactVolume = (Area3D)GetNode("PlayerMesh/InteractVolume");
 
-		Input.MouseMode = Input.MouseModeEnum.Captured;
+		_debugText = (RichTextLabel)GetNode("DebugText");
 
+		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
 
 	public override void _Input(InputEvent @event)
@@ -88,10 +91,11 @@ public partial class Player : CharacterBody3D
 		}
 		else if (IsOnFloor())
 		{
-			Vector3 groundVelocity = Velocity;
-			groundVelocity.Y = 0.0f;
-			Velocity = CustomMath.ConstantInterpToV(groundVelocity, Vector3.Zero, _groundFriction, (float)delta) + new Vector3(0.0f, Velocity.Y, 0.0f);
-			if (CustomMath.IsNearlyZero(Velocity))
+            Vector2 desiredVelocity = Vector2.Zero;
+            Vector2 currentGroundVelocity = new Vector2(Velocity.X, Velocity.Z);
+			Vector2 groundVelocity = CustomMath.ConstantInterpToV(currentGroundVelocity, desiredVelocity, _groundAcceleration, (float)delta);
+            Velocity = new Vector3(groundVelocity.X, Velocity.Y, groundVelocity.Y);
+            if (CustomMath.IsNearlyZero(Velocity))
 			{
 				Velocity = Vector3.Zero;
 			}
@@ -99,6 +103,17 @@ public partial class Player : CharacterBody3D
 		// MoveAndCollide(Velocity * (float)delta);
 		Velocity += new Vector3(0.0f, -9.8f * (float)delta, 0.0f);
 		MoveAndSlide();
+		_debugText.Text = "Velocity: " + Velocity.Length() + " m/s";
+		if (InputPressed())
+		{
+			_debugText.Text += "\nInput currently pressed.";
+		}
+		if (IsOnFloor())
+		{
+			_debugText.Text += "\nCurrently on the floor.";
+		}
+
+
 		LookAtWalkDirection(delta);
 		if (Position.Y < -100.0f)
 		{
@@ -133,7 +148,7 @@ public partial class Player : CharacterBody3D
 		float sin = Mathf.Sin(cameraYaw);
 		_inputVector = new Vector2(cos * inputVector.X - sin * inputVector.Y, sin * inputVector.X + cos * inputVector.Y);
 
-		_inputVectorDisplay.Position = new Vector3(_inputVector.X, 0.0f, _inputVector.Y);
+		_inputVectorDisplay.Position = new Vector3(_inputVector.X, _inputVectorDisplay.Position.Y, _inputVector.Y);
 
 		Vector2 cameraInputVector = Input.GetVector("look_left", "look_right", "look_up", "look_down");
 		RotateCamera(cameraInputVector);
@@ -184,6 +199,6 @@ public partial class Player : CharacterBody3D
 
 	public void SetDialog(String dialog)
 	{
-		EmitSignal(SignalName.DialogChanged);
+		EmitSignal(SignalName.DialogChanged, dialog);
 	}
 }
