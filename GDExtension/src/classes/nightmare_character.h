@@ -2,17 +2,26 @@
 #define NIGHTMARE_NIGHTMARE_CHARACTER_H
 
 #include <godot_cpp/classes/character_body3d.hpp>
+#include <godot_cpp/classes/input_event.hpp>
+
 #include "class_macros.h"
 
 namespace godot
 {
 class NightmareCharacter : public CharacterBody3D
 {
-    GDCLASS(NightmareCharacter, CharacterBody3D);
+    GDCLASS(NightmareCharacter, CharacterBody3D)
 
 protected:
     static void _bind_methods();
 
+    void _update_process_callback();
+    
+    void _notification(int p_what);
+
+public:
+    NightmareCharacter();
+    ~NightmareCharacter();
 
 public:
     virtual void _ready() override;

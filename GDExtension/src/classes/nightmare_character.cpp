@@ -7,6 +7,7 @@
 
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 #include <godot_cpp/core/math.hpp>
 
@@ -16,18 +17,59 @@ using namespace godot;
 
 void NightmareCharacter::_bind_methods()
 {
-    BIND_PROPERTY(lookSpeedVertical, NightmareCharacter, Variant::FLOAT);
+    // BIND_PROPERTY(lookSpeedVertical, NightmareCharacter, Variant::FLOAT);
+}
+
+void NightmareCharacter::_update_process_callback()
+{
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+		set_process_internal(false);
+		set_physics_process_internal(false);
+        set_process_input(false);
+	}
+    else
+    {
+        set_process_mode(PROCESS_MODE_INHERIT);
+		set_process_internal(true);
+		set_physics_process_internal(true);
+        set_process_input(true);
+	}
+}
+
+void NightmareCharacter::_notification(int p_what)
+{
+    switch(p_what)
+    {
+        case NOTIFICATION_ENTER_TREE:
+        {
+            ERR_FAIL_COND(!is_inside_tree());
+            _update_process_callback();
+        }break;
+    }
+}
+
+NightmareCharacter::NightmareCharacter()
+{
+}
+
+NightmareCharacter::~NightmareCharacter()
+{
 }
 
 void NightmareCharacter::_ready()
 {
-    _cameraArm = get_node<Node3D>("CameraArm");
-    _inputVectorDisplay = get_node<Node3D>("InputVectorDisplay");
-    _playerMesh = get_node<MeshInstance3D>("CharacterMesh");
-    _interactVolume = get_node<Area3D>("CharacterMesh/InteractVolume");
+    _cameraArm = dynamic_cast<Node3D*>(get_node_internal("CameraArm"));
+    _inputVectorDisplay = dynamic_cast<Node3D*>(get_node_or_null("InputVectorDisplay"));
+    _playerMesh = dynamic_cast<MeshInstance3D*>(get_node_or_null("PlayerMesh"));
+    _interactVolume = dynamic_cast<Area3D*>(get_node_or_null("PlayerMesh/InteractVolume"));
 
-    _debugText = get_node<RichTextLabel>("DebugText");
+    _debugText = dynamic_cast<RichTextLabel*>(get_node_or_null("DebugText"));
 
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+        return;
+    }
     Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
 }
 
@@ -59,8 +101,6 @@ void NightmareCharacter::_process(double delta)
 
 void NightmareCharacter::_physics_process(double delta)
 {
-    CharacterBody3D::_physics_process(delta);
-
     update_input();
 
     Vector3 velocity = get_velocity();
@@ -85,8 +125,7 @@ void NightmareCharacter::_physics_process(double delta)
     velocity += Vector3(0.0f, -9.8f * delta, 0.0f);
     set_velocity(velocity);
     move_and_slide();
-    String text = "Velocity: %f m/s";
-    text.format(velocity.length());
+    String text = String("Velocity: '{0}' m/s").format(Array::make(velocity.length()));
     if (input_pressed())
     {
         text += "\nInput currently pressed.";
@@ -96,17 +135,21 @@ void NightmareCharacter::_physics_process(double delta)
         text += "\nCurrently on the floor.";
     }
 
-
     look_at_walk_direction(delta);
     if (get_position().y < -100.0f)
     {
         set_position(Vector3(0.0f, 5.0f, 0.0f));
         set_velocity(Vector3(0.0f, 0.0f, 0.0f));
     }
+    _debugText->set_text(text);
 }
 
 void NightmareCharacter::rotate_camera(Vector2 input)
 {
+    if (!_cameraArm)
+    {
+        return;
+    }
     Vector3 currentRotation = _cameraArm->get_rotation_degrees();
     currentRotation.y += input.x * -_lookSpeedHorizontal;
     currentRotation.x += input.y * -_lookSpeedVertical;
@@ -116,14 +159,14 @@ void NightmareCharacter::rotate_camera(Vector2 input)
 
 Vector2 NightmareCharacter::get_input_vector() const
 {
-    return Input::get_singleton()->get_vector("walk_left", "walk_right", "walk_forward", "walk_backward");
+    return Input::get_singleton()->get_vector("walk_left", "walk_right", "walk_forward", "walk_back");
 }
 
 void NightmareCharacter::update_input()
 {
     Vector2 inputVector = get_input_vector();
     Vector3 cameraRotation = _cameraArm->get_rotation();
-    float cameraYaw = -cameraRotation.x;
+    float cameraYaw = -cameraRotation.y;
     float cos = Math::cos(cameraYaw);
     float sin = Math::sin(cameraYaw);
     _inputVector = Vector2(cos * inputVector.x - sin * inputVector.y, sin * inputVector.x + cos * inputVector.y);
@@ -141,6 +184,10 @@ bool NightmareCharacter::input_pressed() const
 
 void NightmareCharacter::look_at_walk_direction(double delta)
 {
+    if (!_playerMesh)
+    {
+        return;
+    }
     if (!input_pressed())
     {
         return;

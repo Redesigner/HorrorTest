@@ -13,7 +13,7 @@ class CustomMath
 public:
     static float angle_between(float angle1, float angle2);
 
-    static Vector3 clamp_vector_to_length(Vector3 vector);
+    static Vector3 clamp_vector_to_length(Vector3 vector, float length);
 
     static Vector3 constant_interp_to_vector(Vector3 vectorFrom, Vector3 vectorTo, float rate, double delta);
 

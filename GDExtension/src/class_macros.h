@@ -2,7 +2,7 @@
 #define NIGHTMARE_CLASS_MACROS_H
 
 #define BIND_PROPERTY(p_name, class, variant)\
-    ClassDB::bind_method(D_METHOD("get_"#p_name), &class::get_ ##p_name);\
+    ClassDB::bind_method(D_METHOD("get_"#p_name), &class::get_p_name);\
     ClassDB::bind_method(D_METHOD("set_"#p_name, "p_"#p_name), &class::set_ ##p_name);\
     ClassDB::add_property(#class, PropertyInfo((variant), #p_name), "set_"#p_name, "get_"#p_name);\
 

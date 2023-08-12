@@ -28,7 +28,7 @@ float CustomMath::angle_between(float angle1, float angle2)
     return deltaAngle;
 }
 
-Vector3 ClampVectorToLength(Vector3 vector, float length)
+Vector3 CustomMath::clamp_vector_to_length(Vector3 vector, float length)
 {
     float lengthSquared = length * length;
     float vectorLengthSquared = vector.length_squared();
@@ -40,7 +40,7 @@ Vector3 ClampVectorToLength(Vector3 vector, float length)
     return vector;
 }
 
-Vector3 ConstantInterpToV(Vector3 vectorFrom, Vector3 vectorTo, float rate, float delta)
+Vector3 CustomMath::constant_interp_to_vector(Vector3 vectorFrom, Vector3 vectorTo, float rate, double delta)
 {
     float movement = rate * delta;
     Vector3 deltaVector = vectorTo - vectorFrom;
@@ -50,7 +50,7 @@ Vector3 ConstantInterpToV(Vector3 vectorFrom, Vector3 vectorTo, float rate, floa
     }
     return vectorFrom + deltaVector.normalized() * movement;
 }
-Vector2 ConstantInterpToV(Vector2 vectorFrom, Vector2 vectorTo, float rate, float delta)
+Vector2 CustomMath::constant_interp_to_vector(Vector2 vectorFrom, Vector2 vectorTo, float rate, double delta)
 {
     float movement = rate * delta;
     Vector2 deltaVector = vectorTo - vectorFrom;
@@ -61,7 +61,7 @@ Vector2 ConstantInterpToV(Vector2 vectorFrom, Vector2 vectorTo, float rate, floa
     return vectorFrom + deltaVector.normalized() * movement;
 }
 
-bool IsNearlyZero(Vector3 vector, float epsilon = 0.001f)
+bool CustomMath::is_nearly_zero(Vector3 vector, float epsilon)
 {
     return vector.length_squared() < epsilon;
 }
