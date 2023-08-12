@@ -34,6 +34,8 @@ public:
 
     void interact();
 
+    void set_dialog(String dialog);
+
 
 private:
     Vector2 get_input_vector() const;
@@ -46,9 +48,6 @@ private:
 
     void look_at_walk_direction(double delta);
 
-    void set_dialog(String dialog);
-
-
 private:
     class Node3D *_cameraArm;
     class Node3D *_inputVectorDisplay;
@@ -56,12 +55,12 @@ private:
     class Area3D *_interactVolume;
     class RichTextLabel *_debugText;
 
-    DECLARE_PROPERTY(lookSpeedVertical, float, 1.0f)
-    float _lookSpeedHorizontal = 1.0f;
-    float _maxWalkSpeed = 4.0f;
-    float _groundAcceleration = 8.0f;
-    float _groundFriction = 16.0f;
-    float _turnSpeed = 90.0f;
+    DECLARE_PROPERTY(float, lookSpeedVertical, 1.0f);
+    DECLARE_PROPERTY(float, lookSpeedHorizontal, 1.0f);
+    DECLARE_PROPERTY(float, maxWalkSpeed, 4.0f);
+    DECLARE_PROPERTY(float, groundAcceleration, 8.0f);
+    DECLARE_PROPERTY(float, groundFriction, 16.0f);
+    DECLARE_PROPERTY(float, turnSpeed, 90.0f);
     Vector2 _inputVector;
 };
 }

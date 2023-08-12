@@ -1,6 +1,5 @@
-[gd_scene load_steps=5 format=3 uid="uid://elcgphpx0dh7"]
+[gd_scene load_steps=4 format=3 uid="uid://elcgphpx0dh7"]
 
-[ext_resource type="Script" path="res://Objects/Characters/NPCs/NPC.cs" id="1_eyest"]
 [ext_resource type="Shape3D" uid="uid://nj41qu6eu7j8" path="res://Objects/Characters/Player/capsule_shape_3d.tres" id="2_ecknm"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5hmqk"]
@@ -9,8 +8,7 @@ albedo_color = Color(0.568627, 0.215686, 0.215686, 1)
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_k3e1e"]
 material = SubResource("StandardMaterial3D_5hmqk")
 
-[node name="NPC" type="Node3D"]
-script = ExtResource("1_eyest")
+[node name="NPC" type="NPC"]
 
 [node name="CapsuleMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_k3e1e")

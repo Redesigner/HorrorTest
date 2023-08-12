@@ -18,6 +18,7 @@ radius = 0.05
 height = 0.1
 
 [node name="Player" type="NightmareCharacter"]
+turnSpeed = 360.0
 process_mode = 4
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="."]
@@ -55,3 +56,5 @@ offset_right = 510.0
 offset_bottom = 92.0
 text = "V: 5.0m/s"
 scroll_active = false
+
+[connection signal="dialog_changed" from="." to="ActiveUI" method="UpdateText"]

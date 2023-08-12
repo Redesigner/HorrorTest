@@ -6,6 +6,7 @@
 #include <godot_cpp/godot.hpp>
 
 #include "classes/nightmare_character.h"
+#include "classes/npc.h"
 
 using namespace godot;
 
@@ -16,6 +17,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 
     // register the classes here
     ClassDB::register_class<NightmareCharacter>();
+    ClassDB::register_class<NPC>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

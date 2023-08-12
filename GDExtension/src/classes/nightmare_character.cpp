@@ -12,12 +12,20 @@
 #include <godot_cpp/core/math.hpp>
 
 #include "../core/custom_math.h"
+#include "npc.h"
 
 using namespace godot;
 
 void NightmareCharacter::_bind_methods()
 {
-    // BIND_PROPERTY(lookSpeedVertical, NightmareCharacter, Variant::FLOAT);
+    BIND_PROPERTY(Variant::FLOAT, lookSpeedVertical, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.1");
+    BIND_PROPERTY(Variant::FLOAT, lookSpeedHorizontal, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.01");
+    BIND_PROPERTY(Variant::FLOAT, maxWalkSpeed, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s");
+    BIND_PROPERTY(Variant::FLOAT, groundAcceleration, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s2");
+    BIND_PROPERTY(Variant::FLOAT, groundFriction, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s2");
+    BIND_PROPERTY(Variant::FLOAT, turnSpeed, NightmareCharacter, PROPERTY_HINT_RANGE, "0,720,1,suffix:deg/s");
+
+    ADD_SIGNAL(MethodInfo("dialog_changed", PropertyInfo(Variant::STRING, "dialog")));
 }
 
 void NightmareCharacter::_update_process_callback()
@@ -90,6 +98,7 @@ void NightmareCharacter::_input(const Ref<InputEvent> &event)
 
     if (event->is_action_pressed("interact"))
     {
+        printf("interacted!");
         interact();
         return;
     }
@@ -211,21 +220,22 @@ void NightmareCharacter::look_at_walk_direction(double delta)
 
 void NightmareCharacter::interact()
 {
-    /* TypedArray<Area3D> hitVolumes = _interactVolume->get_overlapping_areas();
-    for(int i = 0; i < hitVolumes.size() - 1; i++)
+    TypedArray<Area3D> hitVolumes = _interactVolume->get_overlapping_areas();
+    for(int i = 0; i < hitVolumes.size(); i++)
     {
-        Area3D volume = hitVolumes.;
-        if (volume.Owner is not NPC)
+        Object *volumeObject = hitVolumes[i];
+        Area3D *volume = Object::cast_to<Area3D>(volumeObject);
+        if (!volume->get_owner()->is_class("NPC"))
         {
             continue;
         }
 
-        NPC hitNpc = (NPC)volume.Owner;
-        hitNpc.TriggerInteraction(this);
-    } */
+        NPC* hitNpc = dynamic_cast<NPC *>(volume->get_owner());
+        hitNpc->trigger_interaction(this);
+    }
 }
 
-void SetDialog(String dialog)
+void NightmareCharacter::set_dialog(String dialog)
 {
-    // EmitSignal(SignalName.DialogChanged, dialog);
+    emit_signal("dialog_changed", dialog);
 }
