@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://cxlg8lsvfwsqg"]
+[gd_scene load_steps=8 format=3 uid="uid://cxlg8lsvfwsqg"]
 
 [ext_resource type="CapsuleMesh" uid="uid://b4u23j5tjm1t6" path="res://Objects/Characters/Player/capsule_mesh.tres" id="1_dqbrb"]
 [ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="3_4ly3d"]
-[ext_resource type="Script" path="res://Objects/Characters/Player/CameraArm.cs" id="3_y6r0u"]
 [ext_resource type="Shape3D" uid="uid://drhvm2kp46f02" path="res://Objects/Characters/Player/sphere_shape_3d.tres" id="4_s5gv8"]
 [ext_resource type="Shape3D" uid="uid://nj41qu6eu7j8" path="res://Objects/Characters/Player/capsule_shape_3d.tres" id="5_nx85o"]
 [ext_resource type="PackedScene" uid="uid://bpm58hb68x6nq" path="res://UI/Active/ActiveUI.tscn" id="7_1jga6"]
@@ -34,12 +33,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerMesh/InteractVolume"]
 shape = ExtResource("4_s5gv8")
 
-[node name="CameraArm" type="Node3D" parent="."]
+[node name="CameraArm" type="SpringArm3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0.5, 0)
-script = ExtResource("3_y6r0u")
+spring_length = 4.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraArm"]
-transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, -2.98023e-08, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, 0, 0)
 
 [node name="InputVectorDisplay" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
@@ -56,5 +55,3 @@ offset_right = 510.0
 offset_bottom = 92.0
 text = "V: 5.0m/s"
 scroll_active = false
-
-[connection signal="dialog_changed" from="." to="ActiveUI" method="UpdateText"]

@@ -7,6 +7,8 @@
 
 #include "classes/nightmare_character.h"
 #include "classes/npc.h"
+#include "classes/ui/dialog_text_display.h"
+#include "classes/ui/nightmare_ui.h"
 
 using namespace godot;
 
@@ -18,6 +20,8 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     // register the classes here
     ClassDB::register_class<NightmareCharacter>();
     ClassDB::register_class<NPC>();
+    ClassDB::register_class<DialogTextDisplay>();
+    ClassDB::register_class<NightmareUi>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

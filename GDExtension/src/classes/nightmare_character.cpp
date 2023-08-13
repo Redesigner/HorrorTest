@@ -13,6 +13,7 @@
 
 #include "../core/custom_math.h"
 #include "npc.h"
+#include "ui/nightmare_ui.h"
 
 using namespace godot;
 
@@ -79,6 +80,9 @@ void NightmareCharacter::_ready()
         return;
     }
     Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
+
+    NightmareUi* ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
+    connect("dialog_changed",  Callable(ui, "set_dialog"));
 }
 
 void NightmareCharacter::_input(const Ref<InputEvent> &event)
