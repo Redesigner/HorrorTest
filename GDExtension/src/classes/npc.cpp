@@ -6,7 +6,7 @@ using namespace godot;
 
 void NPC::_bind_methods()
 {
-    BIND_PROPERTY(Variant::STRING, dialogText, NPC, PROPERTY_HINT_NONE);
+    BIND_PROPERTY(Variant::STRING, dialogText, NPC);
 }
 
 NPC::NPC()

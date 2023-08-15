@@ -19,12 +19,12 @@ using namespace godot;
 
 void NightmareCharacter::_bind_methods()
 {
-    BIND_PROPERTY(Variant::FLOAT, lookSpeedVertical, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.1");
-    BIND_PROPERTY(Variant::FLOAT, lookSpeedHorizontal, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.01");
-    BIND_PROPERTY(Variant::FLOAT, maxWalkSpeed, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s");
-    BIND_PROPERTY(Variant::FLOAT, groundAcceleration, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s2");
-    BIND_PROPERTY(Variant::FLOAT, groundFriction, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s2");
-    BIND_PROPERTY(Variant::FLOAT, turnSpeed, NightmareCharacter, PROPERTY_HINT_RANGE, "0,720,1,suffix:deg/s");
+    BIND_PROPERTY_HINT(Variant::FLOAT, lookSpeedVertical, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.1");
+    BIND_PROPERTY_HINT(Variant::FLOAT, lookSpeedHorizontal, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.01");
+    BIND_PROPERTY_HINT(Variant::FLOAT, maxWalkSpeed, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s");
+    BIND_PROPERTY_HINT(Variant::FLOAT, groundAcceleration, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s2");
+    BIND_PROPERTY_HINT(Variant::FLOAT, groundFriction, NightmareCharacter, PROPERTY_HINT_RANGE, "0,100,0.1,suffix:m/s2");
+    BIND_PROPERTY_HINT(Variant::FLOAT, turnSpeed, NightmareCharacter, PROPERTY_HINT_RANGE, "0,720,1,suffix:deg/s");
 
     ADD_SIGNAL(MethodInfo("dialog_changed", PropertyInfo(Variant::STRING, "dialog")));
 }
