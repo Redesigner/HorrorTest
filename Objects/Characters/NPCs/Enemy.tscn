@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://dw8mrj653mfym"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r73yy"]
+albedo_color = Color(0.321569, 0.0313726, 0.0313726, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4cgtv"]
+material = SubResource("StandardMaterial3D_r73yy")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wdk20"]
+
+[node name="Enemy" type="Enemy"]
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="EnemyMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_4cgtv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_wdk20")
