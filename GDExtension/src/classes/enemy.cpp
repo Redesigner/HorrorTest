@@ -5,6 +5,8 @@
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/label3d.hpp>
 
+#include <godot_cpp/core/math.hpp>
+
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include "nightmare_character.h"
@@ -43,6 +45,7 @@ void Enemy::_notification(int p_what)
 
 Enemy::Enemy()
 {
+    _navigationAgent = nullptr;
     _target = nullptr;
 }
 
@@ -74,9 +77,12 @@ void Enemy::_physics_process(double delta)
 
     move_and_slide();
 
-    String text = String("Velocity: '{0}' m/s").format(Array::make(get_velocity().length()));
+    String text = String("Velocity: '{0}' m/s").format( Array::make(get_velocity().length()) );
     text += _target == nullptr ? "\nNo target" : "\nTarget: " + _target->get_name();
     text += _navigationAgent->is_navigation_finished() ? "\nNavigation finished" : "\nCurrently navigating";
+    text += String("\nDistance to target: '{0}'m").format(Array::make(
+        Math::round(_navigationAgent->distance_to_target() * 10.0f) / 10.0f
+        ));
     _label->set_text(text);
 }
 
@@ -111,12 +117,23 @@ void godot::Enemy::update_navigation()
         velocity.z = 0.0f;
         set_velocity(velocity);
     }
-    _navigationAgent->set_target_position(_target->get_position());
+    const Vector3 targetPosition = _target->get_position();
+    const Vector3 position = get_position();
+    const Vector3 delta = targetPosition - position;
 
-    Vector3 currentAgentPosition = get_position();
+    const float maxTargetDistance = _navigationAgent->get_target_desired_distance();
+    if (delta.length_squared() > maxTargetDistance * maxTargetDistance)
+    {
+        _navigationAgent->set_target_position(targetPosition);
+    }
+    else
+    {
+        _navigationAgent->set_target_position(position);
+    }
+
     Vector3 nextPathPosition = _navigationAgent->get_next_path_position();
 
-    Vector3 newVelocity = (nextPathPosition - currentAgentPosition).normalized();
+    Vector3 newVelocity = (nextPathPosition - position).normalized();
     newVelocity *= _movementSpeed;
     newVelocity.y = velocity.y;
     set_velocity(newVelocity);

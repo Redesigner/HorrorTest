@@ -13,6 +13,8 @@ movementSpeed = 2.0
 process_mode = 4
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+target_desired_distance = 2.0
+debug_enabled = true
 
 [node name="EnemyMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_4cgtv")
@@ -22,5 +24,6 @@ shape = SubResource("CapsuleShape3D_wdk20")
 
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+visible = false
 billboard = 1
 text = "Enemy"

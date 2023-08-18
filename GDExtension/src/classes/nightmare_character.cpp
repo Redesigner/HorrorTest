@@ -61,6 +61,11 @@ void NightmareCharacter::_notification(int p_what)
 
 NightmareCharacter::NightmareCharacter()
 {
+    _cameraArm = nullptr;
+    _inputVectorDisplay = nullptr;
+    _playerMesh = nullptr;
+    _interactVolume = nullptr;
+    _debugText = nullptr;
 }
 
 NightmareCharacter::~NightmareCharacter()
