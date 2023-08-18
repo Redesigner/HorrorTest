@@ -5,6 +5,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 
+#include "classes/pawn.h"
 #include "classes/nightmare_character.h"
 #include "classes/npc.h"
 #include "classes/enemy.h"
@@ -19,6 +20,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     }
 
     // register the classes here
+    ClassDB::register_class<Pawn>();
     ClassDB::register_class<NightmareCharacter>();
     ClassDB::register_class<NPC>();
     ClassDB::register_class<Enemy>();

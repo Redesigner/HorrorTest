@@ -1,20 +1,15 @@
 #ifndef NIGHTMARE_ENEMY_H
 #define NIGHTMARE_ENEMY_H
 
-#include <godot_cpp/classes/character_body3d.hpp>
+#include "pawn.h"
 
 #include "class_macros.h"
 
 namespace godot
 {
-class Enemy : public CharacterBody3D
+class Enemy : public Pawn
 {
-    GDCLASS(Enemy, CharacterBody3D)
-
-protected:
-    static void _bind_methods();
-
-    void _notification(int p_what);
+    GDCLASS(Enemy, Pawn)
 
 public:
     Enemy();

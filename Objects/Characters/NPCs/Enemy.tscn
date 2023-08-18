@@ -1,4 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dw8mrj653mfym"]
+[gd_scene load_steps=5 format=3 uid="uid://dw8mrj653mfym"]
+
+[ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="1_avl7w"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r73yy"]
 albedo_color = Color(0.321569, 0.0313726, 0.0313726, 1)
@@ -9,21 +11,25 @@ material = SubResource("StandardMaterial3D_r73yy")
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wdk20"]
 
 [node name="Enemy" type="Enemy"]
-movementSpeed = 2.0
+maxWalkSpeed = 2.0
+groundAcceleration = 4.0
+groundFriction = 8.0
 process_mode = 4
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 target_desired_distance = 2.0
-debug_enabled = true
 
-[node name="EnemyMesh" type="MeshInstance3D" parent="."]
+[node name="Mesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_4cgtv")
+
+[node name="FaceMesh" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5, -0.5)
+mesh = ExtResource("1_avl7w")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_wdk20")
 
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-visible = false
 billboard = 1
 text = "Enemy"
