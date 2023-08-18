@@ -9,6 +9,8 @@ material = SubResource("StandardMaterial3D_r73yy")
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wdk20"]
 
 [node name="Enemy" type="Enemy"]
+movementSpeed = 2.0
+process_mode = 4
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 
@@ -17,3 +19,8 @@ mesh = SubResource("CapsuleMesh_4cgtv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_wdk20")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+billboard = 1
+text = "Enemy"

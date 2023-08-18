@@ -33,6 +33,7 @@ void NightmareCharacter::_update_process_callback()
 {
     if (Engine::get_singleton()->is_editor_hint())
     {
+        set_process_mode(PROCESS_MODE_DISABLED);
 		set_process_internal(false);
 		set_physics_process_internal(false);
         set_process_input(false);
@@ -135,7 +136,10 @@ void NightmareCharacter::_physics_process(double delta)
             velocity = Vector3(0.0f, 0.0f, 0.0f);
         }
     }
-    velocity += Vector3(0.0f, -9.8f * delta, 0.0f);
+    if (!is_on_floor())
+    {
+        velocity += Vector3(0.0f, -9.8f * delta, 0.0f);
+    }
     set_velocity(velocity);
     move_and_slide();
     String text = String("Velocity: '{0}' m/s").format(Array::make(velocity.length()));
