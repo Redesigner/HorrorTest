@@ -9,6 +9,8 @@
 #include "classes/nightmare_character.h"
 #include "classes/npc.h"
 #include "classes/enemy.h"
+#include "classes/hitbox_controller.h"
+
 #include "classes/ui/dialog_text_display.h"
 #include "classes/ui/nightmare_ui.h"
 
@@ -24,6 +26,8 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     ClassDB::register_class<NightmareCharacter>();
     ClassDB::register_class<NPC>();
     ClassDB::register_class<Enemy>();
+    ClassDB::register_class<HitboxController>();
+
     ClassDB::register_class<DialogTextDisplay>();
     ClassDB::register_class<NightmareUi>();
 }
