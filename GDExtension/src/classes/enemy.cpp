@@ -1,5 +1,6 @@
 #include "enemy.h"
 
+#include <godot_cpp/classes/animation_player.hpp>
 #include <godot_cpp/classes/navigation_agent3d.hpp>
 #include <godot_cpp/classes/navigation_server3d.hpp>
 #include <godot_cpp/classes/engine.hpp>
@@ -17,6 +18,7 @@ Enemy::Enemy()
 {
     _navigationAgent = nullptr;
     _target = nullptr;
+    _animationPlayer = nullptr;
 }
 
 Enemy::~Enemy()
@@ -30,6 +32,7 @@ void Enemy::_ready()
 
     _navigationAgent = Object::cast_to<NavigationAgent3D>(get_node_or_null("NavigationAgent3D"));
     _label = Object::cast_to<Label3D>(get_node_or_null("Label3D"));
+    _animationPlayer = Object::cast_to<AnimationPlayer>(get_node_or_null("AnimationPlayer"));
 }
 
 void godot::Enemy::_process(double delta)
@@ -52,6 +55,11 @@ void Enemy::_physics_process(double delta)
         ));
     text += String("\nInputvector: X:'{0}', Y:'{1}'").format(Array::make(_inputVector.x, _inputVector.y));
     _label->set_text(text);
+
+    if (!_animationPlayer->is_playing())
+    {
+        _animationPlayer->play();
+    }
 }
 
 void Enemy::check_nav_map_ready() 

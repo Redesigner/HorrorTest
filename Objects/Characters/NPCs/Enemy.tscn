@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dw8mrj653mfym"]
+[gd_scene load_steps=8 format=3 uid="uid://dw8mrj653mfym"]
 
 [ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="1_avl7w"]
 
@@ -9,6 +9,34 @@ albedo_color = Color(0.321569, 0.0313726, 0.0313726, 1)
 material = SubResource("StandardMaterial3D_r73yy")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wdk20"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_po2r4"]
+
+[sub_resource type="Animation" id="Animation_omlem"]
+resource_name = "test_animation"
+length = 2.0
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HitboxController")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(1, 2),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [Vector3(0, 0, 0), SubResource("SphereShape3D_po2r4"), "Test"],
+"method": &"spawn_hitbox"
+}, {
+"args": ["Test"],
+"method": &"remove_hitbox"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_20jhx"]
+_data = {
+"test_animation": SubResource("Animation_omlem")
+}
 
 [node name="Enemy" type="Enemy"]
 maxWalkSpeed = 2.0
@@ -36,3 +64,9 @@ billboard = 1
 text = "Enemy"
 
 [node name="HitboxController" type="HitboxController" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_process_mode = 0
+libraries = {
+"": SubResource("AnimationLibrary_20jhx")
+}

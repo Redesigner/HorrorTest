@@ -3,6 +3,8 @@
 
 #include <godot_cpp/classes/area3d.hpp>
 
+#include <godot_cpp/classes/collision_shape3d.hpp>
+
 namespace godot
 {
 class HitboxController : public Area3D
@@ -18,8 +20,15 @@ public:
 
     virtual void _ready() override;
 
-    void spawn_hitbox(Vector3 offset, class Shape3D *hitboxShape, String hitboxName);
+    void spawn_hitbox(Vector3 offset, Ref<Shape3D> hitboxShape, String hitboxName);
     
+    void remove_hitbox(String hitboxName);
+    
+private:
+    int get_hitbox(String hitboxName) const;
+
+private:
+    TypedArray<CollisionShape3D> _hitboxes;
 };
 }
 

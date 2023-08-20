@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "xlocale": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
