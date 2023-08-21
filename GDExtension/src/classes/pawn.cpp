@@ -24,14 +24,14 @@ void Pawn::_update_process_callback()
 {
     if (Engine::get_singleton()->is_editor_hint())
     {
-        set_process_mode(PROCESS_MODE_DISABLED);
-		set_process_internal(false);
+        _inEditor = true;
+		set_process(false);
 		set_physics_process_internal(false);
         set_process_input(false);
 	}
     else
     {
-        set_process_mode(PROCESS_MODE_INHERIT);
+        _inEditor = false;
 		set_process_internal(true);
 		set_physics_process_internal(true);
         set_process_input(true);
@@ -53,6 +53,7 @@ void Pawn::_notification(int p_what)
 Pawn::Pawn()
 {
     _pawnMesh = nullptr;
+    _inEditor = false;
 }
 
 Pawn::~Pawn()
@@ -62,6 +63,8 @@ Pawn::~Pawn()
 void Pawn::_ready()
 {
     _pawnMesh = dynamic_cast<MeshInstance3D*>(get_node_or_null("Mesh"));
+
+    _update_process_callback();
 }
 
 void Pawn::_process(double delta)
@@ -70,6 +73,13 @@ void Pawn::_process(double delta)
 
 void Pawn::_physics_process(double delta)
 {
+    // Don't run the physics process while we're in the editor
+    if (_inEditor)
+    {
+        return;
+    }
+
+    
     Vector3 velocity = get_velocity();
     if (input_pressed())
     {

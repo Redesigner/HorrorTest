@@ -44,6 +44,7 @@ private:
 
 protected:
     Vector2 _inputVector;
+    bool _inEditor;
 };
 }
 

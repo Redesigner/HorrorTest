@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cxlg8lsvfwsqg"]
+[gd_scene load_steps=9 format=3 uid="uid://cxlg8lsvfwsqg"]
 
 [ext_resource type="CapsuleMesh" uid="uid://b4u23j5tjm1t6" path="res://Objects/Characters/Player/capsule_mesh.tres" id="1_dqbrb"]
 [ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="3_4ly3d"]
@@ -16,9 +16,10 @@ material = SubResource("StandardMaterial3D_thjgr")
 radius = 0.05
 height = 0.1
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_d1we5"]
+
 [node name="Player" type="NightmareCharacter"]
 turnSpeed = 360.0
-process_mode = 4
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 mesh = ExtResource("1_dqbrb")
@@ -55,3 +56,9 @@ offset_right = 510.0
 offset_bottom = 92.0
 text = "V: 5.0m/s"
 scroll_active = false
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeAnimation_d1we5")
+anim_player = NodePath("../AnimationPlayer")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

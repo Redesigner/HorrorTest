@@ -49,7 +49,7 @@ void NightmareCharacter::_ready()
     NightmareUi* ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
     connect("dialog_changed",  Callable(ui, "set_dialog"));
 
-    if (!Engine::get_singleton()->is_editor_hint())
+    if (!_inEditor)
     {
         Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
     }
@@ -57,6 +57,11 @@ void NightmareCharacter::_ready()
 
 void NightmareCharacter::_input(const Ref<InputEvent> &event)
 {
+    if (_inEditor)
+    {
+        return;
+    }
+
     if (event->is_class("InputEventMouseMotion"))
     {
         InputEventMouseMotion *mouseMotionEvent = static_cast<InputEventMouseMotion *>(*event);
@@ -83,6 +88,11 @@ void NightmareCharacter::_process(double delta)
 
 void NightmareCharacter::_physics_process(double delta)
 {
+    if (_inEditor)
+    {
+        return;
+    }
+
     update_input();
     Pawn::_physics_process(delta);
     

@@ -30,7 +30,7 @@ private:
     class NavigationAgent3D *_navigationAgent;
     class NightmareCharacter *_target;
     class Label3D *_label;
-    class AnimationPlayer *_animationPlayer;
+    // class AnimationPlayer *_animationPlayer;
 
     bool _navMapReady = false;
 
