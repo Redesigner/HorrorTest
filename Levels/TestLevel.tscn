@@ -15,11 +15,11 @@ polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Arr
 [sub_resource type="BoxShape3D" id="BoxShape3D_hnfii"]
 size = Vector3(25, 0.001, 25)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c40pq"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8402w"]
 albedo_color = Color(0.109804, 0.160784, 0.113725, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_s52ry"]
-material = SubResource("StandardMaterial3D_c40pq")
+material = SubResource("StandardMaterial3D_8402w")
 size = Vector2(25, 25)
 
 [node name="TestLevel" type="Node3D"]

@@ -26,6 +26,7 @@ void NightmareCharacter::_bind_methods()
 {
     BIND_PROPERTY_HINT(Variant::FLOAT, lookSpeedVertical, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.1");
     BIND_PROPERTY_HINT(Variant::FLOAT, lookSpeedHorizontal, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.01");
+    BIND_PROPERTY_HINT(Variant::FLOAT, readyWalkSpeed, NightmareCharacter, PROPERTY_HINT_RANGE, "0,10,0.1,suffix:m/s");
     BIND_PROPERTY(Variant::STRING, bulletScenePath, NightmareCharacter);
 
     ADD_SIGNAL(MethodInfo("dialog_changed", PropertyInfo(Variant::STRING, "dialog")));
@@ -56,7 +57,7 @@ void NightmareCharacter::_ready()
     Pawn::_ready();
     _cameraArm = dynamic_cast<Node3D *>(get_node_internal("CameraArm"));
     _inputVectorDisplay = dynamic_cast<Node3D *>(get_node_or_null("InputVectorDisplay"));
-    _interactVolume = dynamic_cast<Area3D *>(get_node_or_null("PlayerMesh/InteractVolume"));
+    _interactVolume = dynamic_cast<Area3D *>(get_node_or_null("Mesh/InteractVolume"));
     _debugText = dynamic_cast<RichTextLabel *>(get_node_or_null("DebugText"));
     _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
@@ -220,6 +221,7 @@ void NightmareCharacter::interact()
         }
 
         NPC* hitNpc = dynamic_cast<NPC *>(volume->get_owner());
+        UtilityFunctions::print("Interacted with NPC " + hitNpc->get_name());
         hitNpc->trigger_interaction(this);
     }
 }
@@ -233,7 +235,7 @@ float NightmareCharacter::get_max_speed() const
 {
     if (_weaponReady)
     {
-        return 2.0f;
+        return _readyWalkSpeed;
     }
     return Pawn::get_max_speed();
 }

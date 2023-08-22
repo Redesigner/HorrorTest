@@ -63,6 +63,7 @@ private:
 
     DECLARE_PROPERTY(float, lookSpeedVertical, 1.0f);
     DECLARE_PROPERTY(float, lookSpeedHorizontal, 1.0f);
+    DECLARE_PROPERTY(float, readyWalkSpeed, 1.0f);
     DECLARE_PROPERTY(String, bulletScenePath, "");
 
     bool _weaponReady;
