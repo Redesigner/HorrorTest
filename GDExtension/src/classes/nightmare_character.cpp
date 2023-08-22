@@ -4,10 +4,15 @@
 #include <godot_cpp/classes/area3d.hpp>
 #include <godot_cpp/classes/rich_text_label.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
-
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
 #include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/animation_tree.hpp>
+#include <godot_cpp/classes/audio_stream_player3d.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/packed_scene.hpp>
+
+#include <godot_cpp/variant/utility_functions.hpp>
 
 #include <godot_cpp/core/math.hpp>
 
@@ -21,6 +26,7 @@ void NightmareCharacter::_bind_methods()
 {
     BIND_PROPERTY_HINT(Variant::FLOAT, lookSpeedVertical, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.1");
     BIND_PROPERTY_HINT(Variant::FLOAT, lookSpeedHorizontal, NightmareCharacter, PROPERTY_HINT_RANGE, "0,30,0.01");
+    BIND_PROPERTY(Variant::STRING, bulletScenePath, NightmareCharacter);
 
     ADD_SIGNAL(MethodInfo("dialog_changed", PropertyInfo(Variant::STRING, "dialog")));
 }
@@ -31,6 +37,10 @@ NightmareCharacter::NightmareCharacter()
     _inputVectorDisplay = nullptr;
     _interactVolume = nullptr;
     _debugText = nullptr;
+    _animationTree = nullptr;
+    _audioStreamPlayer = nullptr;
+
+    _weaponReady = false;
 }
 
 NightmareCharacter::~NightmareCharacter()
@@ -39,12 +49,19 @@ NightmareCharacter::~NightmareCharacter()
 
 void NightmareCharacter::_ready()
 {
+    if (_inEditor)
+    {
+        return;
+    }
     Pawn::_ready();
-    _cameraArm = dynamic_cast<Node3D*>(get_node_internal("CameraArm"));
-    _inputVectorDisplay = dynamic_cast<Node3D*>(get_node_or_null("InputVectorDisplay"));
-    _interactVolume = dynamic_cast<Area3D*>(get_node_or_null("PlayerMesh/InteractVolume"));
+    _cameraArm = dynamic_cast<Node3D *>(get_node_internal("CameraArm"));
+    _inputVectorDisplay = dynamic_cast<Node3D *>(get_node_or_null("InputVectorDisplay"));
+    _interactVolume = dynamic_cast<Area3D *>(get_node_or_null("PlayerMesh/InteractVolume"));
+    _debugText = dynamic_cast<RichTextLabel *>(get_node_or_null("DebugText"));
+    _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
+    _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
 
-    _debugText = dynamic_cast<RichTextLabel*>(get_node_or_null("DebugText"));
+    _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);
 
     NightmareUi* ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
     connect("dialog_changed",  Callable(ui, "set_dialog"));
@@ -78,6 +95,27 @@ void NightmareCharacter::_input(const Ref<InputEvent> &event)
     if (event->is_action_pressed("interact"))
     {
         interact();
+        return;
+    }
+
+    if (event->is_action_pressed("weapon_ready"))
+    {
+        ready_weapon();
+        return;
+    }
+
+    if (event->is_action_released("weapon_ready"))
+    {
+        release_weapon();
+        return;
+    }
+
+    if (event->is_action_pressed("weapon_fire"))
+    {
+        if (_weaponReady)
+        {
+            fire_weapon();
+        }
         return;
     }
 }
@@ -148,6 +186,27 @@ void NightmareCharacter::update_input()
     rotate_camera(cameraInputVector);
 }
 
+void NightmareCharacter::ready_weapon()
+{
+    _weaponReady = true;
+    _animationTree->set("parameters/weapon_ready/blend_amount", 1.0f);
+}
+
+void NightmareCharacter::release_weapon()
+{
+    _weaponReady = false;
+    _animationTree->set("parameters/weapon_ready/blend_amount", 0.0f);
+}
+
+void NightmareCharacter::fire_weapon()
+{
+    Node3D *bullet = Object::cast_to<Node3D>(_bulletScene->instantiate());
+    get_tree()->get_current_scene()->add_child(bullet);
+    bullet->set_position(get_position());
+    bullet->set_rotation(_pawnMesh->get_rotation());
+    _audioStreamPlayer->play();
+}
+
 void NightmareCharacter::interact()
 {
     TypedArray<Area3D> hitVolumes = _interactVolume->get_overlapping_areas();
@@ -168,4 +227,13 @@ void NightmareCharacter::interact()
 void NightmareCharacter::set_dialog(String dialog)
 {
     emit_signal("dialog_changed", dialog);
+}
+
+float NightmareCharacter::get_max_speed() const
+{
+    if (_weaponReady)
+    {
+        return 2.0f;
+    }
+    return Pawn::get_max_speed();
 }

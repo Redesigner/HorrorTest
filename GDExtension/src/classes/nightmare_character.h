@@ -22,7 +22,6 @@ public:
     NightmareCharacter();
     ~NightmareCharacter();
 
-public:
     virtual void _ready() override;
 
 	virtual void _input(const Ref<InputEvent> &event) override;
@@ -35,6 +34,9 @@ public:
 
     void set_dialog(String dialog);
 
+protected:
+    virtual float get_max_speed() const override;
+
 
 private:
     void rotate_camera(Vector2 input);
@@ -43,14 +45,27 @@ private:
 
     void update_input();
 
+    void ready_weapon();
+
+    void release_weapon();
+
+    void fire_weapon();
+
 private:
     class Node3D *_cameraArm;
     class Node3D *_inputVectorDisplay;
     class Area3D *_interactVolume;
     class RichTextLabel *_debugText;
+    class AnimationTree *_animationTree;
+    class AudioStreamPlayer3D *_audioStreamPlayer;
+
+    Ref<class PackedScene> _bulletScene;
 
     DECLARE_PROPERTY(float, lookSpeedVertical, 1.0f);
     DECLARE_PROPERTY(float, lookSpeedHorizontal, 1.0f);
+    DECLARE_PROPERTY(String, bulletScenePath, "");
+
+    bool _weaponReady;
 };
 }
 

@@ -32,11 +32,13 @@ public:
 protected:
     void look_at_walk_direction(double delta);
 
+    virtual float get_max_speed() const;
+
     bool input_pressed() const;
 
-private:
     class MeshInstance3D *_pawnMesh;
 
+private:
     DECLARE_PROPERTY(float, maxWalkSpeed, 4.0f);
     DECLARE_PROPERTY(float, groundAcceleration, 8.0f);
     DECLARE_PROPERTY(float, groundFriction, 16.0f);

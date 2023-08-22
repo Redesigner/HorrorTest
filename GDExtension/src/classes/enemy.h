@@ -26,13 +26,16 @@ private:
 
     void update_navigation();
 
+    void update_target();
+
 private:
     class NavigationAgent3D *_navigationAgent;
     class NightmareCharacter *_target;
     class Label3D *_label;
-    // class AnimationPlayer *_animationPlayer;
 
     bool _navMapReady = false;
+
+    bool _hasSeenTarget;
 
     DECLARE_PROPERTY(float, movementSpeed, 4.0f);
 };

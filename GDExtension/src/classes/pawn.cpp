@@ -83,7 +83,7 @@ void Pawn::_physics_process(double delta)
     Vector3 velocity = get_velocity();
     if (input_pressed())
     {
-        Vector2 desiredVelocity = _maxWalkSpeed * _inputVector;
+        Vector2 desiredVelocity = get_max_speed() * _inputVector;
         Vector2 currentGroundVelocity = Vector2(velocity.x, velocity.z);
         Vector2 groundVelocity = CustomMath::constant_interp_to_vector(currentGroundVelocity, desiredVelocity, _groundAcceleration, (float)delta);
         velocity = Vector3(groundVelocity.x, velocity.y, groundVelocity.y);
@@ -137,4 +137,9 @@ void Pawn::look_at_walk_direction(double delta)
     Vector3 postPhysicsRotationDegrees = _pawnMesh->get_rotation_degrees();
     postPhysicsRotationDegrees.y -= yawOffset;
     _pawnMesh->set_rotation_degrees(postPhysicsRotationDegrees);
+}
+
+float Pawn::get_max_speed() const
+{
+    return _maxWalkSpeed;
 }

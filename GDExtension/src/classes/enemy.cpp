@@ -5,6 +5,9 @@
 #include <godot_cpp/classes/navigation_server3d.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/label3d.hpp>
+#include <godot_cpp/classes/world3d.hpp>
+#include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
+#include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 
 #include <godot_cpp/core/math.hpp>
 
@@ -19,6 +22,8 @@ Enemy::Enemy()
     _navigationAgent = nullptr;
     _target = nullptr;
     // _animationPlayer = nullptr;
+
+    _hasSeenTarget = false;
 }
 
 Enemy::~Enemy()
@@ -32,7 +37,8 @@ void Enemy::_ready()
 
     _navigationAgent = Object::cast_to<NavigationAgent3D>(get_node_or_null("NavigationAgent3D"));
     _label = Object::cast_to<Label3D>(get_node_or_null("Label3D"));
-    // _animationPlayer = Object::cast_to<AnimationPlayer>(get_node_or_null("AnimationPlayer"));
+    // there's only ever one target here -- the player
+    _target = dynamic_cast<NightmareCharacter *>(get_node_or_null("../Player"));
 }
 
 void godot::Enemy::_process(double delta)
@@ -46,6 +52,7 @@ void Enemy::_physics_process(double delta)
         return;
     }
     
+    update_target();
     update_navigation();
 
     Pawn::_physics_process(delta);
@@ -53,7 +60,7 @@ void Enemy::_physics_process(double delta)
     String text = String("Velocity: '{0}' m/s").format(Array::make(
         Math::round(get_velocity().length() * 100.0f) / 100.0f
         ));
-    text += _target == nullptr ? "\nNo target" : "\nTarget: " + _target->get_name();
+    text += !_hasSeenTarget ? "\nNo target" : "\nTarget seen";
     text += _navigationAgent->is_navigation_finished() ? "\nNavigation finished" : "\nCurrently navigating";
     text += String("\nDistance to target: '{0}'m").format(Array::make(
         Math::round(_navigationAgent->distance_to_target() * 10.0f) / 10.0f
@@ -77,10 +84,8 @@ void godot::Enemy::update_navigation()
         check_nav_map_ready();
         return;
     }
-    if (_target == nullptr)
+    if (!_hasSeenTarget)
     {
-        UtilityFunctions::print("No target set for enemy ai");
-        _target = Object::cast_to<NightmareCharacter>(get_node_or_null("../Player"));
         return;
     }
     if (_navigationAgent->is_navigation_finished())
@@ -103,4 +108,32 @@ void godot::Enemy::update_navigation()
     Vector3 newVelocity = (nextPathPosition - position);
     Vector2 requestedInput = Vector2(newVelocity.x, newVelocity.z).normalized();
     _inputVector = requestedInput;
+}
+
+void Enemy::update_target()
+{
+    // for now, we're active as soon as we see the target, so it doesn't matter if we lose sight of it
+    if (_hasSeenTarget)
+    {
+        return;
+    }
+    if (!_target)
+    {
+        UtilityFunctions::print(String("Enemy '{0}' was unable to find player. Check that the player can be found in the level tree.")
+            .format(Array::make(get_name())));
+        return;
+    }
+    // can we see the target?
+    PhysicsDirectSpaceState3D *spaceState = get_world_3d()->get_direct_space_state();
+    Ref<PhysicsRayQueryParameters3D> rayQueryParameters = PhysicsRayQueryParameters3D::create(get_position(), _target->get_position());
+    // ignore both self and target
+    rayQueryParameters->set_exclude(TypedArray<RID>::make(get_rid(), _target->get_rid() ));
+    Dictionary rayTraceResult = spaceState->intersect_ray(rayQueryParameters);
+    if (rayTraceResult.size() == 0)
+    {
+        UtilityFunctions::print("Enemy has seen player.");
+        _hasSeenTarget = true;
+        return;
+    }
+    // UtilityFunctions::print(String("Enemy eyesight ray trace hit object: '{0}'").format(Array::make(rayTraceResult["collider"])) );
 }
