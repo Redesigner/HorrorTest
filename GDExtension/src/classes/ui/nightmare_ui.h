@@ -20,7 +20,13 @@ public:
 
     virtual void _ready() override;
 
+    virtual void _input(const Ref<InputEvent> &event) override;
+
     void set_dialog(String dialog);
+
+    void advance_dialog();
+
+    bool is_dialog_playing() const;
 
 private:
     class DialogTextDisplay *_dialogTextDisplay;

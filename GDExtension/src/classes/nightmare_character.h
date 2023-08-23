@@ -51,6 +51,8 @@ private:
 
     void fire_weapon();
 
+    void end_interact_debounce();
+
 private:
     class Node3D *_cameraArm;
     class Node3D *_inputVectorDisplay;
@@ -58,6 +60,7 @@ private:
     class RichTextLabel *_debugText;
     class AnimationTree *_animationTree;
     class AudioStreamPlayer3D *_audioStreamPlayer;
+    class NightmareUi* _ui;
 
     Ref<class PackedScene> _bulletScene;
 
@@ -67,6 +70,8 @@ private:
     DECLARE_PROPERTY(String, bulletScenePath, "");
 
     bool _weaponReady;
+
+    bool _interactDebounce;
 };
 }
 

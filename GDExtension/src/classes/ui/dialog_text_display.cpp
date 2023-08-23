@@ -2,6 +2,8 @@
 
 #include <godot_cpp/classes/rich_text_label.hpp>
 
+#include <godot_cpp/variant/utility_functions.hpp>
+
 using namespace godot;
 
 void DialogTextDisplay::_bind_methods()
@@ -20,6 +22,9 @@ DialogTextDisplay::~DialogTextDisplay()
 void DialogTextDisplay::_ready()
 {
     _textElement = Object::cast_to<RichTextLabel>(get_node_or_null("DialogPanel/RichTextLabel"));
+    _textElement->set_text(String());
+    set_visible(false);
+    set_process_mode(PROCESS_MODE_WHEN_PAUSED);
 }
 
 void DialogTextDisplay::_process(double delta)
@@ -54,7 +59,27 @@ void DialogTextDisplay::set_dialog(String dialog)
 		_currentCharIndex = 0;
 		if (dialog.is_empty())
 		{
+            set_visible(false);
 			return;
 		}
+        set_visible(true);
 		_textAnimating = true;
+}
+
+bool DialogTextDisplay::advance_dialog()
+{
+    UtilityFunctions::print("advancing dialog");
+    if (_textAnimating)
+    {
+        _textAnimating = false;
+        _textElement->set_text(_pendingText);
+        return false;
+    }
+    set_visible(false);
+    return true;
+}
+
+bool DialogTextDisplay::is_dialog_playing() const
+{
+    return _textAnimating;
 }

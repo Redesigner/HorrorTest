@@ -11,6 +11,7 @@
 #include <godot_cpp/classes/audio_stream_player3d.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
+#include <godot_cpp/classes/scene_tree_timer.hpp>
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -30,6 +31,8 @@ void NightmareCharacter::_bind_methods()
     BIND_PROPERTY(Variant::STRING, bulletScenePath, NightmareCharacter);
 
     ADD_SIGNAL(MethodInfo("dialog_changed", PropertyInfo(Variant::STRING, "dialog")));
+
+    ClassDB::bind_method(D_METHOD("end_interact_debounce"), &NightmareCharacter::end_interact_debounce);
 }
 
 NightmareCharacter::NightmareCharacter()
@@ -42,6 +45,7 @@ NightmareCharacter::NightmareCharacter()
     _audioStreamPlayer = nullptr;
 
     _weaponReady = false;
+    _interactDebounce = false;
 }
 
 NightmareCharacter::~NightmareCharacter()
@@ -61,11 +65,9 @@ void NightmareCharacter::_ready()
     _debugText = dynamic_cast<RichTextLabel *>(get_node_or_null("DebugText"));
     _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
-
     _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);
-
-    NightmareUi* ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
-    connect("dialog_changed",  Callable(ui, "set_dialog"));
+    _ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
+    connect("dialog_changed",  Callable(_ui, "set_dialog"));
 
     if (!_inEditor)
     {
@@ -84,12 +86,6 @@ void NightmareCharacter::_input(const Ref<InputEvent> &event)
     {
         InputEventMouseMotion *mouseMotionEvent = static_cast<InputEventMouseMotion *>(*event);
         rotate_camera(mouseMotionEvent->get_relative());
-        return;
-    }
-
-    if (event->is_action_pressed("ui_cancel"))
-    {
-        get_tree()->quit();
         return;
     }
 
@@ -208,8 +204,17 @@ void NightmareCharacter::fire_weapon()
     _audioStreamPlayer->play();
 }
 
+void NightmareCharacter::end_interact_debounce()
+{
+    _interactDebounce = false;
+}
+
 void NightmareCharacter::interact()
 {
+    if (_interactDebounce)
+    {
+        return;
+    }
     TypedArray<Area3D> hitVolumes = _interactVolume->get_overlapping_areas();
     for(int i = 0; i < hitVolumes.size(); i++)
     {
@@ -223,6 +228,11 @@ void NightmareCharacter::interact()
         NPC* hitNpc = dynamic_cast<NPC *>(volume->get_owner());
         UtilityFunctions::print("Interacted with NPC " + hitNpc->get_name());
         hitNpc->trigger_interaction(this);
+
+        _interactDebounce = true;
+        Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.1, false);
+        timer->connect("timeout", Callable(this, "end_interact_debounce"));
+        return;
     }
 }
 

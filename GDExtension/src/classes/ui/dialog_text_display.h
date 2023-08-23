@@ -24,6 +24,10 @@ public:
 
     void set_dialog(String dialog);
 
+    // return true if the dialog is finished animating
+    bool advance_dialog();
+
+    bool is_dialog_playing() const;
 
 private:
     class RichTextLabel *_textElement;
