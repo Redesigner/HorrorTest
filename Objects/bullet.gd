@@ -2,8 +2,11 @@ class_name Bullet
 
 extends Node3D
 
-var velocity;
+@onready var light = get_node("OmniLight3D");
 
-func _physics_process(delta):
-	velocity = transform.basis.z * -100;
-	position += velocity * delta;
+func _ready():
+	var timer = get_tree().create_timer(0.02);
+	timer.connect("timeout", destroy);
+	
+func destroy():
+	light.queue_free();

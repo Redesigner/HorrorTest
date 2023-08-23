@@ -9,6 +9,7 @@
 #include "classes/nightmare_character.h"
 #include "classes/npc.h"
 #include "classes/enemy.h"
+#include "classes/camera_arm.h"
 
 #include "classes/ui/dialog_text_display.h"
 #include "classes/ui/nightmare_ui.h"
@@ -20,12 +21,14 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
         return;
     }
 
-    // register the classes here
+    // Register CLASSES
     ClassDB::register_class<Pawn>();
     ClassDB::register_class<NightmareCharacter>();
     ClassDB::register_class<NPC>();
     ClassDB::register_class<Enemy>();
+    ClassDB::register_class<CameraArm>();
 
+    // UI CLASSES
     ClassDB::register_class<DialogTextDisplay>();
     ClassDB::register_class<NightmareUi>();
 }

@@ -28,7 +28,10 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
+}
 
+void Enemy::_bind_methods()
+{
 }
 
 void Enemy::_ready()

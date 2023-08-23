@@ -54,7 +54,7 @@ private:
     void end_interact_debounce();
 
 private:
-    class Node3D *_cameraArm;
+    class CameraArm *_cameraArm;
     class Node3D *_inputVectorDisplay;
     class Area3D *_interactVolume;
     class RichTextLabel *_debugText;

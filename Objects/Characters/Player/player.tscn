@@ -147,8 +147,9 @@ mesh = SubResource("CapsuleMesh_5vua5")
 [node name="PlayerCapsule" type="CollisionShape3D" parent="."]
 shape = ExtResource("5_nx85o")
 
-[node name="CameraArm" type="SpringArm3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0.5, 0)
+[node name="CameraArm" type="CameraArm" parent="."]
+focusedArmLength = 1.5
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0.8, 0)
 spring_length = 2.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraArm"]
@@ -156,6 +157,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 2.98023e-08, 0, -2.98023e-08, 1, 0, 0, 0)
 
 [node name="InputVectorDisplay" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+visible = false
 cast_shadow = 0
 mesh = SubResource("SphereMesh_xcm8x")
 
@@ -163,6 +165,7 @@ mesh = SubResource("SphereMesh_xcm8x")
 process_mode = 3
 
 [node name="DebugText" type="RichTextLabel" parent="."]
+visible = false
 offset_right = 510.0
 offset_bottom = 92.0
 text = "V: 5.0m/s"

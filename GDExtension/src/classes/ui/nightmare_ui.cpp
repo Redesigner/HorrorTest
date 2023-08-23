@@ -2,8 +2,10 @@
 
 #include "dialog_text_display.h"
 
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/input_event.hpp>
+#include <godot_cpp/classes/window.hpp>
 
 using namespace godot;
 
@@ -40,6 +42,20 @@ void NightmareUi::_input(const Ref<InputEvent> &event)
     if (event->is_action_pressed("interact"))
     {
         advance_dialog();
+        return;
+    }
+
+    if (event->is_action_pressed("toggle_fullscreen"))
+    {
+        Window* window = get_tree()->get_root();
+        if (window->get_mode() == Window::MODE_FULLSCREEN)
+        {
+            window->set_mode(Window::MODE_WINDOWED);
+        }
+        else
+        {
+            window->set_mode(Window::MODE_FULLSCREEN);
+        }
         return;
     }
 }

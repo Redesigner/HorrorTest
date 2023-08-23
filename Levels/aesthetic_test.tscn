@@ -79,7 +79,7 @@ height = 0.1
 
 [sub_resource type="Environment" id="Environment_rrqmw"]
 background_mode = 1
-background_color = Color(0.0823529, 0.0823529, 0.0823529, 1)
+background_color = Color(0.0784314, 0.0784314, 0.0784314, 1)
 
 [node name="aesthetic_test" type="Node3D"]
 

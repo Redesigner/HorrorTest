@@ -21,6 +21,9 @@ public:
 
     virtual void _physics_process(double delta) override;
 
+protected:
+    static void _bind_methods();
+
 private:
     void check_nav_map_ready();
 
@@ -36,8 +39,6 @@ private:
     bool _navMapReady = false;
 
     bool _hasSeenTarget;
-
-    DECLARE_PROPERTY(float, movementSpeed, 4.0f);
 };
 }
 

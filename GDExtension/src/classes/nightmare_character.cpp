@@ -18,8 +18,10 @@
 #include <godot_cpp/core/math.hpp>
 
 #include "../core/custom_math.h"
+
 #include "npc.h"
 #include "ui/nightmare_ui.h"
+#include "camera_arm.h"
 
 using namespace godot;
 
@@ -32,6 +34,7 @@ void NightmareCharacter::_bind_methods()
 
     ADD_SIGNAL(MethodInfo("dialog_changed", PropertyInfo(Variant::STRING, "dialog")));
 
+    // expose this method to the api for the timer to work
     ClassDB::bind_method(D_METHOD("end_interact_debounce"), &NightmareCharacter::end_interact_debounce);
 }
 
@@ -59,14 +62,17 @@ void NightmareCharacter::_ready()
         return;
     }
     Pawn::_ready();
-    _cameraArm = dynamic_cast<Node3D *>(get_node_internal("CameraArm"));
+
+    _cameraArm = dynamic_cast<CameraArm *>(get_node_internal("CameraArm"));
     _inputVectorDisplay = dynamic_cast<Node3D *>(get_node_or_null("InputVectorDisplay"));
     _interactVolume = dynamic_cast<Area3D *>(get_node_or_null("Mesh/InteractVolume"));
     _debugText = dynamic_cast<RichTextLabel *>(get_node_or_null("DebugText"));
     _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
-    _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);
     _ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
+
+    _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);
+
     connect("dialog_changed",  Callable(_ui, "set_dialog"));
 
     if (!_inEditor)
@@ -186,12 +192,14 @@ void NightmareCharacter::update_input()
 void NightmareCharacter::ready_weapon()
 {
     _weaponReady = true;
+    _cameraArm->set_focus(true);
     _animationTree->set("parameters/weapon_ready/blend_amount", 1.0f);
 }
 
 void NightmareCharacter::release_weapon()
 {
     _weaponReady = false;
+    _cameraArm->set_focus(false);
     _animationTree->set("parameters/weapon_ready/blend_amount", 0.0f);
 }
 
