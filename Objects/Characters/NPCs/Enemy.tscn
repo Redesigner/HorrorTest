@@ -15,14 +15,14 @@ length = 0.001
 tracks/0/type = "rotation_3d"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Mesh")
+tracks/0/path = NodePath("Body/Mesh")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array()
 tracks/1/type = "position_3d"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Mesh")
+tracks/1/path = NodePath("Body/Mesh")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = PackedFloat32Array()
@@ -32,21 +32,21 @@ resource_name = "dead"
 tracks/0/type = "position_3d"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Mesh")
+tracks/0/path = NodePath("Body/Mesh")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, -0.5, -0.5)
+tracks/0/keys = PackedFloat32Array(0, 1, 0, -1, -0.5)
 tracks/1/type = "rotation_3d"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Mesh")
+tracks/1/path = NodePath("Body/Mesh")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = PackedFloat32Array(0, 1, -0.707, 0, 0, 0.707)
 tracks/2/type = "scale_3d"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Mesh")
+tracks/2/path = NodePath("Body/Mesh")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = PackedFloat32Array(0, 1, 1, 1, 0.1)
@@ -57,21 +57,21 @@ length = 2.0
 tracks/0/type = "position_3d"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Mesh")
+tracks/0/path = NodePath("Body/Mesh")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 0, -0.5, -0.5)
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 0, -0.5, -0.5, 2, 1, 0, -1, -0.5)
 tracks/1/type = "rotation_3d"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Mesh")
+tracks/1/path = NodePath("Body/Mesh")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, -0.707107, 0, 0, 0.707107)
 tracks/2/type = "scale_3d"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Mesh")
+tracks/2/path = NodePath("Body/Mesh")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = PackedFloat32Array(0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0.1)
@@ -123,10 +123,13 @@ velocity = Vector3(0, -146.508, 0)
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 target_desired_distance = 2.0
 
-[node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_4cgtv")
+[node name="Body" type="Node3D" parent="."]
 
-[node name="FaceMesh" type="MeshInstance3D" parent="Mesh"]
+[node name="Mesh" type="MeshInstance3D" parent="Body"]
+mesh = SubResource("CapsuleMesh_4cgtv")
+skeleton = NodePath("../..")
+
+[node name="FaceMesh" type="MeshInstance3D" parent="Body/Mesh"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5, -0.5)
 mesh = ExtResource("1_avl7w")
 
@@ -141,11 +144,13 @@ text = "Enemy
 "
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+process_mode = 1
 libraries = {
 "": SubResource("AnimationLibrary_n2hcw")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
+process_mode = 1
 tree_root = SubResource("AnimationNodeStateMachine_rcqrp")
 anim_player = NodePath("../AnimationPlayer")
 active = true

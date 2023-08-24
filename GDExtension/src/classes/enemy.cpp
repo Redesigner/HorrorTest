@@ -172,6 +172,11 @@ float Enemy::get_currentHealth() const
 
 void Enemy::take_damage(float damage)
 {
+    // Can't take any more damage
+    if (!_alive)
+    {
+        return;
+    }
     _currentHealth -= damage;
     if (_currentHealth <= 0.0f)
     {
@@ -185,6 +190,8 @@ void Enemy::die()
 {
     UtilityFunctions::print("enemy died");
     _alive = false;
+    // this also disables collisions as long as the "disable mode" property is set to remove
+    set_process_mode(PROCESS_MODE_DISABLED);
     Object *animationStateObject = _animationTree->get("parameters/playback");
     AnimationNodeStateMachinePlayback *stateMachine = Object::cast_to<AnimationNodeStateMachinePlayback>(animationStateObject);
     stateMachine->travel("death_animation");

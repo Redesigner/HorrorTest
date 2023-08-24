@@ -1,6 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://cxlg8lsvfwsqg"]
+[gd_scene load_steps=19 format=3 uid="uid://cxlg8lsvfwsqg"]
 
 [ext_resource type="CapsuleMesh" uid="uid://b4u23j5tjm1t6" path="res://Objects/Characters/Player/capsule_mesh.tres" id="1_dqbrb"]
+[ext_resource type="Texture2D" uid="uid://gmjc4h0w0mqs" path="res://Shared Resources/Textures/flashlight_cookie_valve.png" id="2_jb8rr"]
 [ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="3_4ly3d"]
 [ext_resource type="Shape3D" uid="uid://drhvm2kp46f02" path="res://Objects/Characters/Player/sphere_shape_3d.tres" id="4_s5gv8"]
 [ext_resource type="Material" uid="uid://dkafy4c3c8j0p" path="res://Shared Resources/Materials/default_capsule.material" id="4_vggr1"]
@@ -45,28 +46,28 @@ resource_name = "anim_stand"
 tracks/0/type = "position_3d"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Mesh/ArmMesh_R")
+tracks/0/path = NodePath("Body/Mesh/ArmMesh_R")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0.593815, 0, 0)
 tracks/1/type = "rotation_3d"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Mesh/ArmMesh_R")
+tracks/1/path = NodePath("Body/Mesh/ArmMesh_R")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
 tracks/2/type = "position_3d"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Mesh/ArmMesh_L")
+tracks/2/path = NodePath("Body/Mesh/ArmMesh_L")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = PackedFloat32Array(0, 1, -0.594, 0, 0)
 tracks/3/type = "rotation_3d"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Mesh/ArmMesh_L")
+tracks/3/path = NodePath("Body/Mesh/ArmMesh_L")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
@@ -76,28 +77,28 @@ resource_name = "anim_weapon_ready"
 tracks/0/type = "position_3d"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Mesh/ArmMesh_R")
+tracks/0/path = NodePath("Body/Mesh/ArmMesh_R")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0.594, 0.3, -0.3)
 tracks/1/type = "rotation_3d"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Mesh/ArmMesh_R")
+tracks/1/path = NodePath("Body/Mesh/ArmMesh_R")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = PackedFloat32Array(0, 1, 0.707107, 0, 0, 0.707107)
 tracks/2/type = "position_3d"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("Mesh/ArmMesh_L")
+tracks/2/path = NodePath("Body/Mesh/ArmMesh_L")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = PackedFloat32Array(0, 1, -0.594, 0, 0)
 tracks/3/type = "rotation_3d"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("Mesh/ArmMesh_L")
+tracks/3/path = NodePath("Body/Mesh/ArmMesh_L")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
@@ -113,34 +114,39 @@ bulletScenePath = "res://Objects/bullet.tscn"
 maxWalkSpeed = 2.0
 turnSpeed = 360.0
 
-[node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = ExtResource("1_dqbrb")
+[node name="Body" type="Node3D" parent="."]
 
-[node name="Flashlight" type="SpotLight3D" parent="Mesh"]
+[node name="Mesh" type="MeshInstance3D" parent="Body"]
+mesh = ExtResource("1_dqbrb")
+skeleton = NodePath("../..")
+
+[node name="Flashlight" type="SpotLight3D" parent="Body/Mesh"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
 light_color = Color(0.988235, 0.929412, 0.85098, 1)
-light_energy = 0.2
+light_energy = 0.5
+light_projector = ExtResource("2_jb8rr")
 shadow_enabled = true
 distance_fade_begin = 10.0
 distance_fade_length = 5.0
 spot_range = 35.0
 spot_attenuation = 0.183011
+spot_angle = 60.0
 
-[node name="FaceMesh" type="MeshInstance3D" parent="Mesh"]
+[node name="FaceMesh" type="MeshInstance3D" parent="Body/Mesh"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5, -0.35)
 mesh = ExtResource("3_4ly3d")
 
-[node name="InteractVolume" type="Area3D" parent="Mesh"]
+[node name="InteractVolume" type="Area3D" parent="Body/Mesh"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Mesh/InteractVolume"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Body/Mesh/InteractVolume"]
 shape = ExtResource("4_s5gv8")
 
-[node name="ArmMesh_R" type="MeshInstance3D" parent="Mesh"]
+[node name="ArmMesh_R" type="MeshInstance3D" parent="Body/Mesh"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.593815, 0, 0)
 mesh = SubResource("CapsuleMesh_5vua5")
 
-[node name="ArmMesh_L" type="MeshInstance3D" parent="Mesh"]
+[node name="ArmMesh_L" type="MeshInstance3D" parent="Body/Mesh"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.594, 0, 0)
 mesh = SubResource("CapsuleMesh_5vua5")
 

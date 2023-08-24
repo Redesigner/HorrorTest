@@ -71,7 +71,7 @@ void NightmareCharacter::_ready()
 
     _cameraArm = dynamic_cast<CameraArm *>(get_node_internal("CameraArm"));
     _inputVectorDisplay = dynamic_cast<Node3D *>(get_node_or_null("InputVectorDisplay"));
-    _interactVolume = dynamic_cast<Area3D *>(get_node_or_null("Mesh/InteractVolume"));
+    _interactVolume = dynamic_cast<Area3D *>(get_node_or_null("Body/Mesh/InteractVolume"));
     _debugText = dynamic_cast<RichTextLabel *>(get_node_or_null("DebugText"));
     _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
@@ -219,7 +219,6 @@ void NightmareCharacter::fire_weapon()
     Node3D *bullet = Object::cast_to<Node3D>(_bulletScene->instantiate());
     get_tree()->get_current_scene()->add_child(bullet);
     bullet->set_position(get_position());
-    bullet->set_rotation(_pawnMesh->get_rotation());
     _audioStreamPlayer->play();
 
     _weaponDebounce = true;
@@ -227,7 +226,7 @@ void NightmareCharacter::fire_weapon()
     timer->connect("timeout", Callable(this, "end_weapon_debounce"));
 
     const Vector3 startLocation = get_position();
-    const Vector3 endLocation = startLocation + _pawnMesh->get_basis().get_column(2) * -50.0f;
+    const Vector3 endLocation = startLocation + _body->get_basis().get_column(2) * -50.0f;
     PhysicsDirectSpaceState3D *spaceState = get_world_3d()->get_direct_space_state();
     Ref<PhysicsRayQueryParameters3D> rayQueryParameters = PhysicsRayQueryParameters3D::create(startLocation, endLocation);
     rayQueryParameters->set_exclude(TypedArray<RID>::make(get_rid()));

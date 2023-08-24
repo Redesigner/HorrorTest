@@ -37,6 +37,8 @@ protected:
     bool input_pressed() const;
 
     class MeshInstance3D *_pawnMesh;
+    /// The main pawn object in the physical world. This is separate so we can rotate it and still play animations on the pawnmesh
+    class Node3D *_body;
 
 private:
     DECLARE_PROPERTY(float, maxWalkSpeed, 4.0f);

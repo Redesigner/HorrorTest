@@ -53,6 +53,7 @@ void Pawn::_notification(int p_what)
 Pawn::Pawn()
 {
     _pawnMesh = nullptr;
+    _body = nullptr;
     _inEditor = false;
 }
 
@@ -62,7 +63,8 @@ Pawn::~Pawn()
 
 void Pawn::_ready()
 {
-    _pawnMesh = dynamic_cast<MeshInstance3D*>(get_node_or_null("Mesh"));
+    _body = Object::cast_to<Node3D>(get_node_or_null("Body"));
+    _pawnMesh = Object::cast_to<MeshInstance3D>(get_node_or_null("Body/Mesh"));
 
     _update_process_callback();
 }
@@ -115,7 +117,7 @@ bool Pawn::input_pressed() const
 
 void Pawn::look_at_walk_direction(double delta)
 {
-    if (!_pawnMesh)
+    if (!_body)
     {
         return;
     }
@@ -123,9 +125,10 @@ void Pawn::look_at_walk_direction(double delta)
     {
         return;
     }
+    const Vector3 bodyRotation = _body->get_global_rotation_degrees();
     Vector2 normalizedDirection = _inputVector.normalized();
     float desiredYaw = Math::rad_to_deg(Math::atan2(normalizedDirection.y, normalizedDirection.x));
-    float deltaYaw = CustomMath::angle_between(-_pawnMesh->get_rotation_degrees().y - 90.0f, desiredYaw);
+    float deltaYaw = CustomMath::angle_between(-bodyRotation.y - 90.0f, desiredYaw);
     float yawOffset = Math::sign(deltaYaw) * _turnSpeed * (float)delta;
 
     // Clamp our rotation this frame so that its magnitude is never larger than the difference between our desired rotation and current rotation
@@ -134,9 +137,9 @@ void Pawn::look_at_walk_direction(double delta)
         yawOffset = deltaYaw;
     }
 
-    Vector3 postPhysicsRotationDegrees = _pawnMesh->get_rotation_degrees();
+    Vector3 postPhysicsRotationDegrees = _body->get_rotation_degrees();
     postPhysicsRotationDegrees.y -= yawOffset;
-    _pawnMesh->set_rotation_degrees(postPhysicsRotationDegrees);
+    _body->set_rotation_degrees(postPhysicsRotationDegrees);
 }
 
 float Pawn::get_max_speed() const
