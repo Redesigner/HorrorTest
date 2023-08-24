@@ -12,6 +12,9 @@
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/classes/scene_tree_timer.hpp>
+#include <godot_cpp/classes/world3d.hpp>
+#include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
+#include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -22,6 +25,7 @@
 #include "npc.h"
 #include "ui/nightmare_ui.h"
 #include "camera_arm.h"
+#include "enemy.h"
 
 using namespace godot;
 
@@ -36,6 +40,7 @@ void NightmareCharacter::_bind_methods()
 
     // expose this method to the api for the timer to work
     ClassDB::bind_method(D_METHOD("end_interact_debounce"), &NightmareCharacter::end_interact_debounce);
+    ClassDB::bind_method(D_METHOD("end_weapon_debounce"), &NightmareCharacter::end_weapon_debounce);
 }
 
 NightmareCharacter::NightmareCharacter()
@@ -49,6 +54,7 @@ NightmareCharacter::NightmareCharacter()
 
     _weaponReady = false;
     _interactDebounce = false;
+    _weaponDebounce = false;
 }
 
 NightmareCharacter::~NightmareCharacter()
@@ -205,16 +211,49 @@ void NightmareCharacter::release_weapon()
 
 void NightmareCharacter::fire_weapon()
 {
+    if (_weaponDebounce)
+    {
+        return;
+    }
+
     Node3D *bullet = Object::cast_to<Node3D>(_bulletScene->instantiate());
     get_tree()->get_current_scene()->add_child(bullet);
     bullet->set_position(get_position());
     bullet->set_rotation(_pawnMesh->get_rotation());
     _audioStreamPlayer->play();
+
+    _weaponDebounce = true;
+    Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.5f, false);
+    timer->connect("timeout", Callable(this, "end_weapon_debounce"));
+
+    const Vector3 startLocation = get_position();
+    const Vector3 endLocation = startLocation + _pawnMesh->get_basis().get_column(2) * -50.0f;
+    PhysicsDirectSpaceState3D *spaceState = get_world_3d()->get_direct_space_state();
+    Ref<PhysicsRayQueryParameters3D> rayQueryParameters = PhysicsRayQueryParameters3D::create(startLocation, endLocation);
+    rayQueryParameters->set_exclude(TypedArray<RID>::make(get_rid()));
+    Dictionary rayTraceResult = spaceState->intersect_ray(rayQueryParameters);
+
+    if (rayTraceResult.size() == 0)
+    {
+        return;
+    }
+    Object *hitObject = rayTraceResult["collider"];
+    if (!hitObject->is_class("Enemy"))
+    {
+        return;
+    }
+    Enemy *enemy = dynamic_cast<Enemy *>(hitObject);
+    enemy->take_damage(1.0f);
 }
 
 void NightmareCharacter::end_interact_debounce()
 {
     _interactDebounce = false;
+}
+
+void NightmareCharacter::end_weapon_debounce()
+{
+    _weaponDebounce = false;
 }
 
 void NightmareCharacter::interact()

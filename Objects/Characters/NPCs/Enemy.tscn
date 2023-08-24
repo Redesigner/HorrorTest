@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dw8mrj653mfym"]
+[gd_scene load_steps=16 format=3 uid="uid://dw8mrj653mfym"]
 
 [ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="1_avl7w"]
 
@@ -10,13 +10,108 @@ material = SubResource("StandardMaterial3D_r73yy")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_wdk20"]
 
-[sub_resource type="Animation" id="Animation_faipj"]
-resource_name = "new_animation"
+[sub_resource type="Animation" id="Animation_i47na"]
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Mesh")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array()
+tracks/1/type = "position_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mesh")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array()
+
+[sub_resource type="Animation" id="Animation_vmax6"]
+resource_name = "dead"
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Mesh")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, -0.5, -0.5)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mesh")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, -0.707, 0, 0, 0.707)
+tracks/2/type = "scale_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Mesh")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 1, 1, 0.1)
+
+[sub_resource type="Animation" id="Animation_k2vwx"]
+resource_name = "death_animation"
+length = 2.0
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Mesh")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 0, -0.5, -0.5)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mesh")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, -0.707107, 0, 0, 0.707107)
+tracks/2/type = "scale_3d"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Mesh")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0.1)
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_n2hcw"]
 _data = {
-"new_animation": SubResource("Animation_faipj")
+"RESET": SubResource("Animation_i47na"),
+"dead": SubResource("Animation_vmax6"),
+"death_animation": SubResource("Animation_k2vwx")
 }
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_kthap"]
+animation = &"RESET"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xsbtb"]
+animation = &"dead"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_t8wjv"]
+animation = &"death_animation"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_btrc0"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u5egl"]
+advance_mode = 0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mwn6k"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_rcqrp"]
+states/End/position = Vector2(1010, 115)
+states/RESET/node = SubResource("AnimationNodeAnimation_kthap")
+states/RESET/position = Vector2(414, 121)
+states/Start/position = Vector2(290, 121)
+states/dead/node = SubResource("AnimationNodeAnimation_xsbtb")
+states/dead/position = Vector2(887, 47)
+states/death_animation/node = SubResource("AnimationNodeAnimation_t8wjv")
+states/death_animation/position = Vector2(636, 41)
+transitions = ["Start", "RESET", SubResource("AnimationNodeStateMachineTransition_btrc0"), "RESET", "death_animation", SubResource("AnimationNodeStateMachineTransition_u5egl"), "death_animation", "dead", SubResource("AnimationNodeStateMachineTransition_mwn6k")]
 
 [node name="Enemy" type="Enemy"]
 maxWalkSpeed = 2.0
@@ -49,3 +144,8 @@ text = "Enemy
 libraries = {
 "": SubResource("AnimationLibrary_n2hcw")
 }
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_rcqrp")
+anim_player = NodePath("../AnimationPlayer")
+active = true

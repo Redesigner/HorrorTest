@@ -192,9 +192,11 @@ spot_angle = 80.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00388, 3.5)
 
 [node name="Enemy" parent="." instance=ExtResource("3_e860j")]
+maxHealth = 4.0
+currentHealth = 4.0
 maxWalkSpeed = 0.5
 turnSpeed = 30.0
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.5389, 1.00064, -5.9565)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 7.90799, 1.00064, -5.9565)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_rrqmw")

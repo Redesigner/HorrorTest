@@ -148,6 +148,7 @@ mesh = SubResource("CapsuleMesh_5vua5")
 shape = ExtResource("5_nx85o")
 
 [node name="CameraArm" type="CameraArm" parent="."]
+focus = true
 focusedArmLength = 1.5
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0.8, 0)
 spring_length = 2.0

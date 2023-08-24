@@ -1,6 +1,7 @@
 #include "enemy.h"
 
-#include <godot_cpp/classes/animation_player.hpp>
+#include <godot_cpp/classes/animation_tree.hpp>
+#include <godot_cpp/classes/animation_node_state_machine_playback.hpp>
 #include <godot_cpp/classes/navigation_agent3d.hpp>
 #include <godot_cpp/classes/navigation_server3d.hpp>
 #include <godot_cpp/classes/engine.hpp>
@@ -21,9 +22,10 @@ Enemy::Enemy()
 {
     _navigationAgent = nullptr;
     _target = nullptr;
-    // _animationPlayer = nullptr;
+    _animationTree = nullptr;
 
     _hasSeenTarget = false;
+    _alive = true;
 }
 
 Enemy::~Enemy()
@@ -32,6 +34,8 @@ Enemy::~Enemy()
 
 void Enemy::_bind_methods()
 {
+    BIND_PROPERTY(Variant::FLOAT, maxHealth, Enemy);
+    BIND_PROPERTY(Variant::FLOAT, currentHealth, Enemy);
 }
 
 void Enemy::_ready()
@@ -42,6 +46,8 @@ void Enemy::_ready()
     _label = Object::cast_to<Label3D>(get_node_or_null("Label3D"));
     // there's only ever one target here -- the player
     _target = dynamic_cast<NightmareCharacter *>(get_node_or_null("../Player"));
+    _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
+
 }
 
 void godot::Enemy::_process(double delta)
@@ -54,7 +60,11 @@ void Enemy::_physics_process(double delta)
     {
         return;
     }
-    
+    if (!_alive)
+    {
+        return;
+    }
+
     update_target();
     update_navigation();
 
@@ -134,9 +144,49 @@ void Enemy::update_target()
     Dictionary rayTraceResult = spaceState->intersect_ray(rayQueryParameters);
     if (rayTraceResult.size() == 0)
     {
-        UtilityFunctions::print("Enemy has seen player.");
         _hasSeenTarget = true;
         return;
     }
-    // UtilityFunctions::print(String("Enemy eyesight ray trace hit object: '{0}'").format(Array::make(rayTraceResult["collider"])) );
+}
+
+void Enemy::set_maxHealth(float maxHealth)
+{
+    _maxHealth = Math::max(maxHealth, 0.0f);
+    _currentHealth = Math::min(_currentHealth, _maxHealth);
+}
+
+float Enemy::get_maxHealth() const
+{
+    return _maxHealth;
+}
+
+void Enemy::set_currentHealth(float currentHealth)
+{
+    _currentHealth = Math::clamp(currentHealth, 0.0f, _maxHealth);
+}
+
+float Enemy::get_currentHealth() const
+{
+    return _currentHealth;
+}
+
+void Enemy::take_damage(float damage)
+{
+    _currentHealth -= damage;
+    if (_currentHealth <= 0.0f)
+    {
+        _currentHealth = 0.0f;
+        die();
+    }
+    UtilityFunctions::print(String("Enemy taken '{0}' damage, '{1}' health remaining").format(Array::make(damage, _currentHealth)) );
+}
+
+void Enemy::die()
+{
+    UtilityFunctions::print("enemy died");
+    _alive = false;
+    Object *animationStateObject = _animationTree->get("parameters/playback");
+    AnimationNodeStateMachinePlayback *stateMachine = Object::cast_to<AnimationNodeStateMachinePlayback>(animationStateObject);
+    stateMachine->travel("death_animation");
+    
 }

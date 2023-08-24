@@ -53,6 +53,8 @@ private:
 
     void end_interact_debounce();
 
+    void end_weapon_debounce();
+
 private:
     class CameraArm *_cameraArm;
     class Node3D *_inputVectorDisplay;
@@ -70,8 +72,8 @@ private:
     DECLARE_PROPERTY(String, bulletScenePath, "");
 
     bool _weaponReady;
-
     bool _interactDebounce;
+    bool _weaponDebounce;
 };
 }
 
