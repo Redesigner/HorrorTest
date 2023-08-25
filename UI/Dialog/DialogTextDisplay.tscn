@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://rbkn632r2sbw"]
 
 [node name="DialogTextDisplay" type="DialogTextDisplay"]
+process_mode = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,5 +31,6 @@ offset_right = 500.0
 offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Test text area"
+bbcode_enabled = true
+text = "[color=#00FFFF]test[/color]"
 scroll_active = false

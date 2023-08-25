@@ -5,9 +5,10 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 
+// Please group the classes by directory, to make it easier to read
+// The order here should be the same as the order below
 #include "classes/pawn.h"
 #include "classes/nightmare_character.h"
-#include "classes/npc.h"
 #include "classes/enemy.h"
 #include "classes/camera_arm.h"
 
@@ -15,9 +16,15 @@
 #include "classes/ui/nightmare_ui.h"
 
 #include "classes/inventory/inventory.h"
+#include "classes/inventory/inventory_item_resource.h"
+
+#include "classes/interactable/interactable.h"
+#include "classes/interactable/npc.h"
+#include "classes/interactable/pickup.h"
 
 using namespace godot;
 
+// still using the example module name...
 void initialize_example_module(ModuleInitializationLevel p_level) {
     if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
         return;
@@ -26,7 +33,6 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     // BASE CLASSES
     ClassDB::register_class<Pawn>();
     ClassDB::register_class<NightmareCharacter>();
-    ClassDB::register_class<NPC>();
     ClassDB::register_class<Enemy>();
     ClassDB::register_class<CameraArm>();
 
@@ -36,6 +42,12 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 
     // INVENTORY CLASSES
     ClassDB::register_class<Inventory>();
+    ClassDB::register_class<InventoryItemResource>();
+
+    // INTERACTABLE CLASSES
+    ClassDB::register_class<Interactable>(); // this class should be registered as an abstract, but I can't figure out how to do that correctly at the moment
+    ClassDB::register_class<NPC>();
+    ClassDB::register_class<Pickup>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

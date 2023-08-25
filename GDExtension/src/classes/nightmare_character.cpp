@@ -22,7 +22,7 @@
 
 #include "../core/custom_math.h"
 
-#include "npc.h"
+#include "interactable/interactable.h"
 #include "ui/nightmare_ui.h"
 #include "camera_arm.h"
 #include "enemy.h"
@@ -265,19 +265,19 @@ void NightmareCharacter::interact()
     {
         return;
     }
+    
     TypedArray<Area3D> hitVolumes = _interactVolume->get_overlapping_areas();
     for(int i = 0; i < hitVolumes.size(); i++)
     {
         Object *volumeObject = hitVolumes[i];
         Area3D *volume = Object::cast_to<Area3D>(volumeObject);
-        if (!volume->get_owner()->is_class("NPC"))
+        if (!volume->get_owner()->is_class("Interactable"))
         {
             continue;
         }
 
-        NPC* hitNpc = dynamic_cast<NPC *>(volume->get_owner());
-        UtilityFunctions::print("Interacted with NPC " + hitNpc->get_name());
-        hitNpc->trigger_interaction(this);
+        Interactable *interactable = dynamic_cast<Interactable *>(volume->get_owner());
+        interactable->trigger_interaction(this);
 
         _interactDebounce = true;
         Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.1, false);

@@ -1,6 +1,7 @@
 #include "dialog_text_display.h"
 
 #include <godot_cpp/classes/rich_text_label.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -22,9 +23,15 @@ DialogTextDisplay::~DialogTextDisplay()
 void DialogTextDisplay::_ready()
 {
     _textElement = Object::cast_to<RichTextLabel>(get_node_or_null("DialogPanel/RichTextLabel"));
+    set_process_mode(PROCESS_MODE_WHEN_PAUSED);
+
+    // Hide this element by default when we're not loaded, and clear any text that's in here
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+        return;
+    }
     _textElement->set_text(String());
     set_visible(false);
-    set_process_mode(PROCESS_MODE_WHEN_PAUSED);
 }
 
 void DialogTextDisplay::_process(double delta)
@@ -68,7 +75,6 @@ void DialogTextDisplay::set_dialog(String dialog)
 
 bool DialogTextDisplay::advance_dialog()
 {
-    UtilityFunctions::print("advancing dialog");
     if (_textAnimating)
     {
         _textAnimating = false;

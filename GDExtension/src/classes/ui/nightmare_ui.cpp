@@ -25,7 +25,6 @@ NightmareUi::~NightmareUi()
 void NightmareUi::_ready()
 {
     _dialogTextDisplay = dynamic_cast<DialogTextDisplay *>(get_node_or_null("DialogTextDisplay"));
-
     // the ui will run when we're paused
     set_process_mode(PROCESS_MODE_ALWAYS);
 }

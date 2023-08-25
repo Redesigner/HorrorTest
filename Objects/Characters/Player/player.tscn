@@ -110,7 +110,7 @@ _data = {
 }
 
 [node name="Player" type="NightmareCharacter"]
-bulletScenePath = "res://Objects/bullet.tscn"
+bulletScenePath = "res://Objects/Objects/bullet.tscn"
 maxWalkSpeed = 2.0
 turnSpeed = 360.0
 
@@ -137,7 +137,9 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5
 mesh = ExtResource("3_4ly3d")
 
 [node name="InteractVolume" type="Area3D" parent="Body/Mesh"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.75)
+collision_layer = 0
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body/Mesh/InteractVolume"]
 shape = ExtResource("4_s5gv8")

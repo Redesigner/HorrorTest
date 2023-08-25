@@ -1,0 +1,7 @@
+[gd_resource type="InventoryItemResource" load_steps=2 format=3 uid="uid://bqgxu37n7iy30"]
+
+[ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_l16et"]
+
+[resource]
+itemTexture = ExtResource("1_l16et")
+itemName = "2F key"

@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckm6yya1brr17"]
+
+[ext_resource type="Script" path="res://Objects/Objects/bullet.gd" id="1_f6hti"]
+
+[node name="Bullet" type="Node3D"]
+script = ExtResource("1_f6hti")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+shadow_enabled = true
+omni_range = 10.0
+omni_attenuation = 0.000155585

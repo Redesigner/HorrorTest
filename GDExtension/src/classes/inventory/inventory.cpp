@@ -2,6 +2,8 @@
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
+#include "inventory_item_resource.h"
+
 using namespace godot;
 
 Inventory::Inventory()
@@ -28,7 +30,7 @@ TypedArray<Dictionary> godot::Inventory::get_inventory() const
     return _inventory;
 }
 
-void Inventory::add_item(String inventoryResource, int amount)
+void Inventory::add_item(Ref<InventoryItemResource> inventoryResource, int amount)
 {
     const int itemIndex = get_item_index(inventoryResource);
     if (itemIndex >= 0)
@@ -43,12 +45,12 @@ void Inventory::add_item(String inventoryResource, int amount)
     _inventory.append(newItem);
 }
 
-bool godot::Inventory::has_item(String inventoryResource) const
+bool godot::Inventory::has_item(Ref<InventoryItemResource> inventoryResource) const
 {
     return get_item_index(inventoryResource) >= 0;
 }
 
-int Inventory::get_item_index(String inventoryResource) const
+int Inventory::get_item_index(Ref<InventoryItemResource> inventoryResource) const
 {
     for (int i = 0; i < _inventory.size(); i++)
     {

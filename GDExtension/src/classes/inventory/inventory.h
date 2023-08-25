@@ -7,6 +7,8 @@
 
 namespace godot
 {
+class InventoryItemResource;
+
 class Inventory : public Node
 {
     GDCLASS(Inventory, Node);
@@ -19,9 +21,9 @@ public:
 
     TypedArray<Dictionary> get_inventory() const;
 
-    void add_item(String inventoryResource, int amount);
+    void add_item(Ref<InventoryItemResource> inventoryResource, int amount);
 
-    bool has_item(String inventoryResource) const;
+    bool has_item(Ref<InventoryItemResource> inventoryResource) const;
 
 protected:
     static void _bind_methods();
@@ -29,7 +31,7 @@ protected:
 private:
     TypedArray<Dictionary> _inventory;
 
-    int get_item_index(String inventoryResource) const;
+    int get_item_index(Ref<InventoryItemResource> inventoryResource) const;
 };
 }
 
