@@ -27,6 +27,8 @@
 #include "camera_arm.h"
 #include "enemy.h"
 
+#include "inventory/inventory.h"
+
 using namespace godot;
 
 void NightmareCharacter::_bind_methods()
@@ -51,6 +53,7 @@ NightmareCharacter::NightmareCharacter()
     _debugText = nullptr;
     _animationTree = nullptr;
     _audioStreamPlayer = nullptr;
+    _inventory = nullptr;
 
     _weaponReady = false;
     _interactDebounce = false;
@@ -76,6 +79,7 @@ void NightmareCharacter::_ready()
     _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
     _ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
+    _inventory = dynamic_cast<Inventory *>(get_node_or_null("Inventory"));
 
     _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);
 
@@ -285,6 +289,11 @@ void NightmareCharacter::interact()
 void NightmareCharacter::set_dialog(String dialog)
 {
     emit_signal("dialog_changed", dialog);
+}
+
+Inventory *godot::NightmareCharacter::get_inventory()
+{
+    return _inventory;
 }
 
 float NightmareCharacter::get_max_speed() const

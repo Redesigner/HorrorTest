@@ -34,6 +34,8 @@ public:
 
     void set_dialog(String dialog);
 
+    class Inventory* get_inventory();
+
 protected:
     virtual float get_max_speed() const override;
 
@@ -63,6 +65,7 @@ private:
     class AnimationTree *_animationTree;
     class AudioStreamPlayer3D *_audioStreamPlayer;
     class NightmareUi* _ui;
+    class Inventory *_inventory;
 
     Ref<class PackedScene> _bulletScene;
 

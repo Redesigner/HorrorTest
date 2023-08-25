@@ -23,6 +23,8 @@ public:
 
 private:
     DECLARE_PROPERTY(String, dialogText, "");
+    DECLARE_PROPERTY(bool, requireInventoryItem, false);
+    DECLARE_PROPERTY(String, requiredInventoryItem, "");
 };
 }
 

@@ -14,6 +14,8 @@
 #include "classes/ui/dialog_text_display.h"
 #include "classes/ui/nightmare_ui.h"
 
+#include "classes/inventory/inventory.h"
+
 using namespace godot;
 
 void initialize_example_module(ModuleInitializationLevel p_level) {
@@ -21,7 +23,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
         return;
     }
 
-    // Register CLASSES
+    // BASE CLASSES
     ClassDB::register_class<Pawn>();
     ClassDB::register_class<NightmareCharacter>();
     ClassDB::register_class<NPC>();
@@ -31,6 +33,9 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     // UI CLASSES
     ClassDB::register_class<DialogTextDisplay>();
     ClassDB::register_class<NightmareUi>();
+
+    // INVENTORY CLASSES
+    ClassDB::register_class<Inventory>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

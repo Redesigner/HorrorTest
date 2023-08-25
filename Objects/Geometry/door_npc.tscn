@@ -8,6 +8,8 @@ size = Vector3(1, 2, 0.1)
 
 [node name="DoorNpc" type="NPC"]
 dialogText = "This door can't be opened"
+requireInventoryItem = true
+requiredInventoryItem = "key"
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 2, 0)
 
 [node name="Area3D" type="Area3D" parent="."]
