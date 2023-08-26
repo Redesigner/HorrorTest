@@ -46,31 +46,32 @@ void DialogTextDisplay::_process(double delta)
     if (_currentTick >= 1.0f)
     {
         String currentText = _textElement->get_text();
-        currentText += _pendingText[_currentCharIndex];
+        currentText += _pendingTokens[_currentTokenIndex];
         _textElement->set_text(currentText);
         _currentTick--;
-        if (_currentCharIndex >= _pendingText.length() - 1)
+        if (_currentTokenIndex >= _pendingTokens.size() - 1)
         {
             _textAnimating = false;
             return;
         }
-        _currentCharIndex++;
+        _currentTokenIndex++;
     }
 }
 
 void DialogTextDisplay::set_dialog(String dialog)
 {
-        _textElement->set_text("");
-		_pendingText = dialog;
-		_currentTick = 0.0f;
-		_currentCharIndex = 0;
-		if (dialog.is_empty())
-		{
-            set_visible(false);
-			return;
-		}
-        set_visible(true);
-		_textAnimating = true;
+    _pendingTokens = process_string(dialog);
+    _textElement->set_text("");
+    _pendingText = dialog;
+    _currentTick = 0.0f;
+    _currentTokenIndex = 0;
+    if (dialog.is_empty())
+    {
+        set_visible(false);
+        return;
+    }
+    set_visible(true);
+    _textAnimating = true;
 }
 
 bool DialogTextDisplay::advance_dialog()
@@ -88,4 +89,47 @@ bool DialogTextDisplay::advance_dialog()
 bool DialogTextDisplay::is_dialog_playing() const
 {
     return _textAnimating;
+}
+
+TypedArray<String> DialogTextDisplay::process_string(String string)
+{
+    // I'm not optimistic about the performance here, but it's making do with godot's built in types
+    TypedArray<String> tokens = TypedArray<String>::make();
+    String currentToken = "";
+    bool isSpecialToken = false;
+    for (int i = 0; i < string.length(); i++)
+    {
+        char32_t currentCharacter= string[i];
+
+        if (currentCharacter == '[')
+        {
+            // start a new special token
+            isSpecialToken = true;
+            currentToken += "[";
+            continue;
+        }
+
+        if (isSpecialToken && currentCharacter == ']')
+        {
+            currentToken += ']';
+            isSpecialToken = false;
+            continue;
+        }
+
+        if (isSpecialToken)
+        {
+            currentToken += currentCharacter;
+            continue;
+        }
+
+        currentToken += currentCharacter;
+        tokens.append(currentToken);
+        currentToken = "";
+    }
+    if (currentToken.length() > 1)
+    {
+        tokens.append(currentToken);
+    }
+
+    return tokens;
 }

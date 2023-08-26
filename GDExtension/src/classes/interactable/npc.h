@@ -11,15 +11,14 @@ class NPC : public Interactable
 {
     GDCLASS(NPC, Interactable)
 
-protected:
-    static void _bind_methods();
-
 public:
     NPC();
     ~NPC();
 
-public:
     virtual void trigger_interaction(class NightmareCharacter* source) override;
+
+protected:
+    static void _bind_methods();
 
 private:
     DECLARE_PROPERTY(String, dialogText, "");

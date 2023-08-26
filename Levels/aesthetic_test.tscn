@@ -1,8 +1,9 @@
-[gd_scene load_steps=27 format=3 uid="uid://784mmxriyqy6"]
+[gd_scene load_steps=28 format=3 uid="uid://784mmxriyqy6"]
 
 [ext_resource type="PackedScene" uid="uid://cxlg8lsvfwsqg" path="res://Objects/Characters/Player/player.tscn" id="1_lmib6"]
 [ext_resource type="Material" uid="uid://kua0cji0wqda" path="res://Shared Resources/Materials/default_wall.material" id="2_8vhjp"]
 [ext_resource type="PackedScene" uid="uid://ebq1q4hcj355" path="res://Objects/Objects/door_npc.tscn" id="2_wcmyo"]
+[ext_resource type="PackedScene" uid="uid://dr0q48emy4hbn" path="res://Objects/Objects/door_npc_locked.tscn" id="3_50sox"]
 [ext_resource type="PackedScene" uid="uid://dw8mrj653mfym" path="res://Objects/Characters/NPCs/Enemy.tscn" id="3_e860j"]
 [ext_resource type="PackedScene" uid="uid://dou0e1h0klee7" path="res://Objects/Objects/Pickups/key.tscn" id="5_nc0x0"]
 
@@ -188,7 +189,10 @@ light_energy = 0.5
 spot_angle = 80.0
 
 [node name="DoorNpc" parent="Worldmap" instance=ExtResource("2_wcmyo")]
-dialogText = "This door can't be opened."
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 2, 0)
+
+[node name="Lock" parent="Worldmap" instance=ExtResource("3_50sox")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 2, -3)
 
 [node name="Player" parent="." instance=ExtResource("1_lmib6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00388, 3.5)

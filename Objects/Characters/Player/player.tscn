@@ -195,6 +195,3 @@ libraries = {
 stream = ExtResource("6_msm1o")
 
 [node name="Inventory" type="Inventory" parent="."]
-inventory = Array[Dictionary]([{
-"resource": "key"
-}])

@@ -1,5 +1,7 @@
 #include "npc.h"
 
+#include <godot_cpp/variant/utility_functions.hpp>
+
 #include "../nightmare_character.h"
 
 using namespace godot;
@@ -20,5 +22,6 @@ NPC::~NPC()
 
 void NPC::trigger_interaction(NightmareCharacter *source)
 {
+    // UtilityFunctions::print(String("Player interacted with this ({0})").format(Array::make(get_name())));
     source->set_dialog(_dialogText);
 }

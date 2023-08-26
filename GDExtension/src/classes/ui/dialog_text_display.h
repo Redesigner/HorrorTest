@@ -30,11 +30,15 @@ public:
     bool is_dialog_playing() const;
 
 private:
+    static TypedArray<String> process_string(String string);
+
+private:
     class RichTextLabel *_textElement;
 
     String _pendingText;
+    TypedArray<String> _pendingTokens;
     float _currentTick = 0.0f;
-    int _currentCharIndex = 0;
+    int _currentTokenIndex = 0;
     bool _textAnimating = false;
 
     DECLARE_PROPERTY(float, characterRate, 10.0f);

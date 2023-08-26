@@ -45,9 +45,11 @@ void Inventory::add_item(Ref<InventoryItemResource> inventoryResource, int amoun
     _inventory.append(newItem);
 }
 
-bool godot::Inventory::has_item(Ref<InventoryItemResource> inventoryResource) const
+bool Inventory::has_item(Ref<InventoryItemResource> inventoryResource) const
 {
-    return get_item_index(inventoryResource) >= 0;
+    const int itemIndex = get_item_index(inventoryResource);
+    UtilityFunctions::print(String("Checking for item, item index is '{0}'").format(Array::make(itemIndex)));
+    return itemIndex >= 0;
 }
 
 int Inventory::get_item_index(Ref<InventoryItemResource> inventoryResource) const
@@ -55,11 +57,12 @@ int Inventory::get_item_index(Ref<InventoryItemResource> inventoryResource) cons
     for (int i = 0; i < _inventory.size(); i++)
     {
         Dictionary inventoryEntry = _inventory[i];
-        String entryInventoryResource = inventoryEntry["resource"];
+        Ref<InventoryItemResource> entryInventoryResource = inventoryEntry["resource"];
         if (entryInventoryResource == inventoryResource)
         {
             return i;
         }
     }
+    UtilityFunctions::print("unable to find item in inventory");
     return -1;
 }

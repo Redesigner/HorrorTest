@@ -21,6 +21,7 @@
 #include "classes/interactable/interactable.h"
 #include "classes/interactable/npc.h"
 #include "classes/interactable/pickup.h"
+#include "classes/interactable/lock.h"
 
 using namespace godot;
 
@@ -48,6 +49,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     ClassDB::register_class<Interactable>(); // this class should be registered as an abstract, but I can't figure out how to do that correctly at the moment
     ClassDB::register_class<NPC>();
     ClassDB::register_class<Pickup>();
+    ClassDB::register_class<Lock>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
