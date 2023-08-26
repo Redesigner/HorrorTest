@@ -175,6 +175,16 @@ shape = SubResource("BoxShape3D_w4hc6")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Worldmap/EntranceWall"]
 mesh = SubResource("BoxMesh_ee3hn")
 
+[node name="EntranceWall2" type="StaticBody3D" parent="Worldmap"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 23.5, 2.5, -6.5)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Worldmap/EntranceWall2"]
+shape = SubResource("BoxShape3D_w4hc6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Worldmap/EntranceWall2"]
+mesh = SubResource("BoxMesh_ee3hn")
+
 [node name="LightFixtureMesh" type="MeshInstance3D" parent="Worldmap"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.95, 0)
 cast_shadow = 0
@@ -191,6 +201,18 @@ spot_angle = 80.0
 [node name="DoorNpc" parent="Worldmap" instance=ExtResource("2_wcmyo")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 2, 0)
 
+[node name="DoorNpc2" parent="Worldmap" instance=ExtResource("2_wcmyo")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 4, 2, -5.1)
+
+[node name="DoorNpc3" parent="Worldmap" instance=ExtResource("2_wcmyo")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 7, 2, -5.1)
+
+[node name="DoorNpc4" parent="Worldmap" instance=ExtResource("2_wcmyo")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 13, 2, -5.1)
+
+[node name="DoorNpc5" parent="Worldmap" instance=ExtResource("2_wcmyo")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 16, 2, -5.1)
+
 [node name="Lock" parent="Worldmap" instance=ExtResource("3_50sox")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 2, -3)
 
@@ -202,10 +224,10 @@ maxHealth = 4.0
 currentHealth = 4.0
 maxWalkSpeed = 0.5
 turnSpeed = 30.0
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 7.90799, 1.00064, -5.9565)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 6.40799, 1.00064, -6.4565)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_rrqmw")
 
 [node name="Key" parent="." instance=ExtResource("5_nc0x0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)

@@ -25,4 +25,18 @@ public:\
     }\
 private:
 
+#define DECLARE_PROPERTY_NODEFAULT(type, p_name)\
+private:\
+    type _##p_name;\
+public:\
+    void set_##p_name(type value)\
+    {\
+        _##p_name = value;\
+    }\
+    type get_##p_name() const\
+    {\
+        return _##p_name;\
+    }\
+private:
+
 #endif

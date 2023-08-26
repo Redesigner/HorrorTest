@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dr0q48emy4hbn"]
+[gd_scene load_steps=6 format=3 uid="uid://dr0q48emy4hbn"]
 
+[ext_resource type="AudioStream" uid="uid://dmcym1pykgb77" path="res://Shared Resources/Sounds/keys-unlocking-door.wav" id="1_l5d5q"]
 [ext_resource type="InventoryItemResource" uid="uid://bqgxu37n7iy30" path="res://Objects/Objects/Pickups/item_key.tres" id="1_vx43y"]
+[ext_resource type="AudioStream" uid="uid://bbghdea8ink5h" path="res://Shared Resources/Sounds/doorknob_rattle.wav" id="2_uisw2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x2wdt"]
 size = Vector3(1, 2, 0.1)
@@ -10,8 +12,11 @@ size = Vector3(1, 2, 0.1)
 
 [node name="Lock" type="Lock"]
 successDialogText = "You unlocked the door."
+successSound = ExtResource("1_l5d5q")
 failDialogText = "This door is locked."
+failSound = ExtResource("2_uisw2")
 requiredItem = ExtResource("1_vx43y")
+process_mode = 3
 
 [node name="Area3D" type="Area3D" parent="."]
 collision_layer = 3
@@ -21,3 +26,5 @@ shape = SubResource("BoxShape3D_x2wdt")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_wejrb")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]

@@ -2,6 +2,7 @@
 
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/scene_tree_timer.hpp>
+#include <godot_cpp/classes/audio_stream_player3d.hpp>
 
 #include "../nightmare_character.h"
 #include "../inventory/inventory.h"
@@ -12,6 +13,7 @@ using namespace godot;
 Pickup::Pickup()
 {
     _pickedUp = false;
+    _audioStreamPlayer = nullptr;
 }
 
 Pickup::~Pickup()
@@ -48,12 +50,22 @@ void Pickup::trigger_interaction(NightmareCharacter *source)
     const String displayMessage = "You picked up {0} [color=#00FFFF]{1}[/color]";
     const String formattedDisplayMessage = displayMessage.format(Array::make(startsWithVowel ? "an" : "a", itemName));
 
+    if (_audioStreamPlayer)
+    {
+        _audioStreamPlayer->play();
+    }
+
     source->set_dialog(formattedDisplayMessage);
 
     // Wait a few frames before actually destroying the item
     Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.01, false);
     timer->connect("timeout", Callable(this, "destroy_self"));
     return;
+}
+
+void Pickup::_ready()
+{
+    _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
 }
 
 void Pickup::set_itemResource(Ref<InventoryItemResource> itemResource)

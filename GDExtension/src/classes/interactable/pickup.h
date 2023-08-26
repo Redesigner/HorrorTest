@@ -23,6 +23,8 @@ protected:
 public:
     virtual void trigger_interaction(NightmareCharacter *source) override;
 
+    virtual void _ready() override;
+
     void set_itemResource(Ref<InventoryItemResource> itemResource);
     Ref<InventoryItemResource> get_itemResource() const;
 
@@ -33,6 +35,8 @@ private:
    
     DECLARE_PROPERTY(int, itemAmount, 1);
     Ref<InventoryItemResource> _itemResource;
+
+    class AudioStreamPlayer3D *_audioStreamPlayer;
 };
 }
 

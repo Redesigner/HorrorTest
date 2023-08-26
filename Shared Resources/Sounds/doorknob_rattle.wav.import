@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bbghdea8ink5h"
+path="res://.godot/imported/doorknob_rattle.wav-8cf3ed7d41efc5b5ce73b15fec49ad75.sample"
+
+[deps]
+
+source_file="res://Shared Resources/Sounds/doorknob_rattle.wav"
+dest_files=["res://.godot/imported/doorknob_rattle.wav-8cf3ed7d41efc5b5ce73b15fec49ad75.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

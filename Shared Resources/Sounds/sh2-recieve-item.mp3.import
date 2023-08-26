@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://d105ih8603rmv"
+path="res://.godot/imported/sh2-recieve-item.mp3-3b41bed6d8dbf49c86c3a5e79e7abc5b.mp3str"
+
+[deps]
+
+source_file="res://Shared Resources/Sounds/sh2-recieve-item.mp3"
+dest_files=["res://.godot/imported/sh2-recieve-item.mp3-3b41bed6d8dbf49c86c3a5e79e7abc5b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
