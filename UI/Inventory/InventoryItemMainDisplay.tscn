@@ -1,0 +1,40 @@
+[gd_scene load_steps=2 format=3 uid="uid://c2de0i2hsj2g5"]
+
+[ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_l5vtr"]
+
+[node name="InventoryItemMainDisplay" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.1
+anchor_right = 0.95
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemPicture" type="TextureRect" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.0
+texture = ExtResource("1_l5vtr")
+stretch_mode = 5
+
+[node name="ItemName" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 36
+text = "Item Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ItemDescription" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "This is an inventory item description. Write information about the item here, provide the player with hints as to what the item is used for, or build the world."

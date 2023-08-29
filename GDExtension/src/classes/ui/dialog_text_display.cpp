@@ -46,7 +46,7 @@ void DialogTextDisplay::_process(double delta)
     if (_currentTick >= 1.0f)
     {
         String currentText = _textElement->get_text();
-        currentText += _pendingTokens[_currentTokenIndex];
+        currentText += static_cast<String>(_pendingTokens[_currentTokenIndex]);
         _textElement->set_text(currentText);
         _currentTick--;
         if (_currentTokenIndex >= _pendingTokens.size() - 1)
