@@ -17,6 +17,8 @@ Inventory::~Inventory()
 void Inventory::_bind_methods()
 {
     BIND_PROPERTY(Variant::ARRAY, inventory, Inventory);
+
+    ADD_SIGNAL(MethodInfo("inventory_changed"));
 }
 
 
@@ -37,12 +39,15 @@ void Inventory::add_item(Ref<InventoryItemResource> inventoryResource, int amoun
     {
         Dictionary inventoryEntry = _inventory[itemIndex];
         inventoryEntry["amount"] = static_cast<float>(inventoryEntry["amount"]) + amount;
+
+        emit_signal("inventory_changed");
         return;
     }
     Dictionary newItem = Dictionary();
     newItem["resource"] = inventoryResource;
     newItem["amount"] = amount;
     _inventory.append(newItem);
+    emit_signal("inventory_changed");
 }
 
 bool Inventory::has_item(Ref<InventoryItemResource> inventoryResource) const

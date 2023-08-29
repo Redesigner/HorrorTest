@@ -16,6 +16,7 @@ void InventoryItemResource::_bind_methods()
 {
     BIND_PROPERTY(Variant::OBJECT, itemTexture, InventoryItemResource);
     BIND_PROPERTY(Variant::STRING, itemName, InventoryItemResource);
+    BIND_PROPERTY(Variant::STRING, itemDescription, InventoryItemResource);
 }
 
 void InventoryItemResource::set_itemTexture(Ref<Texture2D> itemTexture)

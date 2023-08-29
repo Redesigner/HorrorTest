@@ -78,12 +78,15 @@ void NightmareCharacter::_ready()
     _debugText = dynamic_cast<RichTextLabel *>(get_node_or_null("DebugText"));
     _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
+
     _ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
     _inventory = dynamic_cast<Inventory *>(get_node_or_null("Inventory"));
 
     _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);
 
     connect("dialog_changed",  Callable(_ui, "set_dialog"));
+    _inventory->connect("inventory_changed", Callable(_ui, "update_inventory"));
+    _ui->set_inventory(_inventory);
 
     if (!_inEditor)
     {

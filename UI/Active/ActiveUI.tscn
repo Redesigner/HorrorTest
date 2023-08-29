@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://bpm58hb68x6nq"]
+[gd_scene load_steps=3 format=3 uid="uid://bpm58hb68x6nq"]
 
 [ext_resource type="PackedScene" uid="uid://rbkn632r2sbw" path="res://UI/Dialog/DialogTextDisplay.tscn" id="1_dxpoi"]
+[ext_resource type="PackedScene" uid="uid://bu6d5l6f23bv3" path="res://UI/Inventory/InventoryMenu.tscn" id="2_7f6j6"]
 
 [node name="ActiveUI" type="NightmareUi"]
+process_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -10,4 +12,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="DialogTextDisplay" parent="." instance=ExtResource("1_dxpoi")]
+layout_mode = 1
+
+[node name="InventoryMenu" parent="." instance=ExtResource("2_7f6j6")]
+visible = false
 layout_mode = 1

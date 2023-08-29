@@ -1,8 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://c2de0i2hsj2g5"]
+[gd_scene load_steps=3 format=3 uid="uid://c2de0i2hsj2g5"]
 
+[ext_resource type="InventoryItemResource" uid="uid://bqgxu37n7iy30" path="res://Objects/Objects/Pickups/item_key.tres" id="1_3eq2p"]
 [ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_l5vtr"]
 
-[node name="InventoryItemMainDisplay" type="Panel"]
+[node name="InventoryItemMainDisplay" type="InventoryUiItemDisplay"]
+itemResource = ExtResource("1_3eq2p")
+itemNameDisplayPath = NodePath("VBoxContainer/ItemName")
+itemDescriptionDisplayPath = NodePath("VBoxContainer/ItemDescription")
+itemPictureDisplayPath = NodePath("VBoxContainer/ItemPicture")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

@@ -28,8 +28,13 @@ public:
 
     bool is_dialog_playing() const;
 
+    void set_inventory(class Inventory *inventory);
+
+    void update_inventory();
+
 private:
     class DialogTextDisplay *_dialogTextDisplay;
+    class InventoryUiMenu *_inventoryMenu;
 };
 }
 

@@ -171,7 +171,6 @@ cast_shadow = 0
 mesh = SubResource("SphereMesh_xcm8x")
 
 [node name="ActiveUI" parent="." instance=ExtResource("7_1jga6")]
-process_mode = 3
 
 [node name="DebugText" type="RichTextLabel" parent="."]
 visible = false

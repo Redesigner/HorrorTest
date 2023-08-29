@@ -25,5 +25,6 @@ protected:
 private:
     Ref<Texture2D> _itemTexture;
     DECLARE_PROPERTY(String, itemName, "");
+    DECLARE_PROPERTY(String, itemDescription, "");
 };
 }
