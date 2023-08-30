@@ -1,7 +1,8 @@
 [gd_resource type="InventoryItemResource" load_steps=2 format=3 uid="uid://bqgxu37n7iy30"]
 
-[ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_l16et"]
+[ext_resource type="Texture2D" uid="uid://dqjrw5r5y2oqf" path="res://Shared Resources/Textures/key_placeholder.png" id="1_5hwm7"]
 
 [resource]
-itemTexture = ExtResource("1_l16et")
+itemTexture = ExtResource("1_5hwm7")
 itemName = "2F key"
+itemDescription = "A simple key with [i]2f[/i] printed on it."

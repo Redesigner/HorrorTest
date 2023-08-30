@@ -1,0 +1,8 @@
+[gd_resource type="InventoryItemResource" load_steps=2 format=3 uid="uid://cw04nw8cwh0rb"]
+
+[ext_resource type="Texture2D" uid="uid://tqu0g50cluub" path="res://Shared Resources/Textures/bullet_box_placeholder.png" id="1_8mdp1"]
+
+[resource]
+itemTexture = ExtResource("1_8mdp1")
+itemName = "Handgun Bullets"
+itemDescription = "A box of 9mm rounds for use in a semi-automatic handgun. There are still a few bullets left in this box."

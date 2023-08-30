@@ -56,5 +56,5 @@ void InventoryUiMenu::update()
     }
     Dictionary inventoryItem = _inventory->get_inventory()[_currentlySelectedItemIndex];
     Ref<InventoryItemResource> currentlySelectedItem = inventoryItem["resource"];
-    _itemDisplay->set_itemResource(currentlySelectedItem);
+    _itemDisplay->update_inventory_item_resource(currentlySelectedItem);
 }

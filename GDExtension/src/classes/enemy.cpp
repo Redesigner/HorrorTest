@@ -85,7 +85,7 @@ void Enemy::_physics_process(double delta)
 void Enemy::check_nav_map_ready() 
 {
     _navMapReady = true;
-    UtilityFunctions::print("Nav map ready");
+    UtilityFunctions::print("[Enemy] Nav map ready");
 }
 
 void godot::Enemy::update_navigation()
@@ -93,7 +93,7 @@ void godot::Enemy::update_navigation()
     Vector3 velocity = get_velocity();
     if (!_navMapReady)
     {
-        UtilityFunctions::print("NavMap not yet ready, checking again");
+        UtilityFunctions::print("[Enemy] NavMap not yet ready, checking again");
         check_nav_map_ready();
         return;
     }
@@ -132,7 +132,7 @@ void Enemy::update_target()
     }
     if (!_target)
     {
-        UtilityFunctions::print(String("Enemy '{0}' was unable to find player. Check that the player can be found in the level tree.")
+        UtilityFunctions::push_warning(String("[Enemy] Enemy '{0}' was unable to find player. Check that the player can be found in the level tree.")
             .format(Array::make(get_name())));
         return;
     }
@@ -183,12 +183,12 @@ void Enemy::take_damage(float damage)
         _currentHealth = 0.0f;
         die();
     }
-    UtilityFunctions::print(String("Enemy taken '{0}' damage, '{1}' health remaining").format(Array::make(damage, _currentHealth)) );
+    UtilityFunctions::print(String("[Enemy] Enemy taken '{0}' damage, '{1}' health remaining").format(Array::make(damage, _currentHealth)) );
 }
 
 void Enemy::die()
 {
-    UtilityFunctions::print("enemy died");
+    UtilityFunctions::print("[Enemy] enemy died");
     _alive = false;
     // this also disables collisions as long as the "disable mode" property is set to remove
     set_process_mode(PROCESS_MODE_DISABLED);

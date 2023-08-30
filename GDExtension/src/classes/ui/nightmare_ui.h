@@ -33,6 +33,9 @@ public:
     void update_inventory();
 
 private:
+    void toggle_inventory();
+
+private:
     class DialogTextDisplay *_dialogTextDisplay;
     class InventoryUiMenu *_inventoryMenu;
 };

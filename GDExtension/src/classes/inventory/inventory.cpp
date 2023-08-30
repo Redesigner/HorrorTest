@@ -53,7 +53,7 @@ void Inventory::add_item(Ref<InventoryItemResource> inventoryResource, int amoun
 bool Inventory::has_item(Ref<InventoryItemResource> inventoryResource) const
 {
     const int itemIndex = get_item_index(inventoryResource);
-    UtilityFunctions::print(String("Checking for item, item index is '{0}'").format(Array::make(itemIndex)));
+    UtilityFunctions::print(String("[Inventory] Checking for item, item index is '{0}'").format(Array::make(itemIndex)));
     return itemIndex >= 0;
 }
 
@@ -68,6 +68,6 @@ int Inventory::get_item_index(Ref<InventoryItemResource> inventoryResource) cons
             return i;
         }
     }
-    UtilityFunctions::print("unable to find item in inventory");
+    UtilityFunctions::print("[Inventory] Unable to find item in inventory");
     return -1;
 }

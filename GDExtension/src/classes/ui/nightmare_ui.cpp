@@ -112,3 +112,7 @@ void NightmareUi::update_inventory()
 {
     _inventoryMenu->update();
 }
+
+void NightmareUi::toggle_inventory()
+{
+}

@@ -42,4 +42,5 @@ vertical_alignment = 1
 [node name="ItemDescription" type="RichTextLabel" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+bbcode_enabled = true
 text = "This is an inventory item description. Write information about the item here, provide the player with hints as to what the item is used for, or build the world."
