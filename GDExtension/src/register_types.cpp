@@ -18,6 +18,7 @@
 #include "classes/ui/inventory/inventory_ui_menu.h"
 #include "classes/ui/inventory/inventory_ui_item_display.h"
 #include "classes/ui/inventory/inventory_ui_item_preview_list.h"
+#include "classes/ui/inventory/inventory_ui_item_preview.h"
 
 #include "classes/inventory/inventory.h"
 #include "classes/inventory/inventory_item_resource.h"
@@ -44,10 +45,11 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
     // UI CLASSES
     ClassDB::register_class<DialogTextDisplay>();
     ClassDB::register_class<NightmareUi>();
-
+    // Inventory ui
     ClassDB::register_class<InventoryUiMenu>();
     ClassDB::register_class<InventoryUiItemDisplay>();
     ClassDB::register_class<InventoryUiItemPreviewList>();
+    ClassDB::register_class<InventoryUiItemPreview>();
 
     // INVENTORY CLASSES
     ClassDB::register_class<Inventory>();

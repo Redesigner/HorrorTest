@@ -8,7 +8,7 @@
 [ext_resource type="Shape3D" uid="uid://nj41qu6eu7j8" path="res://Objects/Characters/Player/capsule_shape_3d.tres" id="5_nx85o"]
 [ext_resource type="AudioStream" uid="uid://cv7huedjccdh5" path="res://Shared Resources/Sounds/pistol-shot.wav" id="6_msm1o"]
 [ext_resource type="PackedScene" uid="uid://bpm58hb68x6nq" path="res://UI/Active/ActiveUI.tscn" id="7_1jga6"]
-[ext_resource type="InventoryItemResource" uid="uid://cw04nw8cwh0rb" path="res://Objects/Objects/Pickups/bullets.tres" id="9_kudrg"]
+[ext_resource type="InventoryItemResource" path="res://Objects/Objects/Pickups/bullets.tres" id="9_kudrg"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5vua5"]
 material = ExtResource("4_vggr1")

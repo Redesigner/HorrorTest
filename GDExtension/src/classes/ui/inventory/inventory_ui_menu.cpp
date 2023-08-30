@@ -39,6 +39,7 @@ void InventoryUiMenu::_ready()
 void InventoryUiMenu::set_inventory(Inventory *inventory)
 {
     _inventory = inventory;
+    _itemPreviews->set_inventory(inventory);
     update();
 }
 
@@ -57,4 +58,5 @@ void InventoryUiMenu::update()
     Dictionary inventoryItem = _inventory->get_inventory()[_currentlySelectedItemIndex];
     Ref<InventoryItemResource> currentlySelectedItem = inventoryItem["resource"];
     _itemDisplay->update_inventory_item_resource(currentlySelectedItem);
+    _itemPreviews->update();
 }

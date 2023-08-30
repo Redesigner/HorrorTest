@@ -2,8 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_j6gu4"]
 
-[node name="InventoryItemDisplay" type="Control"]
-layout_mode = 3
+[node name="InventoryItemDisplay" type="InventoryUiItemPreview"]
+itemPictureDisplayPath = NodePath("Panel/TextureRect")
+anchors_preset = -1
 anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
@@ -31,4 +32,5 @@ anchor_bottom = 0.9
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_j6gu4")
+expand_mode = 3
 stretch_mode = 5

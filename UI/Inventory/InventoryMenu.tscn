@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bu6d5l6f23bv3"]
 
 [ext_resource type="PackedScene" uid="uid://c2de0i2hsj2g5" path="res://UI/Inventory/InventoryItemMainDisplay.tscn" id="2_gcrm1"]
-[ext_resource type="PackedScene" uid="uid://fyooku05dexy" path="res://UI/Inventory/InventoryItemPreviewList.tscn" id="2_p2b1j"]
+[ext_resource type="PackedScene" uid="uid://boojals3agg4r" path="res://UI/Inventory/InventoryItemPreviewList.tscn" id="2_p2b1j"]
 
 [node name="InventoryUiMenu" type="InventoryUiMenu"]
 itemDisplayPath = NodePath("VBoxContainer/InventoryItemMainDisplay")
