@@ -33,3 +33,6 @@ layout_mode = 2
 
 [node name="InventoryItemDisplay4" parent="HBoxContainer" instance=ExtResource("1_pl4lt")]
 layout_mode = 2
+
+[node name="InventoryItemDisplay5" parent="HBoxContainer" instance=ExtResource("1_pl4lt")]
+layout_mode = 2

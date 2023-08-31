@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://c2de0i2hsj2g5"]
 
 [ext_resource type="InventoryItemResource" uid="uid://bqgxu37n7iy30" path="res://Objects/Objects/Pickups/item_key.tres" id="1_3eq2p"]
-[ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_l5vtr"]
+[ext_resource type="Texture2D" uid="uid://dqjrw5r5y2oqf" path="res://Shared Resources/Textures/key_placeholder.png" id="2_8mndw"]
 
 [node name="InventoryItemMainDisplay" type="InventoryUiItemDisplay"]
 itemResource = ExtResource("1_3eq2p")
-itemNameDisplayPath = NodePath("VBoxContainer/ItemName")
+itemNameDisplayPath = NodePath("VBoxContainer/Control/ItemName")
 itemDescriptionDisplayPath = NodePath("VBoxContainer/ItemDescription")
 itemPictureDisplayPath = NodePath("VBoxContainer/ItemPicture")
 anchors_preset = 15
@@ -14,7 +14,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -25,14 +25,25 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ItemPicture" type="TextureRect" parent="VBoxContainer"]
+visible = false
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
-size_flags_stretch_ratio = 3.0
-texture = ExtResource("1_l5vtr")
+texture = ExtResource("2_8mndw")
+expand_mode = 1
 stretch_mode = 5
 
-[node name="ItemName" type="Label" parent="VBoxContainer"]
+[node name="Control" type="Control" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ItemName" type="Label" parent="VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_vertical = 3
 theme_override_font_sizes/font_size = 36
 text = "Item Name"
@@ -41,6 +52,7 @@ vertical_alignment = 1
 
 [node name="ItemDescription" type="RichTextLabel" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_horizontal = 3
 bbcode_enabled = true
 text = "This is an inventory item description. Write information about the item here, provide the player with hints as to what the item is used for, or build the world."
+scroll_active = false

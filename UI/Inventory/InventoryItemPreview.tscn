@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://beskdkxw1o5jq"]
 
-[ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_j6gu4"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_re6yh"]
+bg_color = Color(0, 0, 0, 1)
 
 [node name="InventoryItemDisplay" type="InventoryUiItemPreview"]
 itemPictureDisplayPath = NodePath("Panel/TextureRect")
@@ -21,6 +22,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_re6yh")
 
 [node name="TextureRect" type="TextureRect" parent="Panel"]
 layout_mode = 1
@@ -31,6 +33,5 @@ anchor_right = 0.9
 anchor_bottom = 0.9
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_j6gu4")
 expand_mode = 3
 stretch_mode = 5
