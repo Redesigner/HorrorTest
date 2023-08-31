@@ -52,21 +52,8 @@ void NightmareUi::_input(const Ref<InputEvent> &event)
 
     if (event->is_action_pressed("toggle_inventory"))
     {
-        if (!_inventoryMenu->is_visible())
-        {
-            get_tree()->set_pause(true);
-            _inventoryMenu->set_visible(true);
-        }
-        else
-        {
-            _inventoryMenu->set_visible(false);
-
-            // unpause the game only if there is no dialog playing
-            if (!is_dialog_playing())
-            {
-                get_tree()->set_pause(false);
-            }
-        }
+        toggle_inventory();
+        return;
     }
 
     if (event->is_action_pressed("toggle_fullscreen"))
@@ -92,6 +79,10 @@ void NightmareUi::set_dialog(String dialog)
 
 void NightmareUi::advance_dialog()
 {
+    if (!_dialogTextDisplay->is_visible())
+    {
+        return;
+    }
     if (_dialogTextDisplay->advance_dialog())
     {
         get_tree()->set_pause(false);
@@ -115,4 +106,19 @@ void NightmareUi::update_inventory()
 
 void NightmareUi::toggle_inventory()
 {
+    if (_dialogTextDisplay->is_visible())
+    {
+        // don't open the inventory if dialog is displayed...
+        return;
+    }
+    if (!_inventoryMenu->is_visible())
+    {
+        get_tree()->set_pause(true);
+        _inventoryMenu->set_visible(true);
+    }
+    else
+    {
+        get_tree()->set_pause(false);
+        _inventoryMenu->set_visible(false);
+    }
 }
