@@ -24,6 +24,8 @@ public:
 
     void update();
 
+    void set_selected_index(int index);
+
 private:
     void bind_previews_to_array();
 
@@ -35,6 +37,8 @@ private:
     class Control *_containerNode;
 
     DECLARE_PROPERTY_NODEFAULT(NodePath, containerNodePath);
+
+    int _currentlySelectedItemIndex;
 
 };
 }

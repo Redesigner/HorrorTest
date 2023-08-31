@@ -23,9 +23,13 @@ public:
 
     void set_item_resource(Ref<InventoryItemResource> itemResource);
 
+    void set_selected(bool selected);
+
 private:
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemPictureDisplayPath);
+    DECLARE_PROPERTY_NODEFAULT(NodePath, itemHighlightPath);
 
     class TextureRect *_itemPictureDisplay;
+    class Control *_itemHighlight;
 };
 }

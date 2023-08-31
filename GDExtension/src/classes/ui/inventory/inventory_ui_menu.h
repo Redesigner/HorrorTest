@@ -20,11 +20,19 @@ protected:
 public:
     virtual void _ready() override;
 
+    virtual void _input(const Ref<InputEvent> &event) override;
+
     void set_inventory(class Inventory *inventory);
 
     void update();
 
 private:
+    void increase_index();
+
+    void decrease_index();
+
+    void update_currently_selected_item();
+
     class InventoryUiItemDisplay *_itemDisplay;
     class InventoryUiItemPreviewList  *_itemPreviews;
 

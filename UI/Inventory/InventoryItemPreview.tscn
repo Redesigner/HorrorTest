@@ -5,6 +5,7 @@ bg_color = Color(0, 0, 0, 1)
 
 [node name="InventoryItemDisplay" type="InventoryUiItemPreview"]
 itemPictureDisplayPath = NodePath("Panel/TextureRect")
+itemHighlightPath = NodePath("ReferenceRect")
 anchors_preset = -1
 anchor_left = 0.1
 anchor_top = 0.1
@@ -31,7 +32,24 @@ anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
+offset_left = 3.6864
+offset_top = 2.0736
+offset_right = 3.68634
+offset_bottom = 2.07364
 grow_horizontal = 2
 grow_vertical = 2
 expand_mode = 3
 stretch_mode = 5
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.005
+anchor_top = 0.005
+anchor_right = 0.995
+anchor_bottom = 0.995
+grow_horizontal = 2
+grow_vertical = 2
+border_width = 5.0
+editor_only = false

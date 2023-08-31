@@ -15,6 +15,8 @@ InventoryUiItemPreviewList::InventoryUiItemPreviewList()
 {
     _inventory = nullptr;
     _containerNode = nullptr;
+
+    _currentlySelectedItemIndex = 0;
 }
 
 InventoryUiItemPreviewList::~InventoryUiItemPreviewList()
@@ -62,6 +64,16 @@ void InventoryUiItemPreviewList::update()
         InventoryUiItemPreview *itemPreview = dynamic_cast<InventoryUiItemPreview *>(static_cast<Object *>(_itemPreviews[i]));
         itemPreview->set_item_resource(item["resource"]);
     }
+}
+
+void InventoryUiItemPreviewList::set_selected_index(int index)
+{
+    InventoryUiItemPreview *oldPreview = dynamic_cast<InventoryUiItemPreview *>(static_cast<Object *>(_itemPreviews[_currentlySelectedItemIndex]));
+    oldPreview->set_selected(false);
+    _currentlySelectedItemIndex = index;
+    
+    InventoryUiItemPreview *newPreview = dynamic_cast<InventoryUiItemPreview *>(static_cast<Object *>(_itemPreviews[index]));
+    newPreview->set_selected(true);
 }
 
 void InventoryUiItemPreviewList::bind_previews_to_array()
