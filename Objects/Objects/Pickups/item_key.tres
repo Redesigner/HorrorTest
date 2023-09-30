@@ -5,4 +5,4 @@
 [resource]
 itemTexture = ExtResource("1_5hwm7")
 itemName = "2F key"
-itemDescription = "A simple key with [i]2f[/i] printed on it."
+itemDescription = "A simple key with [b]2F[/b] printed on it."
