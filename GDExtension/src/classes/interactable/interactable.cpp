@@ -1,6 +1,6 @@
 #include "interactable.h"
 
-#include "../nightmare_character.h"
+#include "../pawns/nightmare_character.h"
 
 using namespace godot;
 

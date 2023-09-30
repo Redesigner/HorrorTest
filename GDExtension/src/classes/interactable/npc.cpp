@@ -4,7 +4,7 @@
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
-#include "../nightmare_character.h"
+#include "../pawns/nightmare_character.h"
 
 using namespace godot;
 

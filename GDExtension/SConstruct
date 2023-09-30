@@ -21,6 +21,7 @@ sources += Glob("src/classes/ui/*.cpp")
 sources += Glob("src/classes/ui/inventory/*.cpp")
 sources += Glob("src/classes/inventory/*.cpp")
 sources += Glob("src/classes/interactable/*.cpp")
+sources += Glob("src/classes/pawns/*.cpp")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(

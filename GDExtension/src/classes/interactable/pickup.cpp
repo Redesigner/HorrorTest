@@ -4,7 +4,7 @@
 #include <godot_cpp/classes/scene_tree_timer.hpp>
 #include <godot_cpp/classes/audio_stream_player3d.hpp>
 
-#include "../nightmare_character.h"
+#include "../pawns/nightmare_character.h"
 #include "../inventory/inventory.h"
 #include "../inventory/inventory_item_resource.h"
 

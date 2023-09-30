@@ -7,9 +7,9 @@
 
 // Please group the classes by directory, to make it easier to read
 // The order here should be the same as the order below
-#include "classes/pawn.h"
-#include "classes/nightmare_character.h"
-#include "classes/enemy.h"
+#include "classes/pawns/pawn.h"
+#include "classes/pawns/nightmare_character.h"
+#include "classes/pawns/enemy.h"
 #include "classes/camera_arm.h"
 
 #include "classes/ui/dialog_text_display.h"

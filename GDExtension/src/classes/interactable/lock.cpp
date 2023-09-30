@@ -2,7 +2,7 @@
 
 #include "../inventory/inventory.h"
 #include "../inventory/inventory_item_resource.h"
-#include "../nightmare_character.h"
+#include "../pawns/nightmare_character.h"
 
 #include <godot_cpp/classes/audio_stream_player3d.hpp>
 #include <godot_cpp/classes/audio_stream.hpp>
