@@ -213,7 +213,7 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 13, 2,
 [node name="DoorNpc5" parent="Worldmap" instance=ExtResource("2_wcmyo")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 16, 2, -5.1)
 
-[node name="Lock" parent="Worldmap" instance=ExtResource("3_50sox")]
+[node name="Lock" parent="Worldmap" groups=["locks"] instance=ExtResource("3_50sox")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 2, -3)
 
 [node name="Player" parent="." instance=ExtResource("1_lmib6")]
