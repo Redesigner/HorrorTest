@@ -21,6 +21,7 @@ void GameInstance::_bind_methods()
 
 void GameInstance::_ready()
 {
+    game_state->load();
 }
 
 const Ref<GameState> GameInstance::get_game_state() const

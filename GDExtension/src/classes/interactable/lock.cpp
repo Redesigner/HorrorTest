@@ -82,13 +82,21 @@ Ref<InventoryItemResource> Lock::get_requiredItem() const
 PackedByteArray Lock::make_state_data() const
 {
     PackedByteArray data = PackedByteArray();
-    data.encode_u8(0, _locked);
+    data.append(_locked ? 0xFF : 0xFE);
     return data;
 }
 
 void Lock::unpack_state_data(PackedByteArray state_data)
 {
-    _locked = state_data.decode_u8(0);
+    _locked = state_data.decode_u8(0) != 0xFF;
+    if (_locked)
+    {
+        UtilityFunctions::print("[Lock] loaded data from state, the door is locked.");
+    }
+    else
+    {
+        UtilityFunctions::print("[Lock] loaded data from state, the door is unlocked.");
+    }
 }
 
 void Lock::unlock(NightmareCharacter *source)
@@ -97,4 +105,5 @@ void Lock::unlock(NightmareCharacter *source)
     audio_stream_player->set_stream(_successSound);
     audio_stream_player->play();
     _locked = false;
+    get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->update_node_state(this, make_state_data());
 }

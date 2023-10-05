@@ -43,7 +43,7 @@ private:
     DECLARE_PROPERTY(String, successDialogText, "");
     DECLARE_PROPERTY_NODEFAULT(Ref<AudioStream>, successSound);
 
-    DECLARE_PROPERTY(bool, locked, false);
+    DECLARE_PROPERTY(bool, locked, true);
 
     Ref<InventoryItemResource> _requiredItem;
 

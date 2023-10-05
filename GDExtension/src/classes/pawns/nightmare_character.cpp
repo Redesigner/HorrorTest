@@ -29,6 +29,9 @@
 
 #include "../inventory/inventory.h"
 
+#include "../game/game_instance.h"
+#include "../game/game_state.h"
+
 using namespace godot;
 
 void NightmareCharacter::_bind_methods()
@@ -132,6 +135,13 @@ void NightmareCharacter::_input(const Ref<InputEvent> &event)
         {
             fire_weapon();
         }
+        return;
+    }
+
+    // temporary testing action?
+    if (event->is_action_pressed("save"))
+    {
+        get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->save();
         return;
     }
 }

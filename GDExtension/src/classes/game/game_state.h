@@ -19,13 +19,18 @@ protected:
     static void _bind_methods();
 
 public:
-    template <class Type>
-    void update_node_state(Type node);
+    void update_node_state(Node *node, PackedByteArray data);
 
     bool get_node_state(Node *node, PackedByteArray &data_out);
 
+    void save();
+
+    void load();
+
 private:
     StringName convert_node_to_key(Node *node);
+
+    String save_file_path;
 
     std::map<StringName, PackedByteArray> state_map;
 };
