@@ -82,13 +82,13 @@ Ref<InventoryItemResource> Lock::get_requiredItem() const
 PackedByteArray Lock::make_state_data() const
 {
     PackedByteArray data = PackedByteArray();
-    data.append(_locked ? 0xFF : 0xFE);
+    data.append(_locked);
     return data;
 }
 
 void Lock::unpack_state_data(PackedByteArray state_data)
 {
-    _locked = state_data.decode_u8(0) != 0xFF;
+    _locked = state_data.decode_u8(0);
     if (_locked)
     {
         UtilityFunctions::print("[Lock] loaded data from state, the door is locked.");

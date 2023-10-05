@@ -48,8 +48,7 @@ void GameState::save()
     {
         UtilityFunctions::print(String("[GameState} Writing entry '{0}:{1}' to file").format(Array::make(entry.first, entry.second.get_string_from_utf8())));
         file->store_string(String(entry.first) + ":");
-        // file->store_buffer(entry.second);
-        file->store_string(entry.second.get_string_from_utf8());
+        file->store_buffer(entry.second);
         file->store_string("\n");
     }
     UtilityFunctions::print("[GameState] Saving game...");
@@ -58,19 +57,39 @@ void GameState::save()
 
 void GameState::load()
 {
-    String data;
+    String data ="";
+    StringName key = "";
+    PackedByteArray state = PackedByteArray();
+    bool reading_state = false;
+    UtilityFunctions::print("[GameState] Opening save file...");
     Ref<FileAccess> file = FileAccess::open(save_file_path, FileAccess::ModeFlags::READ);
     while (file->get_position() < file->get_length())
     {
-        String data = file->get_line();
-        int split = data.find(":");
-        StringName key = data.left(split);
-        String data_string = data.right(-split - 1);
-        UtilityFunctions::print(String("[GameState] Loading state data, raw info: '{0}'").format(Array::make(data_string)));
-        PackedByteArray state = data_string.to_utf8_buffer();
-        UtilityFunctions::print(String("[GameState] Loading state from file for node {0}:'{1}'").format(Array::make(key, state)));
-
-        state_map.insert(std::pair<StringName, PackedByteArray>(key, state));
+        uint8_t next_char = file->get_8();
+        if (next_char == '\n')
+        {
+            state_map.insert(std::pair<StringName, PackedByteArray>(key, state));
+            UtilityFunctions::print(String("[GameState] Loading state from file for node {0}:'{1}'").format(Array::make(key, state)));
+            data = "";
+            state.clear();
+            reading_state = false;
+            continue;
+        }
+        if (next_char == ':')
+        {
+            key = data;
+            data = "";
+            reading_state = true;
+            continue;
+        }
+        if (reading_state)
+        {
+            state.append(next_char);
+        }
+        else
+        {
+            data += next_char;
+        }
     }
 }
 
