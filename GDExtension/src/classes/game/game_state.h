@@ -7,6 +7,8 @@
 namespace godot
 {
 class Node;
+class Inventory;
+class FileAccess;
 class GameState : public RefCounted
 {
     GDCLASS(GameState, RefCounted);
@@ -27,11 +29,20 @@ public:
 
     void load();
 
+    // Should this return a pointer instead of a ref?
+    Inventory * get_inventory();
+
 private:
     StringName convert_node_to_key(Node *node);
+
+    void load_inventory(Ref<FileAccess> file);
+
+    void load_inventory_item_from_string(String reference_string, String amount_string);
 
     String save_file_path;
 
     std::map<StringName, PackedByteArray> state_map;
+
+    Ref<Inventory> inventory;
 };
 }

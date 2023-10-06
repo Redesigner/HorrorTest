@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cxlg8lsvfwsqg"]
+[gd_scene load_steps=19 format=3 uid="uid://cxlg8lsvfwsqg"]
 
 [ext_resource type="CapsuleMesh" uid="uid://b4u23j5tjm1t6" path="res://Objects/Characters/Player/capsule_mesh.tres" id="1_dqbrb"]
 [ext_resource type="Texture2D" uid="uid://gmjc4h0w0mqs" path="res://Shared Resources/Textures/flashlight_cookie_valve.png" id="2_jb8rr"]
@@ -8,7 +8,6 @@
 [ext_resource type="Shape3D" uid="uid://nj41qu6eu7j8" path="res://Objects/Characters/Player/capsule_shape_3d.tres" id="5_nx85o"]
 [ext_resource type="AudioStream" uid="uid://cv7huedjccdh5" path="res://Shared Resources/Sounds/pistol-shot.wav" id="6_msm1o"]
 [ext_resource type="PackedScene" uid="uid://bpm58hb68x6nq" path="res://UI/Active/ActiveUI.tscn" id="7_1jga6"]
-[ext_resource type="InventoryItemResource" uid="uid://cw04nw8cwh0rb" path="res://Objects/Objects/Pickups/bullets.tres" id="9_kudrg"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5vua5"]
 material = ExtResource("4_vggr1")
@@ -193,9 +192,3 @@ libraries = {
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("6_msm1o")
-
-[node name="Inventory" type="Inventory" parent="."]
-inventory = Array[Dictionary]([{
-"amount": 9,
-"resource": ExtResource("9_kudrg")
-}])

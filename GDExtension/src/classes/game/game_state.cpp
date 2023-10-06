@@ -3,14 +3,19 @@
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
 
 #include <godot_cpp/variant/utility_functions.hpp>
+
+#include "../inventory/inventory.h"
+#include "../inventory/inventory_item_resource.h"
 
 using namespace godot;
 
 GameState::GameState()
 {
     save_file_path = "user://save_game.dat";
+    inventory = Ref(memnew(Inventory));
 }
 
 GameState::~GameState()
@@ -52,6 +57,8 @@ void GameState::save()
         file->store_buffer(entry.second);
         file->store_string("\n");
     }
+    String inventory_data = inventory->make_string_data();
+    file ->store_string(inventory_data);
     UtilityFunctions::print("[GameState] Saving game...");
     file->close();
 }
@@ -63,11 +70,26 @@ void GameState::load()
     StringName key = "";
     UtilityFunctions::print("[GameState] Opening save file...");
     Ref<FileAccess> file = FileAccess::open(save_file_path, FileAccess::ModeFlags::READ);
+
+    String inventory_control_string = "Inventory {";
     while (file->get_position() < file->get_length())
     {
+        // @todo: make this not hardcoded, it should equal the string added in inventory's make_string_data function
+        if (data.length() >= inventory_control_string.length())
+        {
+            UtilityFunctions::print(data);
+            if (data.right(inventory_control_string.length()) == inventory_control_string)
+            {
+                load_inventory(file);
+                continue;
+            }
+        }
+
         uint8_t next_char = file->get_8();
         if (next_char == '\n')
         {
+            // clear data on each newline
+            data = "";
             continue;
         }
         if (next_char == ':')
@@ -87,7 +109,98 @@ void GameState::load()
     }
 }
 
+Inventory * GameState::get_inventory()
+{
+    return inventory.ptr();
+}
+
 StringName GameState::convert_node_to_key(Node *node)
 {
     return node->get_path().get_concatenated_names();
+}
+
+void GameState::load_inventory(Ref<FileAccess> file)
+{
+    uint8_t current_char = '0';
+    String string_buffer = "";
+    bool writing_string = false;
+    bool writing_amount = false;
+
+    bool reference_valid = false;
+    bool amount_valid = false;
+
+    String inventory_reference_string = "";
+    String amount_string = "";
+    while (file->get_position() < file->get_length() && current_char != '}') // '}' should close out our entry
+    {
+        // The file will always open in single byte intervals
+        current_char = file->get_8();
+
+        if (current_char == '\"') // quotation marks
+        {
+            if (writing_string)
+            {
+                writing_string = false;
+                // write one of our two values
+                if (writing_amount)
+                {
+                    amount_string = string_buffer;
+                    amount_valid = true;
+                }
+                else
+                {
+                    inventory_reference_string = string_buffer;
+                    reference_valid = true;
+                }
+            }
+            else
+            {
+                // if we haven't been writing strings, clear the buffer for a new string
+                writing_string = true;
+                string_buffer = "";
+            }
+            continue;
+        }
+
+        if (current_char == ':' && !writing_string) // allow string names to have colons in them
+        {
+            // switch writing mode
+            writing_amount = true;
+            continue;
+        }
+
+        if (current_char == '\n')
+        {
+            if (amount_valid && reference_valid)
+            {
+                load_inventory_item_from_string(inventory_reference_string, amount_string);
+                amount_valid = false;
+                reference_valid = false;
+                writing_amount = false;
+            }
+            continue;
+        }
+
+        if (current_char == '\t')
+        {
+            continue;
+        }
+
+        // this will ignore psuedo-control characters like : or " becacuse of the previous continue statements
+        string_buffer += current_char;
+    }
+}
+
+void GameState::load_inventory_item_from_string(String resource_string, String amount_string)
+{
+    UtilityFunctions::print(String("[GameState] loading resource from strings '{0}':'{1}'").format(Array::make(resource_string, amount_string)));
+    ResourceLoader *resource_loader = ResourceLoader::get_singleton();
+    Ref<InventoryItemResource> item_resource = resource_loader->load(resource_string);
+    if (!item_resource.is_valid())
+    {
+        WARN_PRINT(String("[GameState] Attempt to load inventory item resource at '{0}' failed. Check that the file specified exists, and is of type 'InventoryItemResource'.").format(Array::make(resource_string)));
+        return;
+    }
+    const int amount = amount_string.to_int();
+    inventory->add_item(item_resource, amount);
 }

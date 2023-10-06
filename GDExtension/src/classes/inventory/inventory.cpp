@@ -21,13 +21,12 @@ void Inventory::_bind_methods()
     ADD_SIGNAL(MethodInfo("inventory_changed"));
 }
 
-
-void godot::Inventory::set_inventory(TypedArray<Dictionary> inventory)
+void Inventory::set_inventory(TypedArray<Dictionary> inventory)
 {
     _inventory = inventory;
 }
 
-TypedArray<Dictionary> godot::Inventory::get_inventory() const
+TypedArray<Dictionary> Inventory::get_inventory() const
 {
     return _inventory;
 }
@@ -70,4 +69,36 @@ int Inventory::get_item_index(Ref<InventoryItemResource> inventoryResource) cons
     }
     UtilityFunctions::print("[Inventory] Unable to find item in inventory");
     return -1;
+}
+
+String Inventory::make_string_data() const
+{
+    String data = "Inventory {\n";
+    const String inventory_entry_format = "\t\"{0}\" : \"{1}\"\n";
+    // e.g. ["res://Objects/Objects/Pickups/item_key.tres" : "1"]
+    // indicates the resource path (so we can grab it on load) and number, separated by ':'
+    // similar to JSON
+
+    // I don't know how much this will save on reallocation, but ¯\_(ツ)_/¯
+    Array inventory_entry_data = Array::make(StringName(), 0U);
+
+    for (int i = 0; i < _inventory.size(); i++)
+    {
+        Dictionary inventory_entry = _inventory[i];
+        Ref<InventoryItemResource> entry_inventory_resource = inventory_entry["resource"];
+        StringName entry_name = entry_inventory_resource->get_path();
+        int entry_amount = inventory_entry["amount"];
+
+        inventory_entry_data[0] = entry_name;
+        inventory_entry_data[1] = entry_amount;
+
+        data += inventory_entry_format.format(inventory_entry_data);
+    }
+    data += "}";
+    // UtilityFunctions::print("[Inventory] converted to string:\n" + data);
+    return data;
+}
+
+void Inventory::unpack_state_data(PackedByteArray state_data)
+{
 }

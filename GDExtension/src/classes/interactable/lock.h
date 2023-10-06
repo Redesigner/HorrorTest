@@ -30,9 +30,9 @@ public:
     void set_requiredItem(Ref<InventoryItemResource> requiredItem);
     Ref<InventoryItemResource> get_requiredItem() const;
 
+private:
     PackedByteArray make_state_data() const;
 
-private:
     void unpack_state_data(PackedByteArray state_data);
 
     void unlock(NightmareCharacter *source);

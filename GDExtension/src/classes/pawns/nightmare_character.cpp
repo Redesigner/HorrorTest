@@ -83,7 +83,7 @@ void NightmareCharacter::_ready()
     _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
 
     _ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
-    _inventory = dynamic_cast<Inventory *>(get_node_or_null("Inventory"));
+    _inventory = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->get_inventory();
 
     _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);
 
@@ -142,6 +142,7 @@ void NightmareCharacter::_input(const Ref<InputEvent> &event)
     if (event->is_action_pressed("save"))
     {
         get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->save();
+        _inventory->make_string_data();
         return;
     }
 }

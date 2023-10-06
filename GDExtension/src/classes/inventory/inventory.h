@@ -1,7 +1,7 @@
 #ifndef NIGHTMARE_INVENTORY_H
 #define NIGHTMARE_INVENTORY_H
 
-#include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/classes/ref_counted.hpp>
 
 #include "../../class_macros.h"
 
@@ -9,9 +9,9 @@ namespace godot
 {
 class InventoryItemResource;
 
-class Inventory : public Node
+class Inventory : public RefCounted
 {
-    GDCLASS(Inventory, Node);
+    GDCLASS(Inventory, RefCounted);
 
 public:
     Inventory();
@@ -25,13 +25,18 @@ public:
 
     bool has_item(Ref<InventoryItemResource> inventoryResource) const;
 
+    String make_string_data() const;
+
 protected:
     static void _bind_methods();
 
 private:
-    TypedArray<Dictionary> _inventory;
-
     int get_item_index(Ref<InventoryItemResource> inventoryResource) const;
+
+
+    void unpack_state_data(PackedByteArray state_data);
+
+    TypedArray<Dictionary> _inventory;
 };
 }
 
