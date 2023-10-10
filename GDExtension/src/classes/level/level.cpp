@@ -21,7 +21,7 @@ Level::~Level()
 
 void Level::_bind_methods()
 {
-    BIND_PROPERTY_HINT(Variant::STRING_NAME, player_scene_path, Level, PROPERTY_HINT_FILE, "");
+    BIND_PROPERTY_HINT(Variant::STRING, player_scene_path, Level, PROPERTY_HINT_FILE, "");
     BIND_PROPERTY(Variant::STRING, current_spawn_location_name, Level);
 }
 
@@ -31,9 +31,6 @@ void Level::_ready()
     {
         return;
     }
-
-    UtilityFunctions::print(get_path());
-
     populate_spawn_locations();
 
     spawn_player();

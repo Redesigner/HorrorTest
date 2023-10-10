@@ -30,6 +30,7 @@
 #include "classes/interactable/npc.h"
 #include "classes/interactable/pickup.h"
 #include "classes/interactable/lock.h"
+#include "classes/interactable/door.h"
 
 #include "classes/level/spawn_location.h"
 #include "classes/level/level.h"
@@ -70,7 +71,9 @@ void initialize_example_module(ModuleInitializationLevel p_level)
     ClassDB::register_class<NPC>();
     ClassDB::register_class<Pickup>();
     ClassDB::register_class<Lock>();
+    ClassDB::register_class<Door>();
 
+    // LEVEL CLASSES
     ClassDB::register_class<SpawnLocation>();
     ClassDB::register_class<Level>();
 }

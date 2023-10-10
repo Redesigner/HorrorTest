@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=3 uid="uid://ebq1q4hcj355"]
+
+[ext_resource type="AudioStream" uid="uid://bbghdea8ink5h" path="res://Shared Resources/Sounds/doorknob_rattle.wav" id="1_su0x6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ct646"]
+size = Vector3(1, 2, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7u5fs"]
+size = Vector3(1, 2, 0.1)
+
+[node name="DoorNpc" type="NPC"]
+dialogText = "This door can't be opened."
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_ct646")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_7u5fs")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+process_mode = 3
+stream = ExtResource("1_su0x6")

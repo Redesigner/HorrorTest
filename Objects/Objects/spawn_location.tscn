@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://bwj5cc18q5bcw"]
+
+[ext_resource type="CapsuleMesh" uid="uid://b4u23j5tjm1t6" path="res://Objects/Characters/Player/capsule_mesh.tres" id="1_nua4d"]
+[ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="2_2agx0"]
+[ext_resource type="Material" uid="uid://dkafy4c3c8j0p" path="res://Shared Resources/Materials/default_capsule.material" id="3_vbjbh"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_6tk75"]
+material = ExtResource("3_vbjbh")
+radius = 0.1
+height = 0.8
+
+[node name="spawn_location" type="SpawnLocation"]
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = ExtResource("1_nua4d")
+skeleton = NodePath("../..")
+
+[node name="FaceMesh" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.5, -0.35)
+mesh = ExtResource("2_2agx0")
+
+[node name="ArmMesh_R" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.593815, 0, 0)
+mesh = SubResource("CapsuleMesh_6tk75")
+
+[node name="ArmMesh_L" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.594, 0, 0)
+mesh = SubResource("CapsuleMesh_6tk75")

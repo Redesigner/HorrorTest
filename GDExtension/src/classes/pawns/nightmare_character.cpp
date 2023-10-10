@@ -163,14 +163,18 @@ void NightmareCharacter::_physics_process(double delta)
     Pawn::_physics_process(delta);
     
     Vector3 velocity = get_velocity();
-    String text = String("Velocity: '{0}' m/s").format(Array::make(velocity.length()));
-    if (input_pressed())
+    if (_debugText->is_visible())
     {
-        text += "\nInput currently pressed.";
-    }
-    if (is_on_floor())
-    {
-        text += "\nCurrently on the floor.";
+        String text = String("Velocity: '{0}' m/s").format(Array::make(velocity.length()));
+        if (input_pressed())
+        {
+            text += "\nInput currently pressed.";
+        }
+        if (is_on_floor())
+        {
+            text += "\nCurrently on the floor.";
+        }
+        _debugText->set_text(text);
     }
 
     if (get_position().y < -100.0f)
@@ -178,7 +182,6 @@ void NightmareCharacter::_physics_process(double delta)
         set_position(Vector3(0.0f, 5.0f, 0.0f));
         set_velocity(Vector3(0.0f, 0.0f, 0.0f));
     }
-    _debugText->set_text(text);
 }
 
 void NightmareCharacter::rotate_camera(Vector2 input)
@@ -202,7 +205,7 @@ Vector2 NightmareCharacter::get_input_vector() const
 void NightmareCharacter::update_input()
 {
     Vector2 inputVector = get_input_vector();
-    Vector3 cameraRotation = _cameraArm->get_rotation();
+    Vector3 cameraRotation = _cameraArm->get_global_rotation();
     float cameraYaw = -cameraRotation.y;
     float cos = Math::cos(cameraYaw);
     float sin = Math::sin(cameraYaw);
@@ -236,7 +239,13 @@ void NightmareCharacter::fire_weapon()
     }
 
     Node3D *bullet = Object::cast_to<Node3D>(_bulletScene->instantiate());
-    get_tree()->get_current_scene()->add_child(bullet);
+    if (!bullet)
+    {
+        ERR_PRINT("[Nightmare Character] failed to spawn bullet correctly.");
+        return;
+    }
+    UtilityFunctions::print("[Nightmare Character] spawning bullet.");
+    // get_tree()->get_current_scene()->add_child(bullet);
     bullet->set_position(get_position());
     _audioStreamPlayer->play();
 
@@ -245,7 +254,7 @@ void NightmareCharacter::fire_weapon()
     timer->connect("timeout", Callable(this, "end_weapon_debounce"));
 
     const Vector3 startLocation = get_position();
-    const Vector3 endLocation = startLocation + _body->get_basis().get_column(2) * -50.0f;
+    const Vector3 endLocation = startLocation + _body->get_global_transform().get_basis().get_column(2) * -50.0f;
     PhysicsDirectSpaceState3D *spaceState = get_world_3d()->get_direct_space_state();
     Ref<PhysicsRayQueryParameters3D> rayQueryParameters = PhysicsRayQueryParameters3D::create(startLocation, endLocation);
     rayQueryParameters->set_exclude(TypedArray<RID>::make(get_rid()));

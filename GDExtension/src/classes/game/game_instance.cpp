@@ -5,6 +5,7 @@
 
 #include "godot_cpp/classes/packed_scene.hpp"
 #include "godot_cpp/classes/resource_loader.hpp"
+#include "godot_cpp/classes/scene_tree.hpp"
 
 #include "godot_cpp/variant/utility_functions.hpp"
 
@@ -34,12 +35,14 @@ const Ref<GameState> GameInstance::get_game_state() const
     return game_state;
 }
 
-void GameInstance::change_level(StringName scene_path)
+void GameInstance::change_level(StringName scene_path, String spawn_location)
 {
     Ref<PackedScene> next_level_packed = ResourceLoader::get_singleton()->load(scene_path);
+    // @todo load levels asynchronously?
     Node *next_scene = next_level_packed->instantiate();
 
     Level *next_level = Object::cast_to<Level>(next_scene);
+    next_level->set_current_spawn_location_name(spawn_location);
 
     if (!next_level)
     {
@@ -47,5 +50,12 @@ void GameInstance::change_level(StringName scene_path)
         return;
     }
 
-    // Level *current_level = 
+    Node *current_level = get_tree()->get_current_scene();
+    if (current_level)
+    {
+        current_level->queue_free();
+    }
+    current_level = next_level;
+    get_parent()->add_child(current_level);
+    get_tree()->set_current_scene(current_level);
 }

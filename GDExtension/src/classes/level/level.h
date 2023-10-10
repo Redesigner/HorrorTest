@@ -30,7 +30,7 @@ private:
 
     std::map<String, SpawnLocation *> spawn_location_map;
 
-    DECLARE_PROPERTY_NODEFAULT(StringName, player_scene_path);
+    DECLARE_PROPERTY_NODEFAULT(String, player_scene_path);
 
     DECLARE_PROPERTY(String, current_spawn_location_name, "None");
     SpawnLocation *current_spawn_location;

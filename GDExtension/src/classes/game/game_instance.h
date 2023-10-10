@@ -5,6 +5,7 @@
 namespace godot
 {
 class GameState;
+class Level;
 class GameInstance : public Node
 {
     GDCLASS(GameInstance, Node);
@@ -21,7 +22,7 @@ public:
 
     const Ref<GameState> get_game_state() const;
 
-    void change_level(StringName scene_path);
+    void change_level(StringName scene_path, String spawn_location);
 
 private:
     Ref<GameState> game_state;
