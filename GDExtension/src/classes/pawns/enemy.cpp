@@ -70,6 +70,12 @@ void Enemy::_physics_process(double delta)
 
     Pawn::_physics_process(delta);
 
+    // Don't bother formatting the string if there is nothing there, it could get expensive
+    if (!_label->is_visible())
+    {
+        return;
+    }
+
     String text = String("Velocity: '{0}' m/s").format(Array::make(
         Math::round(get_velocity().length() * 100.0f) / 100.0f
         ));
@@ -132,8 +138,8 @@ void Enemy::update_target()
     }
     if (!_target)
     {
-        UtilityFunctions::push_warning(String("[Enemy] Enemy '{0}' was unable to find player. Check that the player can be found in the level tree.")
-            .format(Array::make(get_name())));
+        UtilityFunctions::print(String("[Enemy] Enemy '{0}' was unable to find player. Check that the player can be found in the level tree.").format(Array::make(get_name())));
+        _target = dynamic_cast<NightmareCharacter *>(get_node_or_null("../Player"));
         return;
     }
     // can we see the target?

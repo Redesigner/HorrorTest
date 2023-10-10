@@ -31,6 +31,9 @@
 #include "classes/interactable/pickup.h"
 #include "classes/interactable/lock.h"
 
+#include "classes/level/spawn_location.h"
+#include "classes/level/level.h"
+
 using namespace godot;
 
 // still using the example module name...
@@ -67,6 +70,9 @@ void initialize_example_module(ModuleInitializationLevel p_level)
     ClassDB::register_class<NPC>();
     ClassDB::register_class<Pickup>();
     ClassDB::register_class<Lock>();
+
+    ClassDB::register_class<SpawnLocation>();
+    ClassDB::register_class<Level>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level)

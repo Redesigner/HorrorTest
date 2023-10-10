@@ -21,6 +21,7 @@ void GameInstance::_bind_methods()
 
 void GameInstance::_ready()
 {
+    UtilityFunctions::print("Game instance ready.");
     game_state->load();
 }
 

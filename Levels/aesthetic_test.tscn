@@ -1,6 +1,5 @@
-[gd_scene load_steps=28 format=3 uid="uid://784mmxriyqy6"]
+[gd_scene load_steps=27 format=3 uid="uid://784mmxriyqy6"]
 
-[ext_resource type="PackedScene" uid="uid://cxlg8lsvfwsqg" path="res://Objects/Characters/Player/player.tscn" id="1_lmib6"]
 [ext_resource type="Material" uid="uid://kua0cji0wqda" path="res://Shared Resources/Materials/default_wall.material" id="2_8vhjp"]
 [ext_resource type="PackedScene" uid="uid://ebq1q4hcj355" path="res://Objects/Objects/door_npc.tscn" id="2_wcmyo"]
 [ext_resource type="PackedScene" uid="uid://dr0q48emy4hbn" path="res://Objects/Objects/door_npc_locked.tscn" id="3_50sox"]
@@ -10,8 +9,6 @@
 [sub_resource type="NavigationMesh" id="NavigationMesh_b2pfy"]
 vertices = PackedVector3Array(-11.7, 1.2, -7.6, -2.4, 1.2, -7.5, -2.2, 1.2, -8.5, -11.7, 1.2, -7.6, -2.2, 1.2, -8.5, -1.6, 1.2, -8.9, -1.1, 1.2, -19.2, -11.7, 1.2, -19.2, -1.6, 1.2, -8.9, -1, 1.2, -8.9, -1.1, 1.2, -19.2, 24.2, 1.2, -8.6, 24.4, 1.2, -8, 26.7, 1.2, -8, 23.7, 1.2, -8.9, 24.2, 1.2, -8.6, 26.7, 1.2, -8, 26.7, 1.2, -19.2, 5.1, 1.2, -8.9, 5.8, 1.2, -19.2, -1.1, 1.2, -19.2, -1, 1.2, -8.9, 23.7, 1.2, -8.9, 26.7, 1.2, -19.2, 19.7, 1.2, -19.2, 17.5, 1.2, -8.9, 11.3, 1.2, -8.9, 12.8, 1.2, -19.2, 5.8, 1.2, -19.2, 5.1, 1.2, -8.9, 17.5, 1.2, -8.9, 19.7, 1.2, -19.2, 12.8, 1.2, -19.2, 11.3, 1.2, -8.9, 22.9, 1.2, -7.1, 22.9, 1.2, -5.9, 23.7, 1.2, -5.9, 23.7, 1.2, -7.1, 24.4, 1.2, -8, 24.1, 1.2, -7.3, 24.1, 1.2, -5.7, 24.4, 1.2, -5, 26.7, 1.2, -5, 26.7, 1.2, -8, 24.1, 1.2, -7.3, 23.7, 1.2, -7.1, 23.7, 1.2, -5.9, 24.1, 1.2, -5.7, -2.4, 1.2, -7.5, -11.7, 1.2, -7.6, -11.7, 1.2, -1.5, -2.4, 1.2, -1.5, -2.4, 1.2, 4.6, -2.4, 1.2, -1.5, -11.7, 1.2, -1.5, -11.7, 1.2, 4.7, -0.8, 4.2, -4.2, 0.8, 4.2, -4.2, 0.8, 4.2, -5, 1.5, 4.2, -5.7, 2.3, 4.2, -5.7, 2.3, 4.2, -7.3, -0.8, 4.2, -4.2, 0.8, 4.2, -5, 1, 4.2, -5.4, 1, 4.2, -5.4, 1.5, 4.2, -5.7, 2.3, 4.2, -7.3, 1, 4.2, -5.4, 2.3, 4.2, -7.3, -0.8, 4.2, -7.3, -0.8, 4.2, -4.2, 12.5, 4.2, -5.7, 22.7, 4.2, -5.7, 22.7, 4.2, -7.3, 12.5, 4.2, -7.3, 12.5, 4.2, -7.3, 2.3, 4.2, -7.3, 2.3, 4.2, -5.7, 12.5, 4.2, -5.7, -0.599999, 1.2, -4.3, 0.6, 1.2, -4.3, 0.6, 1.2, -5.1, 1.4, 1.2, -5.9, 2.2, 1.2, -5.9, 2.2, 1.2, -7.1, -0.599999, 1.2, -4.3, 0.6, 1.2, -5.1, 0.8, 1.2, -5.5, -0.599999, 1.2, -7.1, 0.8, 1.2, -5.5, 1.4, 1.2, -5.9, 2.2, 1.2, -7.1, -0.599999, 1.2, -7.1, 12.5, 1.2, -7.1, 2.2, 1.2, -7.1, 2.2, 1.2, -5.9, 12.5, 1.2, -5.9, 12.5, 1.2, -5.9, 22.9, 1.2, -5.9, 22.9, 1.2, -7.1, 12.5, 1.2, -7.1, 26.7, 1.2, -5, 24.4, 1.2, -5, 24.2, 1.2, -4.4, 26.7, 1.2, -5, 24.2, 1.2, -4.4, 23.7, 1.2, -4.1, 26.7, 1.2, 1, 26.7, 1.2, 7.1, 23.7, 1.2, -4.1, 13, 1.2, -4.1, 2.4, 1.2, 5.2, 7.5, 1.2, 19.2, 13.9, 1.2, 19.2, 20.3, 1.2, 19.2, 26.7, 1.2, 19.2, 26.7, 1.2, 13.1, 26.7, 1.2, 7.1, 26.7, 1.2, 1, 23.7, 1.2, -4.1, 2.1, 1.2, 5.7, 1.1, 1.2, 5.9, 1.2, 1.2, 19.2, 20.3, 1.2, 19.2, 26.7, 1.2, 13.1, 26.7, 1.2, 7.1, 13.9, 1.2, 19.2, 2.4, 1.2, 5.2, 2.1, 1.2, 5.7, 1.2, 1.2, 19.2, 7.5, 1.2, 19.2, 13, 1.2, -4.1, 2.4, 1.2, -4.1, 2.4, 1.2, 5.2, 0.6, 1.2, -4.3, -0.599999, 1.2, -4.3, -0.599999, 1.2, 4.1, 0.6, 1.2, 4.1, 0.8, 4.2, -4.2, -0.8, 4.2, -4.2, -0.8, 4.2, 4.3, 0.8, 4.2, 4.3, -2.2, 1.2, 5.6, -2.4, 1.2, 4.6, -11.7, 1.2, 4.7, -1.7, 1.2, 5.9, -2.2, 1.2, 5.6, -11.7, 1.2, 4.7, -11.7, 1.2, 11.9, -1.1, 1.2, 5.9, -1.7, 1.2, 5.9, -11.7, 1.2, 11.9, -11.7, 1.2, 19.2, -1.2, 1.2, 19.2, -1.2, 1.2, 19.2, 1.2, 1.2, 19.2, 1.1, 1.2, 5.9, -1.1, 1.2, 5.9)
 polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(4, 3, 5), PackedInt32Array(5, 3, 7), PackedInt32Array(5, 7, 6), PackedInt32Array(10, 9, 8), PackedInt32Array(13, 12, 11), PackedInt32Array(15, 14, 16), PackedInt32Array(16, 14, 17), PackedInt32Array(21, 20, 18), PackedInt32Array(18, 20, 19), PackedInt32Array(25, 24, 22), PackedInt32Array(22, 24, 23), PackedInt32Array(29, 28, 26), PackedInt32Array(26, 28, 27), PackedInt32Array(33, 32, 30), PackedInt32Array(30, 32, 31), PackedInt32Array(37, 36, 34), PackedInt32Array(34, 36, 35), PackedInt32Array(39, 38, 40), PackedInt32Array(40, 38, 41), PackedInt32Array(41, 38, 43), PackedInt32Array(41, 43, 42), PackedInt32Array(46, 45, 47), PackedInt32Array(47, 45, 44), PackedInt32Array(51, 50, 48), PackedInt32Array(48, 50, 49), PackedInt32Array(53, 52, 54), PackedInt32Array(54, 52, 55), PackedInt32Array(58, 57, 56), PackedInt32Array(61, 60, 59), PackedInt32Array(64, 63, 62), PackedInt32Array(67, 66, 65), PackedInt32Array(71, 70, 68), PackedInt32Array(68, 70, 69), PackedInt32Array(75, 74, 72), PackedInt32Array(72, 74, 73), PackedInt32Array(79, 78, 76), PackedInt32Array(76, 78, 77), PackedInt32Array(82, 81, 80), PackedInt32Array(85, 84, 83), PackedInt32Array(87, 86, 88), PackedInt32Array(88, 86, 89), PackedInt32Array(91, 90, 92), PackedInt32Array(92, 90, 93), PackedInt32Array(97, 96, 94), PackedInt32Array(94, 96, 95), PackedInt32Array(101, 100, 98), PackedInt32Array(98, 100, 99), PackedInt32Array(104, 103, 102), PackedInt32Array(106, 105, 107), PackedInt32Array(107, 105, 108), PackedInt32Array(113, 112, 114), PackedInt32Array(114, 112, 111), PackedInt32Array(114, 111, 109), PackedInt32Array(109, 111, 110), PackedInt32Array(117, 116, 115), PackedInt32Array(120, 119, 118), PackedInt32Array(123, 122, 121), PackedInt32Array(125, 124, 126), PackedInt32Array(126, 124, 127), PackedInt32Array(129, 128, 130), PackedInt32Array(130, 128, 131), PackedInt32Array(134, 133, 132), PackedInt32Array(138, 137, 135), PackedInt32Array(135, 137, 136), PackedInt32Array(142, 141, 139), PackedInt32Array(139, 141, 140), PackedInt32Array(143, 145, 144), PackedInt32Array(147, 146, 148), PackedInt32Array(148, 146, 149), PackedInt32Array(151, 150, 152), PackedInt32Array(152, 150, 153), PackedInt32Array(153, 150, 154), PackedInt32Array(158, 157, 155), PackedInt32Array(155, 157, 156)]
-cell_size = 0.1
-cell_height = 0.1
 agent_radius = 0.75
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tt4ib"]
@@ -83,7 +80,9 @@ height = 0.1
 background_mode = 1
 background_color = Color(0.0784314, 0.0784314, 0.0784314, 1)
 
-[node name="aesthetic_test" type="Node3D"]
+[node name="aesthetic_test" type="Level"]
+player_scene_path = &"res://Objects/Characters/Player/player.tscn"
+current_spawn_location_name = "DefaultSpawn"
 
 [node name="Worldmap" type="NavigationRegion3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
@@ -216,9 +215,6 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 16, 2,
 [node name="Lock" parent="Worldmap" groups=["locks"] instance=ExtResource("3_50sox")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 2, -3)
 
-[node name="Player" parent="." instance=ExtResource("1_lmib6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00388, 3.5)
-
 [node name="Enemy" parent="." instance=ExtResource("3_e860j")]
 maxHealth = 4.0
 currentHealth = 4.0
@@ -231,3 +227,6 @@ environment = SubResource("Environment_rrqmw")
 
 [node name="Key" parent="." instance=ExtResource("5_nc0x0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)
+
+[node name="DefaultSpawn" type="SpawnLocation" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.5)

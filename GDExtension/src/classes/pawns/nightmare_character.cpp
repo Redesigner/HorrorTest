@@ -74,6 +74,7 @@ void NightmareCharacter::_ready()
         return;
     }
     Pawn::_ready();
+    UtilityFunctions::print("NightmareCharacter ready.");
 
     _cameraArm = dynamic_cast<CameraArm *>(get_node_internal("CameraArm"));
     _inputVectorDisplay = dynamic_cast<Node3D *>(get_node_or_null("InputVectorDisplay"));
