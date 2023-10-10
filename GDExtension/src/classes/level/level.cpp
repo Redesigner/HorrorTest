@@ -32,6 +32,8 @@ void Level::_ready()
         return;
     }
 
+    UtilityFunctions::print(get_path());
+
     populate_spawn_locations();
 
     spawn_player();

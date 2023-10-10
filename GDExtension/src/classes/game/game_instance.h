@@ -21,6 +21,8 @@ public:
 
     const Ref<GameState> get_game_state() const;
 
+    void change_level(StringName scene_path);
+
 private:
     Ref<GameState> game_state;
 };
