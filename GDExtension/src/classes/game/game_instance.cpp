@@ -37,6 +37,7 @@ const Ref<GameState> GameInstance::get_game_state() const
 
 void GameInstance::change_level(StringName scene_path, String spawn_location)
 {
+    UtilityFunctions::print(String("[GameInstance] Loading level scene '{0}'.").format(Array::make(scene_path)));
     Ref<PackedScene> next_level_packed = ResourceLoader::get_singleton()->load(scene_path);
     // @todo load levels asynchronously?
     Node *next_scene = next_level_packed->instantiate();
@@ -57,7 +58,8 @@ void GameInstance::change_level(StringName scene_path, String spawn_location)
         current_level->queue_free();
     }
     current_level = next_level;
-    UtilityFunctions::print(String("[GameInstance] Loading level '{0}'.").format(Array::make(current_level->get_name())));
+    current_level->set_name(scene_path.get_basename().rsplit("/", false, 1)[1]);
     get_parent()->add_child(current_level);
     get_tree()->set_current_scene(current_level);
+    UtilityFunctions::print(String("[GameInstance] Switched level to '{0}'.").format(Array::make(current_level->get_name())) );
 }

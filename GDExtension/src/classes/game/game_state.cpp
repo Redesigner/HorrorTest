@@ -72,6 +72,12 @@ void GameState::load()
     UtilityFunctions::print("[GameState] Opening save file...");
     Ref<FileAccess> file = FileAccess::open(save_file_path, FileAccess::ModeFlags::READ);
 
+    if (!file.is_valid())
+    {
+        UtilityFunctions::print("[GameState] No save file found.");
+        return;
+    }
+
     String inventory_control_string = "Inventory {";
     while (file->get_position() < file->get_length())
     {
