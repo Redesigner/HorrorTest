@@ -42,6 +42,10 @@ public:
 
     void take_damage(float damage);
 
+    PackedByteArray make_state_data() const;
+
+    void unpack_state_data(PackedByteArray data);
+
 private:
     class NavigationAgent3D *_navigationAgent;
     class NightmareCharacter *_target;

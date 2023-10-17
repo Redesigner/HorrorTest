@@ -9,6 +9,7 @@
 
 #include "../inventory/inventory.h"
 #include "../inventory/inventory_item_resource.h"
+#include "../pawns/enemy.h"
 
 using namespace godot;
 
@@ -107,6 +108,40 @@ void GameState::load()
         }
         data += next_char;
     }
+}
+
+void GameState::register_enemy(Enemy *enemy)
+{
+    if (!enemy)
+    {
+        return;
+    }
+    enemies_in_level.emplace_back(enemy);
+}
+
+void GameState::on_level_exit()
+{
+    // Manually update the state for certain object types that would otherwise be constantly changing
+    // e.g., enemies
+    // We don't want to udpate the enemy state every tick, so we do it here
+
+    UtilityFunctions::print(String("[GameState] Writing state information for {0} enemies in level.").format(Array::make(enemies_in_level.size())));
+    for (Enemy *enemy : enemies_in_level)
+    {
+        // Check enemy is not null
+        if (!enemy)
+        {
+            UtilityFunctions::print("[GameState] Unable to write state for enemy, it is null.");
+            continue;
+        }
+        UtilityFunctions::print(String("[GameState] State stored for enemy '{0}'.").format(Array::make(convert_node_to_key(enemy))));
+        update_node_state(enemy, enemy->make_state_data());
+    }
+    enemies_in_level.clear();
+}
+
+void GameState::on_level_enter()
+{
 }
 
 Inventory * GameState::get_inventory()

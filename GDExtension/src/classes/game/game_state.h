@@ -9,6 +9,7 @@ namespace godot
 class Node;
 class Inventory;
 class FileAccess;
+class Enemy;
 class GameState : public RefCounted
 {
     GDCLASS(GameState, RefCounted);
@@ -29,6 +30,12 @@ public:
 
     void load();
 
+    void register_enemy(Enemy *enemy);
+
+    void on_level_exit();
+
+    void on_level_enter();
+
     // Should this return a pointer instead of a ref?
     Inventory * get_inventory();
 
@@ -44,5 +51,7 @@ private:
     std::map<StringName, PackedByteArray> state_map;
 
     Ref<Inventory> inventory;
+
+    std::vector<Enemy *> enemies_in_level;
 };
 }

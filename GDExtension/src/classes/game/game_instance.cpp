@@ -53,9 +53,11 @@ void GameInstance::change_level(StringName scene_path, String spawn_location)
     Node *current_level = get_tree()->get_current_scene();
     if (current_level)
     {
+        game_state->on_level_exit();
         current_level->queue_free();
     }
     current_level = next_level;
+    UtilityFunctions::print(String("[GameInstance] Loading level '{0}'.").format(Array::make(current_level->get_name())));
     get_parent()->add_child(current_level);
     get_tree()->set_current_scene(current_level);
 }

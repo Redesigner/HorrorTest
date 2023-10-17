@@ -15,6 +15,8 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include "nightmare_character.h"
+#include "../game/game_instance.h"
+#include "../game/game_state.h"
 
 using namespace godot;
 
@@ -42,12 +44,23 @@ void Enemy::_ready()
 {
     Pawn::_ready();
 
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+        return;
+    }
     _navigationAgent = Object::cast_to<NavigationAgent3D>(get_node_or_null("NavigationAgent3D"));
     _label = Object::cast_to<Label3D>(get_node_or_null("Label3D"));
     // there's only ever one target here -- the player
     _target = dynamic_cast<NightmareCharacter *>(get_node_or_null("../Player"));
     _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
 
+    Ref<GameState> game_state = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state();
+    game_state->register_enemy(this);
+    PackedByteArray data = PackedByteArray();
+    if (game_state->get_node_state(this, data))
+    {
+        unpack_state_data(data);
+    }
 }
 
 void godot::Enemy::_process(double delta)
@@ -190,6 +203,50 @@ void Enemy::take_damage(float damage)
         die();
     }
     UtilityFunctions::print(String("[Enemy] Enemy taken '{0}' damage, '{1}' health remaining").format(Array::make(damage, _currentHealth)) );
+}
+
+PackedByteArray Enemy::make_state_data() const
+{
+    PackedByteArray data = PackedByteArray();
+    const int data_size = sizeof(float) * 7;
+    data.resize(data_size);
+
+    const Vector3 global_position = get_global_position();
+    const Vector3 global_rotation = get_global_rotation();
+
+    UtilityFunctions::print(String("[Enemy] Stored position as '{0}'").format(Array::make(global_position)));
+
+    data.encode_float(0, global_position.x);
+    data.encode_float(4, global_position.y);
+    data.encode_float(8, global_position.z);
+    data.encode_float(12, global_rotation.x);
+    data.encode_float(16, global_rotation.y);
+    data.encode_float(20, global_rotation.z);
+    data.encode_float(24, _currentHealth);
+    return data;
+}
+
+void Enemy::unpack_state_data(PackedByteArray data)
+{
+    Vector3 global_position = Vector3();
+    Vector3 global_rotation = Vector3();
+
+    global_position.x = data.decode_float(0);
+    global_position.y = data.decode_float(4);
+    global_position.z = data.decode_float(8);
+    global_rotation.x = data.decode_float(12);
+    global_rotation.y = data.decode_float(16);
+    global_rotation.z = data.decode_float(20);
+
+    UtilityFunctions::print(String("[Enemy] Loaded position as '{0}'").format(Array::make(global_position)));
+    set_global_position(global_position);
+    set_global_rotation(global_rotation);
+
+    _currentHealth = data.decode_float(24);
+    if (_currentHealth <= 0.0f)
+    {
+        _alive = false;
+    }
 }
 
 void Enemy::die()
