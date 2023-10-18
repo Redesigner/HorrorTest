@@ -17,6 +17,7 @@
 
 #include "classes/ui/dialog_text_display.h"
 #include "classes/ui/nightmare_ui.h"
+#include "classes/ui/effects/fade_ui.h"
 
 #include "classes/ui/inventory/inventory_ui_menu.h"
 #include "classes/ui/inventory/inventory_ui_item_display.h"
@@ -56,6 +57,7 @@ void initialize_example_module(ModuleInitializationLevel p_level)
     // UI CLASSES
     ClassDB::register_class<DialogTextDisplay>();
     ClassDB::register_class<NightmareUi>();
+    ClassDB::register_class<FadeUi>();
     // Inventory ui
     ClassDB::register_class<InventoryUiMenu>();
     ClassDB::register_class<InventoryUiItemDisplay>();

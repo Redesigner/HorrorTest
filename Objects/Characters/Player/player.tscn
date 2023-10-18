@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://cxlg8lsvfwsqg"]
+[gd_scene load_steps=18 format=3 uid="uid://cxlg8lsvfwsqg"]
 
 [ext_resource type="CapsuleMesh" uid="uid://b4u23j5tjm1t6" path="res://Objects/Characters/Player/capsule_mesh.tres" id="1_dqbrb"]
 [ext_resource type="Texture2D" uid="uid://gmjc4h0w0mqs" path="res://Shared Resources/Textures/flashlight_cookie_valve.png" id="2_jb8rr"]
@@ -7,7 +7,6 @@
 [ext_resource type="Material" uid="uid://dkafy4c3c8j0p" path="res://Shared Resources/Materials/default_capsule.material" id="4_vggr1"]
 [ext_resource type="Shape3D" uid="uid://nj41qu6eu7j8" path="res://Objects/Characters/Player/capsule_shape_3d.tres" id="5_nx85o"]
 [ext_resource type="AudioStream" uid="uid://cv7huedjccdh5" path="res://Shared Resources/Sounds/pistol-shot.wav" id="6_msm1o"]
-[ext_resource type="PackedScene" uid="uid://bpm58hb68x6nq" path="res://UI/Active/ActiveUI.tscn" id="7_1jga6"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5vua5"]
 material = ExtResource("4_vggr1")
@@ -169,8 +168,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 visible = false
 cast_shadow = 0
 mesh = SubResource("SphereMesh_xcm8x")
-
-[node name="ActiveUI" parent="." instance=ExtResource("7_1jga6")]
 
 [node name="DebugText" type="RichTextLabel" parent="."]
 visible = false

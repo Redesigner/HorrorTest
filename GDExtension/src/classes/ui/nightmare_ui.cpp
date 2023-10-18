@@ -3,6 +3,7 @@
 #include "dialog_text_display.h"
 
 #include "inventory/inventory_ui_menu.h"
+#include "effects/fade_ui.h"
 
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
@@ -29,14 +30,24 @@ NightmareUi::~NightmareUi()
 
 void NightmareUi::_ready()
 {
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+        return;
+    }
     _dialogTextDisplay = dynamic_cast<DialogTextDisplay *>(get_node_or_null("DialogTextDisplay"));
     _inventoryMenu = dynamic_cast<InventoryUiMenu *>(get_node_or_null("InventoryMenu"));
+    _fadeUi = dynamic_cast<FadeUi *>(get_node_or_null("Fade"));
     // the ui will run when we're paused
     set_process_mode(PROCESS_MODE_ALWAYS);
 }
 
 void NightmareUi::_input(const Ref<InputEvent> &event)
 {
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+        return;
+    }
+
     // control the quitting from here, so it runs even when paused?
     if (event->is_action_pressed("ui_cancel"))
     {
@@ -102,6 +113,11 @@ void NightmareUi::set_inventory(Inventory *inventory)
 void NightmareUi::update_inventory()
 {
     _inventoryMenu->update();
+}
+
+FadeUi *NightmareUi::get_fade_effect() const
+{
+    return _fadeUi;
 }
 
 void NightmareUi::toggle_inventory()

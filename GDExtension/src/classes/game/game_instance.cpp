@@ -2,6 +2,8 @@
 
 #include "game_state.h"
 #include "../level/level.h"
+#include "../ui/nightmare_ui.h"
+#include "../ui/effects/fade_ui.h"
 
 #include "godot_cpp/classes/packed_scene.hpp"
 #include "godot_cpp/classes/resource_loader.hpp"
@@ -14,6 +16,9 @@ using namespace godot;
 GameInstance::GameInstance()
 {
     game_state = Ref(memnew(GameState));
+
+    next_scene_path = "";
+    next_spawn_location = "";
 }
 
 GameInstance::~GameInstance()
@@ -22,17 +27,49 @@ GameInstance::~GameInstance()
 
 void GameInstance::_bind_methods()
 {
+    ClassDB::bind_method(D_METHOD("on_fade_out"), &GameInstance::on_fade_out);
+    ClassDB::bind_method(D_METHOD("on_fade_back_in"), &GameInstance::on_fade_back_in);
 }
 
 void GameInstance::_ready()
 {
-    UtilityFunctions::print("Game instance ready.");
     game_state->load();
+    NightmareUi *nightmare_ui = get_node<NightmareUi>("/root/ActiveUi/");
+    FadeUi *fade_effect = nightmare_ui->get_fade_effect();
+    if (!fade_effect)
+    {
+        UtilityFunctions::print("[GameInstance] unable to get UI");
+        return;
+    }
+    fade_effect->connect("fade_out_complete", Callable(this, "on_fade_out"));
+    fade_effect->connect("fade_in_complete", Callable(this, "on_fade_back_in"));
 }
 
 const Ref<GameState> GameInstance::get_game_state() const
 {
     return game_state;
+}
+
+void GameInstance::request_level_change(StringName scene_path, String spawn_location)
+{
+    if (changing_level)
+    {
+        return;
+    }
+    UtilityFunctions::print("[GameInstance] level change requested.");
+    get_tree()->set_pause(true);
+
+    next_scene_path = scene_path;
+    next_spawn_location = spawn_location;
+
+    NightmareUi *nightmare_ui = get_node<NightmareUi>("/root/ActiveUi/");
+    FadeUi *fade_effect = nightmare_ui->get_fade_effect();
+    if (!fade_effect)
+    {
+        UtilityFunctions::print("[GameInstance] unable to get UI effect");
+        return;
+    }
+    fade_effect->fade_out(1.0f);
 }
 
 void GameInstance::change_level(StringName scene_path, String spawn_location)
@@ -62,4 +99,24 @@ void GameInstance::change_level(StringName scene_path, String spawn_location)
     get_parent()->add_child(current_level);
     get_tree()->set_current_scene(current_level);
     UtilityFunctions::print(String("[GameInstance] Switched level to '{0}'.").format(Array::make(current_level->get_name())) );
+}
+
+void GameInstance::on_fade_out()
+{
+    change_level(next_scene_path, next_spawn_location);
+
+    NightmareUi *nightmare_ui = get_node<NightmareUi>("/root/ActiveUi/");
+    FadeUi *fade_effect = nightmare_ui->get_fade_effect();
+    if (!fade_effect)
+    {
+        UtilityFunctions::print("[GameInstance] unable to get UI effect");
+        return;
+    }
+    fade_effect->fade_in(1.0f);
+}
+
+void GameInstance::on_fade_back_in()
+{
+    changing_level = false;
+    get_tree()->set_pause(false);
 }

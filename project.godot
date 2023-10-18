@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+ActiveUi="*res://UI/Active/ActiveUI.tscn"
 DefaultGameInstance="*res://Objects/Core/DefaultGameInstance.tscn"
 
 [display]

@@ -21,5 +21,5 @@ void Door::_bind_methods()
 void Door::trigger_interaction(NightmareCharacter *source)
 {
     GameInstance *game = get_node<GameInstance>("/root/DefaultGameInstance");
-    game->change_level(_next_level_path, _spawn_location);
+    game->request_level_change(_next_level_path, _spawn_location);
 }

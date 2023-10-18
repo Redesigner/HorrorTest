@@ -74,8 +74,6 @@ void NightmareCharacter::_ready()
         return;
     }
     Pawn::_ready();
-    UtilityFunctions::print("NightmareCharacter ready.");
-
     _cameraArm = dynamic_cast<CameraArm *>(get_node_internal("CameraArm"));
     _inputVectorDisplay = dynamic_cast<Node3D *>(get_node_or_null("InputVectorDisplay"));
     _interactVolume = dynamic_cast<Area3D *>(get_node_or_null("Body/Mesh/InteractVolume"));
@@ -83,7 +81,7 @@ void NightmareCharacter::_ready()
     _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
 
-    _ui = dynamic_cast<NightmareUi *>(get_node_internal("ActiveUI"));
+    _ui = get_node<NightmareUi>("/root/ActiveUi");
     _inventory = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->get_inventory();
 
     _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);

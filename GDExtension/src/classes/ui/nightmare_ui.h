@@ -5,8 +5,11 @@
 
 #include "../../class_macros.h"
 
+#include <godot_cpp/classes/input_event.hpp>
+
 namespace godot
 {
+class FadeUi;
 class NightmareUi : public Control
 {
     GDCLASS(NightmareUi, Control);
@@ -32,12 +35,14 @@ public:
 
     void update_inventory();
 
+    FadeUi * get_fade_effect() const;
+
 private:
     void toggle_inventory();
 
-private:
     class DialogTextDisplay *_dialogTextDisplay;
     class InventoryUiMenu *_inventoryMenu;
+    FadeUi* _fadeUi;
 };
 }
 
