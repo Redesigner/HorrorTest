@@ -137,3 +137,4 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 
 
 [node name="Entrance" parent="." instance=ExtResource("4_dxvyo")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.5, 1, 2)
+visible = false

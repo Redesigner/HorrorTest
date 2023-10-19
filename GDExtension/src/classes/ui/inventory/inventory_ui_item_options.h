@@ -4,6 +4,8 @@
 
 #include "../../../class_macros.h"
 
+#include "../../inventory/inventory_item_resource.h"
+
 namespace godot
 {
 class InventoryUiItemOptions : public Control
@@ -18,6 +20,6 @@ protected:
     static void _bind_methods();
 
 public:
-    void set_selected_item(Ref<class InventoryItemResource> itemResource);
+    void set_selected_item(Ref<InventoryItemResource> itemResource);
 };
 }

@@ -5,11 +5,12 @@
 #include "../ui/nightmare_ui.h"
 #include "../ui/effects/fade_ui.h"
 
-#include "godot_cpp/classes/packed_scene.hpp"
-#include "godot_cpp/classes/resource_loader.hpp"
-#include "godot_cpp/classes/scene_tree.hpp"
+#include <godot_cpp/classes/engine.hpp>
+#include <godot_cpp/classes/packed_scene.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/scene_tree.hpp>
 
-#include "godot_cpp/variant/utility_functions.hpp"
+#include <godot_cpp/variant/utility_functions.hpp>
 
 using namespace godot;
 
@@ -33,6 +34,10 @@ void GameInstance::_bind_methods()
 
 void GameInstance::_ready()
 {
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+        return;
+    }
     game_state->load();
     NightmareUi *nightmare_ui = get_node<NightmareUi>("/root/ActiveUi/");
     FadeUi *fade_effect = nightmare_ui->get_fade_effect();

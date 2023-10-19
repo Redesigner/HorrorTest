@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Project",
+            "type": "cppvsdbg",
+            "request": "launch",
+            // Set this to wherever the Godot executable is
+            "program": "${env:APPDATA}/Godot/export_templates/4.1.1.stable.mono/windows_debug_x86_64_console.exe",
+            // To run the project instead of editing it, remove the "--editor" argument.
+            "args": ["--path", "${workspaceFolder}/"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "internalConsole",
+            "visualizerFile": "${workspaceFolder}/platform/windows/godot.natvis",
+            "preLaunchTask": "build"
+          }
+    ]
+}

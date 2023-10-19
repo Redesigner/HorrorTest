@@ -2,5 +2,16 @@
     "files.associations": {
         "xlocale": "cpp"
     },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        // Hide object files from the display, since these are going to clutter things up
+        "**/*.o": true,
+        "**/*.obj": true
+    },
     "cmake.configureOnOpen": false
 }
