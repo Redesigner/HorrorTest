@@ -14,12 +14,12 @@ using namespace godot;
 
 InventoryUiMenu::InventoryUiMenu()
 {
-    _itemDisplay = nullptr;
-    _itemPreviews = nullptr;
+    _item_display = nullptr;
+    _item_previews = nullptr;
 
     _inventory = nullptr;
 
-    _currentlySelectedItemIndex = 0;
+    currently_selected_item_index = 0;
 }
 
 InventoryUiMenu::~InventoryUiMenu()
@@ -34,8 +34,8 @@ void InventoryUiMenu::_bind_methods()
 
 void InventoryUiMenu::_ready()
 {
-    _itemDisplay = dynamic_cast<InventoryUiItemDisplay *>(get_node_or_null(_itemDisplayPath));
-    _itemPreviews = dynamic_cast<InventoryUiItemPreviewList *>(get_node_or_null(_itemPreviewsPath));
+    _item_display = dynamic_cast<InventoryUiItemDisplay *>(get_node_or_null(_itemDisplayPath));
+    _item_previews = dynamic_cast<InventoryUiItemPreviewList *>(get_node_or_null(_itemPreviewsPath));
 }
 
 void InventoryUiMenu::_input(const Ref<InputEvent> &event)
@@ -65,7 +65,7 @@ void InventoryUiMenu::_input(const Ref<InputEvent> &event)
 void InventoryUiMenu::set_inventory(Inventory *inventory)
 {
     _inventory = inventory;
-    _itemPreviews->set_inventory(inventory);
+    _item_previews->set_inventory(inventory);
     update();
 }
 
@@ -73,49 +73,55 @@ void InventoryUiMenu::update()
 {
     if (!_inventory)
     {
-        UtilityFunctions::push_warning("[InventoryUi] Cannot find inventory instance. Make sure to call set_inventory.");
+        WARN_PRINT("[InventoryUi] Cannot find inventory instance. Make sure to call set_inventory.");
     }
     UtilityFunctions::print("[InventoryUi] Inventory changed, updating ui elements.");
-    if (_inventory->get_inventory().size() <= 0)
+    if (_inventory->get_inventory_array().size() <= 0)
     {
         UtilityFunctions::print("[InventoryUi] Inventory instance does not contain any items.");
         return;
     }
     update_currently_selected_item();
-    _itemPreviews->update();
+    _item_previews->update();
 }
 
 void InventoryUiMenu::increase_index()
 {
-    int newIndex = _currentlySelectedItemIndex + 1;
-    int inventorySize = _inventory->get_inventory().size();
+    int new_index = currently_selected_item_index + 1;
+    int inventory_size = _inventory->get_inventory_array().size();
     
-    if (newIndex >= inventorySize)
+    if (new_index >= inventory_size)
     {
-        newIndex -= inventorySize;
+        new_index -= inventory_size;
     }
-    _currentlySelectedItemIndex = newIndex;
+    currently_selected_item_index = new_index;
     update_currently_selected_item();
 }
 
 void InventoryUiMenu::decrease_index()
 {
-    int newIndex = _currentlySelectedItemIndex - 1;
-    int inventorySize = _inventory->get_inventory().size();
+    int new_index = currently_selected_item_index - 1;
+    int inventorySize = _inventory->get_inventory_array().size();
     
-    if (newIndex < 0)
+    if (new_index < 0)
     {
-        newIndex += inventorySize;
+        new_index += inventorySize;
     }
-    _currentlySelectedItemIndex = newIndex;
+    currently_selected_item_index = new_index;
     update_currently_selected_item();
 }
 
 void InventoryUiMenu::update_currently_selected_item()
 {
-    Dictionary inventoryItem = _inventory->get_inventory()[_currentlySelectedItemIndex];
-    Ref<InventoryItemResource> currentlySelectedItem = inventoryItem["resource"];
-    _itemDisplay->update_inventory_item_resource(currentlySelectedItem);
+    TypedArray<Dictionary> inventory_dictionary = _inventory->get_inventory_array();
+    if (currently_selected_item_index >= inventory_dictionary.size() || currently_selected_item_index < 0)
+    {
+        UtilityFunctions::print("[InventoryUi] Currently selected item index out of range.");
+        return;
+    }
+    Dictionary inventory_item = inventory_dictionary[currently_selected_item_index];
+    Ref<InventoryItemResource> currentlySelectedItem = inventory_item["resource"];
+    _item_display->update_inventory_item_resource(currentlySelectedItem);
 
-    _itemPreviews->set_selected_index(_currentlySelectedItemIndex);
+    _item_previews->set_selected_index(currently_selected_item_index);
 }

@@ -33,14 +33,14 @@ private:
 
     void update_currently_selected_item();
 
-    class InventoryUiItemDisplay *_itemDisplay;
-    class InventoryUiItemPreviewList  *_itemPreviews;
+    class InventoryUiItemDisplay *_item_display;
+    class InventoryUiItemPreviewList  *_item_previews;
 
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemDisplayPath);
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemPreviewsPath);
 
     class Inventory *_inventory;
 
-    int _currentlySelectedItemIndex;
+    int currently_selected_item_index;
 };
 }

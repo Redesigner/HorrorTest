@@ -17,13 +17,13 @@ public:
     Inventory();
     ~Inventory();
 
-    void set_inventory(TypedArray<Dictionary> inventory);
+    void set_inventory_array(TypedArray<Dictionary> inventory);
 
-    TypedArray<Dictionary> get_inventory() const;
+    TypedArray<Dictionary> get_inventory_array() const;
 
-    void add_item(Ref<InventoryItemResource> inventoryResource, int amount);
+    void add_item(Ref<InventoryItemResource> inventory_resource, int amount);
 
-    bool has_item(Ref<InventoryItemResource> inventoryResource) const;
+    bool has_item(Ref<InventoryItemResource> inventory_resource) const;
 
     String make_string_data() const;
 
@@ -31,7 +31,7 @@ protected:
     static void _bind_methods();
 
 private:
-    int get_item_index(Ref<InventoryItemResource> inventoryResource) const;
+    int get_item_index(Ref<InventoryItemResource> inventory_resource) const;
 
 
     void unpack_state_data(PackedByteArray state_data);

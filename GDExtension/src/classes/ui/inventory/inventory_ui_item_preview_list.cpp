@@ -51,7 +51,7 @@ void InventoryUiItemPreviewList::update()
         return;
     }
 
-    TypedArray<Dictionary> inventoryArray = _inventory->get_inventory();
+    TypedArray<Dictionary> inventoryArray = _inventory->get_inventory_array();
     UtilityFunctions::print( String("[InventoryUi] Attaching inventory items to previews - found {0} items in inventory.").format(Array::make(inventoryArray.size())) );
     for (int i = 0; i < _itemPreviews.size(); i++)
     {

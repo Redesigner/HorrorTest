@@ -12,6 +12,7 @@
               // enable for debugging with breakpoints
               "dev_build=yes",
               "debug_symbols=yes",
+              "target=template_debug",
               //"use_mingw=yes"
             ],
             "options": {

@@ -16,17 +16,19 @@ Inventory::~Inventory()
 
 void Inventory::_bind_methods()
 {
-    BIND_PROPERTY(Variant::ARRAY, inventory, Inventory);
-
+    ClassDB::bind_method(D_METHOD("get_inventory"), &Inventory::get_inventory_array);
+    ClassDB::bind_method(D_METHOD("set_inventory", "p_inventory"), &Inventory::set_inventory_array);
+    ClassDB::add_property("Inventory", PropertyInfo((Variant::ARRAY), "inventory"), "set_inventory", "get_inventory");
+    
     ADD_SIGNAL(MethodInfo("inventory_changed"));
 }
 
-void Inventory::set_inventory(TypedArray<Dictionary> inventory)
+void Inventory::set_inventory_array(TypedArray<Dictionary> inventory)
 {
     _inventory = inventory;
 }
 
-TypedArray<Dictionary> Inventory::get_inventory() const
+TypedArray<Dictionary> Inventory::get_inventory_array() const
 {
     return _inventory;
 }

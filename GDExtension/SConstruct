@@ -38,5 +38,6 @@ else:
         "../bin/nightmare{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
         source=sources,
     )
+    # env["PDB"] = env["target"] + ".pdb"
 
 Default(library)
