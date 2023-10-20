@@ -38,30 +38,6 @@ void InventoryUiMenu::_ready()
     _item_previews = dynamic_cast<InventoryUiItemPreviewList *>(get_node_or_null(_itemPreviewsPath));
 }
 
-void InventoryUiMenu::_input(const Ref<InputEvent> &event)
-{
-    // don't allow any inputs here if it's not visible
-    // we don't want the player to accidentally change selection
-    // or use an item when in regular gameplay
-    if (!is_visible())
-    {
-        return;
-    }
-
-    // Possibly consider using separate actions from the character?
-    if (event->is_action_pressed("walk_left"))
-    {
-        decrease_index();
-        return;
-    }
-
-    if (event->is_action_pressed("walk_right"))
-    {
-        increase_index();
-        return;
-    }
-}
-
 void InventoryUiMenu::set_inventory(Inventory *inventory)
 {
     _inventory = inventory;
@@ -83,6 +59,26 @@ void InventoryUiMenu::update()
     }
     update_currently_selected_item();
     _item_previews->update();
+}
+
+void InventoryUiMenu::scroll_left()
+{
+    decrease_index();
+}
+
+void InventoryUiMenu::scroll_right()
+{
+    increase_index();
+}
+
+void InventoryUiMenu::show()
+{
+    set_visible(true);
+}
+
+void InventoryUiMenu::hide()
+{
+    set_visible(false);
 }
 
 void InventoryUiMenu::increase_index()

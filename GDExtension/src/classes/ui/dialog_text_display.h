@@ -1,13 +1,13 @@
-#ifndef NIGHTMARE_DIALOG_TEXT_DISPLAY_H
-#define NIGHTMARE_DIALOG_TEXT_DISPLAY_H
+#pragma once
 
 #include <godot_cpp/classes/control.hpp>
+#include "stackable_ui_element.h"
 
 #include "../../class_macros.h"
 
 namespace godot
 {
-class DialogTextDisplay : public Control
+class DialogTextDisplay : public Control, public StackableUiElement
 {
     GDCLASS(DialogTextDisplay, Control);
 
@@ -29,6 +29,13 @@ public:
 
     bool is_dialog_playing() const;
 
+
+    // StackableUiElement
+    virtual bool accept() override;
+
+    virtual void show() override;
+    virtual void hide() override;
+
 private:
     static TypedArray<String> process_string(String string);
 
@@ -44,5 +51,3 @@ private:
     DECLARE_PROPERTY(float, characterRate, 10.0f);
 };
 }
-
-#endif

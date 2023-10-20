@@ -1,12 +1,13 @@
 #pragma once
 
 #include <godot_cpp/classes/control.hpp>
+#include "../stackable_ui_element.h"
 
 #include "../../../class_macros.h"
 
 namespace godot
 {
-class InventoryUiMenu : public Control
+class InventoryUiMenu : public Control, public StackableUiElement
 {
     GDCLASS(InventoryUiMenu, Control);
 
@@ -20,11 +21,16 @@ protected:
 public:
     virtual void _ready() override;
 
-    virtual void _input(const Ref<InputEvent> &event) override;
-
     void set_inventory(class Inventory *inventory);
 
     void update();
+
+    // StackableUiElement Interface
+    virtual void scroll_left() override;
+    virtual void scroll_right() override;
+
+    virtual void show() override;
+    virtual void hide() override;
 
 private:
     void increase_index();

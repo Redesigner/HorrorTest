@@ -82,13 +82,28 @@ bool DialogTextDisplay::advance_dialog()
         _textElement->set_text(_pendingText);
         return false;
     }
-    set_visible(false);
+    // set_visible(false);
     return true;
 }
 
 bool DialogTextDisplay::is_dialog_playing() const
 {
     return _textAnimating;
+}
+
+bool DialogTextDisplay::accept()
+{
+    return advance_dialog();
+}
+
+void DialogTextDisplay::show()
+{
+    set_visible(true);
+}
+
+void DialogTextDisplay::hide()
+{
+    set_visible(false);
 }
 
 TypedArray<String> DialogTextDisplay::process_string(String string)
