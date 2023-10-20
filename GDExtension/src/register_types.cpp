@@ -23,6 +23,8 @@
 #include "classes/ui/inventory/inventory_ui_item_display.h"
 #include "classes/ui/inventory/inventory_ui_item_preview_list.h"
 #include "classes/ui/inventory/inventory_ui_item_preview.h"
+#include "classes/ui/inventory/inventory_ui_item_option_list.h"
+#include "classes/ui/inventory/inventory_ui_item_option.h"
 
 #include "classes/inventory/inventory.h"
 #include "classes/inventory/inventory_item_resource.h"
@@ -63,6 +65,8 @@ void initialize_example_module(ModuleInitializationLevel p_level)
     ClassDB::register_class<InventoryUiItemDisplay>();
     ClassDB::register_class<InventoryUiItemPreviewList>();
     ClassDB::register_class<InventoryUiItemPreview>();
+    ClassDB::register_class<InventoryUiItemOptionList>();
+    ClassDB::register_class<InventoryUiItemOption>();
 
     // INVENTORY CLASSES
     ClassDB::register_class<Inventory>();
