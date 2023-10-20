@@ -6,3 +6,4 @@
 itemTexture = ExtResource("1_8mdp1")
 itemName = "Handgun Bullets"
 itemDescription = "A box of 9mm rounds for use in a semi-automatic handgun. There are still a few bullets left in this box."
+options = Array[String](["Examine", "\"Test\""])

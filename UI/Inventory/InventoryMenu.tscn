@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://boojals3agg4r" path="res://UI/Inventory/InventoryItemPreviewList.tscn" id="2_p2b1j"]
 
 [node name="InventoryUiMenu" type="InventoryUiMenu"]
-itemDisplayPath = NodePath("Panel/VBoxContainer/InventoryItemMainDisplay")
-itemPreviewsPath = NodePath("Panel/VBoxContainer/InventoryItemPreviewList")
+item_display_path = NodePath("Panel/VBoxContainer/InventoryItemMainDisplay")
+item_previews_path = NodePath("Panel/VBoxContainer/InventoryItemPreviewList")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

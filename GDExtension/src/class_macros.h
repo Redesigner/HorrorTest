@@ -1,5 +1,4 @@
-#ifndef NIGHTMARE_CLASS_MACROS_H
-#define NIGHTMARE_CLASS_MACROS_H
+#pragma once
 
 #define BIND_PROPERTY_HINT(variant, p_name, class, hint_type, hint)\
     ClassDB::bind_method(D_METHOD("get_"#p_name), &class::get_ ##p_name);\
@@ -39,4 +38,4 @@ public:\
     }\
 private:
 
-#endif
+#define IN_EDITOR() Engine::get_singleton()->is_editor_hint()

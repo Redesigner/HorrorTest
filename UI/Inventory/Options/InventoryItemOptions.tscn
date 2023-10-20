@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://cew1yi7fhkksj"]
+
+[ext_resource type="PackedScene" uid="uid://2mossuy8aswv" path="res://UI/Inventory/Options/InventoryItemOption.tscn" id="1_ovih6"]
+
+[node name="InventoryItemOptions" type="InventoryUiItemOptionList"]
+list_container_path = NodePath("Panel/VBoxContainer")
+option_scene_path = "res://UI/Inventory/Options/InventoryItemOption.tscn"
+anchors_preset = -1
+anchor_right = 0.4
+anchor_bottom = 0.4
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InventoryItemOption" parent="Panel/VBoxContainer" instance=ExtResource("1_ovih6")]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3

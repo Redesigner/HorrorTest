@@ -55,6 +55,22 @@ void NightmareUi::_input(const Ref<InputEvent> &event)
         return;
     }
 
+    if (event->is_action_pressed("toggle_fullscreen"))
+    {
+        Window *window = get_tree()->get_root();
+        if (window->get_mode() == Window::MODE_FULLSCREEN)
+        {
+            window->set_mode(Window::MODE_WINDOWED);
+        }
+        else
+        {
+            window->set_mode(Window::MODE_FULLSCREEN);
+        }
+        return;
+    }
+
+
+    // Forward these events to our stack
     if (event->is_action_pressed("interact"))
     {
         if (!ui_stack.empty())
@@ -73,16 +89,38 @@ void NightmareUi::_input(const Ref<InputEvent> &event)
         return;
     }
 
-    if (event->is_action_pressed("toggle_fullscreen"))
+    if (event->is_action_pressed("walk_right"))
     {
-        Window *window = get_tree()->get_root();
-        if (window->get_mode() == Window::MODE_FULLSCREEN)
+        if (!ui_stack.empty())
         {
-            window->set_mode(Window::MODE_WINDOWED);
+            ui_stack.top()->scroll_right();
         }
-        else
+        return;
+    }
+
+    if (event->is_action_pressed("walk_left"))
+    {
+        if (!ui_stack.empty())
         {
-            window->set_mode(Window::MODE_FULLSCREEN);
+            ui_stack.top()->scroll_left();
+        }
+        return;
+    }
+
+    if (event->is_action_pressed("walk_forward"))
+    {
+        if (!ui_stack.empty())
+        {
+            ui_stack.top()->scroll_up();
+        }
+        return;
+    }
+
+    if (event->is_action_pressed("walk_back"))
+    {
+        if (!ui_stack.empty())
+        {
+            ui_stack.top()->scroll_down();
         }
         return;
     }

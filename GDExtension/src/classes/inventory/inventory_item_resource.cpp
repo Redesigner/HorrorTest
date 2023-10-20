@@ -6,6 +6,7 @@ using namespace godot;
 
 InventoryItemResource::InventoryItemResource()
 {
+    _options = TypedArray<String>();
 }
 
 InventoryItemResource::~InventoryItemResource()

@@ -29,6 +29,10 @@ public:
 
     void set_selected_item(Ref<InventoryItemResource> item_resource);
 
+    void increment_index();
+
+    void decrement_index();
+
 private:
     void create_option(String option_name);
 

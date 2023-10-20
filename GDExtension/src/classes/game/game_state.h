@@ -48,6 +48,8 @@ private:
 
     String save_file_path;
 
+    String fallback_save_file_path;
+
     std::map<StringName, PackedByteArray> state_map;
 
     Ref<Inventory> inventory;

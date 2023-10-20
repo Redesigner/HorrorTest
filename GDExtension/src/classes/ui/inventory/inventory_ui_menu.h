@@ -29,6 +29,9 @@ public:
     virtual void scroll_left() override;
     virtual void scroll_right() override;
 
+    virtual void scroll_up() override;
+    virtual void scroll_down() override;
+
     virtual void show() override;
     virtual void hide() override;
 
@@ -42,8 +45,8 @@ private:
     class InventoryUiItemDisplay *_item_display;
     class InventoryUiItemPreviewList  *_item_previews;
 
-    DECLARE_PROPERTY_NODEFAULT(NodePath, itemDisplayPath);
-    DECLARE_PROPERTY_NODEFAULT(NodePath, itemPreviewsPath);
+    DECLARE_PROPERTY_NODEFAULT(NodePath, item_display_path);
+    DECLARE_PROPERTY_NODEFAULT(NodePath, item_previews_path);
 
     class Inventory *_inventory;
 

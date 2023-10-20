@@ -3,6 +3,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <godot_cpp/classes/input_event.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 #include "inventory_ui_item_display.h"
 #include "inventory_ui_item_preview_list.h"
@@ -28,20 +29,27 @@ InventoryUiMenu::~InventoryUiMenu()
 
 void InventoryUiMenu::_bind_methods()
 {
-    BIND_PROPERTY(Variant::NODE_PATH, itemDisplayPath, InventoryUiMenu);
-    BIND_PROPERTY(Variant::NODE_PATH, itemPreviewsPath, InventoryUiMenu);
+    BIND_PROPERTY(Variant::NODE_PATH, item_display_path, InventoryUiMenu);
+    BIND_PROPERTY(Variant::NODE_PATH, item_previews_path, InventoryUiMenu);
 }
 
 void InventoryUiMenu::_ready()
 {
-    _item_display = dynamic_cast<InventoryUiItemDisplay *>(get_node_or_null(_itemDisplayPath));
-    _item_previews = dynamic_cast<InventoryUiItemPreviewList *>(get_node_or_null(_itemPreviewsPath));
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+        return;
+    }
+    _item_display = get_node<InventoryUiItemDisplay>(_item_display_path);
+    _item_previews = get_node<InventoryUiItemPreviewList>(_item_previews_path);
 }
 
 void InventoryUiMenu::set_inventory(Inventory *inventory)
 {
     _inventory = inventory;
-    _item_previews->set_inventory(inventory);
+    if (_item_previews)
+    {
+        _item_previews->set_inventory(inventory);
+    }
     update();
 }
 
@@ -58,6 +66,11 @@ void InventoryUiMenu::update()
         return;
     }
     update_currently_selected_item();
+    
+    if (!_item_previews)
+    {
+        return;
+    }
     _item_previews->update();
 }
 
@@ -69,6 +82,24 @@ void InventoryUiMenu::scroll_left()
 void InventoryUiMenu::scroll_right()
 {
     increase_index();
+}
+
+void InventoryUiMenu::scroll_up()
+{
+    if (!_item_display)
+    {
+        return;
+    }
+    _item_display->scroll_up();
+}
+
+void InventoryUiMenu::scroll_down()
+{
+    if (!_item_display)
+    {
+        return;
+    }
+    _item_display->scroll_down();
 }
 
 void InventoryUiMenu::show()
@@ -117,7 +148,14 @@ void InventoryUiMenu::update_currently_selected_item()
     }
     Dictionary inventory_item = inventory_dictionary[currently_selected_item_index];
     Ref<InventoryItemResource> currentlySelectedItem = inventory_item["resource"];
-    _item_display->update_inventory_item_resource(currentlySelectedItem);
 
-    _item_previews->set_selected_index(currently_selected_item_index);
+    if (_item_display)
+    {
+        _item_display->update_inventory_item_resource(currentlySelectedItem);
+    }
+
+    if (_item_previews)
+    {
+        _item_previews->set_selected_index(currently_selected_item_index);
+    }
 }

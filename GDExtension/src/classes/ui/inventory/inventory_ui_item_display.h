@@ -22,12 +22,16 @@ protected:
 public:
     virtual void _ready() override;
 
+    void scroll_up();
+    void scroll_down();
+
     void update_inventory_item_resource(Ref<InventoryItemResource> itemResource);
 
 private:
     class Label *_itemNameDisplay;
     class RichTextLabel *_itemDescriptionDisplay;
     class TextureRect *_itemPictureDisplay;
+    class InventoryUiItemOptionList *_itemOptionDisplay;
 
     DECLARE_PROPERTY_NODEFAULT(Ref<InventoryItemResource>, itemResource);
 
@@ -35,5 +39,6 @@ private:
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemNameDisplayPath);
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemDescriptionDisplayPath);
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemPictureDisplayPath);
+    DECLARE_PROPERTY_NODEFAULT(NodePath, itemOptionDisplayPath);
 };
 }

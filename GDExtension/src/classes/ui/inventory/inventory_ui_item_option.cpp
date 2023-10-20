@@ -1,6 +1,7 @@
 #include "inventory_ui_item_option.h"
 
 #include <godot_cpp/classes/label.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 using namespace godot;
 
@@ -21,6 +22,10 @@ void InventoryUiItemOption::_bind_methods()
 
 void InventoryUiItemOption::_ready()
 {
+    if (Engine::get_singleton()->is_editor_hint())
+    {
+        return;
+    }
     identifier = get_node<Control>(_identifier_path);
     label = get_node<Label>(_label_path);
 

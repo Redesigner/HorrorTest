@@ -2,6 +2,7 @@
 
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/engine.hpp>
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -28,8 +29,12 @@ void InventoryUiItemOptionList::_bind_methods()
 
 void InventoryUiItemOptionList::_ready()
 {
-    ui_list_container = get_node<VBoxContainer>(_list_container_path);
+    if (IN_EDITOR())
+    {
+        return;
+    }
 
+    ui_list_container = get_node<VBoxContainer>(_list_container_path);
     option_scene = ResourceLoader::get_singleton()->load(_option_scene_path);
 }
 
@@ -62,6 +67,30 @@ void InventoryUiItemOptionList::set_selected_item(Ref<InventoryItemResource> ite
     {
         select_option(0);
     }
+    else
+    {
+        select_option(currently_selected_option_index);
+    }
+}
+
+void InventoryUiItemOptionList::increment_index()
+{
+    int new_selection_index = currently_selected_option_index + 1;
+    if (new_selection_index >= option_ui_list.size())
+    {
+        new_selection_index -= option_ui_list.size();
+    }
+    select_option(new_selection_index);
+}
+
+void InventoryUiItemOptionList::decrement_index()
+{
+    int new_selection_index = currently_selected_option_index - 1;
+    if (new_selection_index < 0)
+    {
+        new_selection_index += option_ui_list.size();
+    }
+    select_option(new_selection_index);
 }
 
 void InventoryUiItemOptionList::create_option(String option_name)
@@ -82,11 +111,12 @@ void InventoryUiItemOptionList::create_option(String option_name)
     if (!new_option)
     {
         WARN_PRINT("[InventoryUi] Failed to create item option, option prefab is the wrong type. Please make sure it is of type 'InventoryUiItemOption'");
-        new_option->queue_free(); // Should get cleared by ref counter, but make sure here
         return;
     }
 
+    ui_list_container->add_child(new_option);
     new_option->set_text(option_name);
+    new_option->set_v_size_flags(SIZE_EXPAND_FILL);
     option_ui_list.push_back(new_option);
 }
 

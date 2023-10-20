@@ -26,6 +26,6 @@ private:
     Ref<Texture2D> _itemTexture;
     DECLARE_PROPERTY(String, itemName, "");
     DECLARE_PROPERTY(String, itemDescription, "");
-    DECLARE_PROPERTY_NODEFAULT(TypedArray<String>, options);
+    DECLARE_PROPERTY_NODEFAULT(Array, options);
 };
 }

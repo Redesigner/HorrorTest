@@ -16,6 +16,7 @@ using namespace godot;
 GameState::GameState()
 {
     save_file_path = "user://save_game.dat";
+    fallback_save_file_path = "res://Shared Resources/save_game.dat";
     inventory = Ref(memnew(Inventory));
 }
 
@@ -75,7 +76,13 @@ void GameState::load()
     if (!file.is_valid())
     {
         UtilityFunctions::print("[GameState] No save file found.");
-        return;
+        UtilityFunctions::print("[GameState] Attempting to load fallback save file...");
+        file = FileAccess::open(fallback_save_file_path, FileAccess::ModeFlags::READ);
+        if (!file.is_valid())
+        {
+            UtilityFunctions::print("[GameState] Failed to load fallback save file.");
+            return;
+        }
     }
 
     String inventory_control_string = "Inventory {";
@@ -84,7 +91,6 @@ void GameState::load()
         // @todo: make this not hardcoded, it should equal the string added in inventory's make_string_data function
         if (data.length() >= inventory_control_string.length())
         {
-            UtilityFunctions::print(data);
             if (data.right(inventory_control_string.length()) == inventory_control_string)
             {
                 load_inventory(file);
