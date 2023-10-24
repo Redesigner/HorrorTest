@@ -26,11 +26,10 @@
 #include "../ui/nightmare_ui.h"
 #include "../camera_arm.h"
 #include "enemy.h"
-
 #include "../inventory/inventory.h"
-
 #include "../game/game_instance.h"
 #include "../game/game_state.h"
+#include "../equipment/equipment.h"
 
 using namespace godot;
 
@@ -50,17 +49,18 @@ void NightmareCharacter::_bind_methods()
 
 NightmareCharacter::NightmareCharacter()
 {
-    _cameraArm = nullptr;
-    _inputVectorDisplay = nullptr;
-    _interactVolume = nullptr;
-    _debugText = nullptr;
-    _animationTree = nullptr;
-    _audioStreamPlayer = nullptr;
-    _inventory = nullptr;
+    camera_arm = nullptr;
+    input_vector_display = nullptr;
+    interact_volume = nullptr;
+    debug_text = nullptr;
+    animation_tree = nullptr;
+    audio_stream_player = nullptr;
+    inventory = nullptr;
 
-    _weaponReady = false;
-    _interactDebounce = false;
-    _weaponDebounce = false;
+    current_equipment = nullptr;
+
+    interact_debounce = false;
+    weapon_debounce = false;
 }
 
 NightmareCharacter::~NightmareCharacter()
@@ -74,21 +74,21 @@ void NightmareCharacter::_ready()
         return;
     }
     Pawn::_ready();
-    _cameraArm = dynamic_cast<CameraArm *>(get_node_internal("CameraArm"));
-    _inputVectorDisplay = dynamic_cast<Node3D *>(get_node_or_null("InputVectorDisplay"));
-    _interactVolume = dynamic_cast<Area3D *>(get_node_or_null("Body/Mesh/InteractVolume"));
-    _debugText = dynamic_cast<RichTextLabel *>(get_node_or_null("DebugText"));
-    _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
-    _audioStreamPlayer = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
+    camera_arm = dynamic_cast<CameraArm *>(get_node_internal("CameraArm"));
+    input_vector_display = dynamic_cast<Node3D *>(get_node_or_null("InputVectorDisplay"));
+    interact_volume = dynamic_cast<Area3D *>(get_node_or_null("Body/Mesh/InteractVolume"));
+    debug_text = dynamic_cast<RichTextLabel *>(get_node_or_null("DebugText"));
+    animation_tree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
+    audio_stream_player = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
 
-    _ui = get_node<NightmareUi>("/root/ActiveUi");
-    _inventory = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->get_inventory();
+    ui = get_node<NightmareUi>("/root/ActiveUi");
+    inventory = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->get_inventory();
 
-    _bulletScene = ResourceLoader::get_singleton()->load(_bulletScenePath);
+    bullet_scene = ResourceLoader::get_singleton()->load(_bulletScenePath);
 
-    connect("dialog_changed",  Callable(_ui, "set_dialog"));
-    _inventory->connect("inventory_changed", Callable(_ui, "update_inventory"));
-    _ui->set_inventory(_inventory);
+    connect("dialog_changed",  Callable(ui, "set_dialog"));
+    inventory->connect("inventory_changed", Callable(ui, "update_inventory"));
+    ui->set_inventory(inventory);
 
     if (!_inEditor)
     {
@@ -130,7 +130,7 @@ void NightmareCharacter::_input(const Ref<InputEvent> &event)
 
     if (event->is_action_pressed("weapon_fire"))
     {
-        if (_weaponReady)
+        if (is_weapon_ready())
         {
             fire_weapon();
         }
@@ -141,7 +141,7 @@ void NightmareCharacter::_input(const Ref<InputEvent> &event)
     if (event->is_action_pressed("save"))
     {
         get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->save();
-        _inventory->make_string_data();
+        inventory->make_string_data();
         return;
     }
 }
@@ -161,7 +161,7 @@ void NightmareCharacter::_physics_process(double delta)
     Pawn::_physics_process(delta);
     
     Vector3 velocity = get_velocity();
-    if (_debugText->is_visible())
+    if (debug_text->is_visible())
     {
         String text = String("Velocity: '{0}' m/s").format(Array::make(velocity.length()));
         if (input_pressed())
@@ -172,7 +172,7 @@ void NightmareCharacter::_physics_process(double delta)
         {
             text += "\nCurrently on the floor.";
         }
-        _debugText->set_text(text);
+        debug_text->set_text(text);
     }
 
     if (get_position().y < -100.0f)
@@ -184,15 +184,15 @@ void NightmareCharacter::_physics_process(double delta)
 
 void NightmareCharacter::rotate_camera(Vector2 input)
 {
-    if (!_cameraArm)
+    if (!camera_arm)
     {
         return;
     }
-    Vector3 currentRotation = _cameraArm->get_rotation_degrees();
+    Vector3 currentRotation = camera_arm->get_rotation_degrees();
     currentRotation.y += input.x * -_lookSpeedHorizontal;
     currentRotation.x += input.y * -_lookSpeedVertical;
     currentRotation.x = Math::clamp(currentRotation.x, -89.9f, 89.9f);
-    _cameraArm->set_rotation_degrees(currentRotation);
+    camera_arm->set_rotation_degrees(currentRotation);
 }
 
 Vector2 NightmareCharacter::get_input_vector() const
@@ -203,13 +203,13 @@ Vector2 NightmareCharacter::get_input_vector() const
 void NightmareCharacter::update_input()
 {
     Vector2 inputVector = get_input_vector();
-    Vector3 cameraRotation = _cameraArm->get_global_rotation();
+    Vector3 cameraRotation = camera_arm->get_global_rotation();
     float cameraYaw = -cameraRotation.y;
     float cos = Math::cos(cameraYaw);
     float sin = Math::sin(cameraYaw);
     _inputVector = Vector2(cos * inputVector.x - sin * inputVector.y, sin * inputVector.x + cos * inputVector.y);
 
-    _inputVectorDisplay->set_position(Vector3(_inputVector.x, _inputVectorDisplay->get_position().y, _inputVector.y));
+    input_vector_display->set_position(Vector3(_inputVector.x, input_vector_display->get_position().y, _inputVector.y));
 
     Vector2 cameraInputVector = Input::get_singleton()->get_vector("look_left", "look_right", "look_up", "look_down");
     rotate_camera(cameraInputVector);
@@ -217,78 +217,58 @@ void NightmareCharacter::update_input()
 
 void NightmareCharacter::ready_weapon()
 {
-    _weaponReady = true;
-    _cameraArm->set_focus(true);
-    _animationTree->set("parameters/weapon_ready/blend_amount", 1.0f);
+    camera_arm->set_focus(true);
+    animation_tree->set("parameters/weapon_ready/blend_amount", 1.0f);
 }
 
 void NightmareCharacter::release_weapon()
 {
-    _weaponReady = false;
-    _cameraArm->set_focus(false);
-    _animationTree->set("parameters/weapon_ready/blend_amount", 0.0f);
+    camera_arm->set_focus(false);
+    animation_tree->set("parameters/weapon_ready/blend_amount", 0.0f);
 }
 
 void NightmareCharacter::fire_weapon()
 {
-    if (_weaponDebounce)
+    if (weapon_debounce)
     {
         return;
     }
 
-    Node3D *bullet = Object::cast_to<Node3D>(_bulletScene->instantiate());
-    if (!bullet)
-    {
-        ERR_PRINT("[Nightmare Character] failed to spawn bullet correctly.");
-        return;
-    }
-    UtilityFunctions::print("[Nightmare Character] spawning bullet.");
-    // get_tree()->get_current_scene()->add_child(bullet);
-    bullet->set_position(get_position());
-    _audioStreamPlayer->play();
-
-    _weaponDebounce = true;
-    Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.5f, false);
-    timer->connect("timeout", Callable(this, "end_weapon_debounce"));
-
-    const Vector3 startLocation = get_position();
-    const Vector3 endLocation = startLocation + _body->get_global_transform().get_basis().get_column(2) * -50.0f;
-    PhysicsDirectSpaceState3D *spaceState = get_world_3d()->get_direct_space_state();
-    Ref<PhysicsRayQueryParameters3D> rayQueryParameters = PhysicsRayQueryParameters3D::create(startLocation, endLocation);
-    rayQueryParameters->set_exclude(TypedArray<RID>::make(get_rid()));
-    Dictionary rayTraceResult = spaceState->intersect_ray(rayQueryParameters);
-
-    if (rayTraceResult.size() == 0)
+    if (!is_weapon_ready())
     {
         return;
     }
-    Object *hitObject = rayTraceResult["collider"];
-    if (!hitObject->is_class("Enemy"))
-    {
-        return;
-    }
-    Enemy *enemy = dynamic_cast<Enemy *>(hitObject);
-    enemy->take_damage(1.0f);
+
+    current_equipment->fire(get_global_transform().get_basis().get_column(2));
 }
 
 void NightmareCharacter::end_interact_debounce()
 {
-    _interactDebounce = false;
+    interact_debounce = false;
 }
 
 void NightmareCharacter::end_weapon_debounce()
 {
-    _weaponDebounce = false;
+    weapon_debounce = false;
+}
+
+bool NightmareCharacter::is_weapon_ready() const
+{
+    if (!current_equipment)
+    {
+        return false;
+    }
+    return current_equipment->is_ready();
 }
 
 void NightmareCharacter::interact()
 {
-    if (_interactDebounce)
+    if (interact_debounce)
     {
         return;
     }
     
-    TypedArray<Area3D> hitVolumes = _interactVolume->get_overlapping_areas();
+    TypedArray<Area3D> hitVolumes = interact_volume->get_overlapping_areas();
     for(int i = 0; i < hitVolumes.size(); i++)
     {
         Object *volumeObject = hitVolumes[i];
@@ -301,7 +281,7 @@ void NightmareCharacter::interact()
         Interactable *interactable = dynamic_cast<Interactable *>(volume->get_owner());
         interactable->trigger_interaction(this);
 
-        _interactDebounce = true;
+        interact_debounce = true;
         Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.1, false);
         timer->connect("timeout", Callable(this, "end_interact_debounce"));
         return;
@@ -315,12 +295,12 @@ void NightmareCharacter::set_dialog(String dialog)
 
 Inventory *godot::NightmareCharacter::get_inventory()
 {
-    return _inventory;
+    return inventory;
 }
 
 float NightmareCharacter::get_max_speed() const
 {
-    if (_weaponReady)
+    if (is_weapon_ready())
     {
         return _readyWalkSpeed;
     }

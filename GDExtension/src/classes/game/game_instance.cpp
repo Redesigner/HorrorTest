@@ -125,3 +125,16 @@ void GameInstance::on_fade_back_in()
     changing_level = false;
     get_tree()->set_pause(false);
 }
+
+NightmareCharacter *GameInstance::get_player() const
+{
+    Node *current_node = get_tree()->get_current_scene();
+    Level *current_level = Object::cast_to<Level>(current_node);
+    if (current_level)
+    {
+        UtilityFunctions::print("[GameInstance] Unable to get player. The current root scene isn't a level.");
+        return nullptr;
+    }
+    
+    return current_level->get_player();
+}

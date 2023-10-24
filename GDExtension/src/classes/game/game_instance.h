@@ -6,6 +6,7 @@ namespace godot
 {
 class GameState;
 class Level;
+class NightmareCharacter;
 class GameInstance : public Node
 {
     GDCLASS(GameInstance, Node);
@@ -27,6 +28,8 @@ public:
     void on_fade_out();
 
     void on_fade_back_in();
+
+    NightmareCharacter *get_player() const;
 
 private:
     void change_level(StringName scene_path, String spawn_location);

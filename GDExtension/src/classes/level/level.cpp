@@ -13,6 +13,7 @@ using namespace godot;
 
 Level::Level()
 {
+    player = nullptr;
 }
 
 Level::~Level()
@@ -36,6 +37,11 @@ void Level::_ready()
     spawn_player();
 }
 
+NightmareCharacter *Level::get_player() const
+{
+    return player;
+}
+
 void Level::populate_spawn_locations()
 {
     UtilityFunctions::print("[Level] Searching for valid spawn locations...");
@@ -55,10 +61,11 @@ void Level::spawn_player()
 {
     Ref<PackedScene> player_scene = ResourceLoader::get_singleton()->load(_player_scene_path);
     Node *player_node = player_scene->instantiate();
-    NightmareCharacter *player = Object::cast_to<NightmareCharacter>(player_node);
+    player = Object::cast_to<NightmareCharacter>(player_node);
     if (!player)
     {
         ERR_PRINT(String("[Level] Spawning player, but the scene at path '{0}' is not a NightmareCharacter.").format(Array::make(_player_scene_path)));
+        player = nullptr;
         return;
     }
     add_child(player);

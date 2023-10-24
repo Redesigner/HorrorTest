@@ -9,6 +9,7 @@
 
 namespace godot
 {
+class Equipment;
 class NightmareCharacter : public Pawn
 {
     GDCLASS(NightmareCharacter, Pawn)
@@ -30,11 +31,14 @@ public:
 
     virtual void _physics_process(double delta) override;
 
+
     void interact();
 
     void set_dialog(String dialog);
 
     class Inventory* get_inventory();
+
+    void equip(Equipment *equipment);
 
 protected:
     virtual float get_max_speed() const override;
@@ -57,26 +61,29 @@ private:
 
     void end_weapon_debounce();
 
-private:
-    class CameraArm *_cameraArm;
-    class Node3D *_inputVectorDisplay;
-    class Area3D *_interactVolume;
-    class RichTextLabel *_debugText;
-    class AnimationTree *_animationTree;
-    class AudioStreamPlayer3D *_audioStreamPlayer;
-    class NightmareUi* _ui;
-    class Inventory *_inventory;
+    bool is_weapon_ready() const;
 
-    Ref<class PackedScene> _bulletScene;
+
+    class CameraArm *camera_arm;
+    class Node3D *input_vector_display;
+    class Area3D *interact_volume;
+    class RichTextLabel *debug_text;
+    class AnimationTree *animation_tree;
+    class AudioStreamPlayer3D *audio_stream_player;
+    class NightmareUi* ui;
+    class Inventory *inventory;
+
+    Equipment *current_equipment;
+
+    Ref<class PackedScene> bullet_scene;
 
     DECLARE_PROPERTY(float, lookSpeedVertical, 1.0f);
     DECLARE_PROPERTY(float, lookSpeedHorizontal, 1.0f);
     DECLARE_PROPERTY(float, readyWalkSpeed, 1.0f);
     DECLARE_PROPERTY(String, bulletScenePath, "");
 
-    bool _weaponReady;
-    bool _interactDebounce;
-    bool _weaponDebounce;
+    bool interact_debounce;
+    bool weapon_debounce;
 };
 }
 
