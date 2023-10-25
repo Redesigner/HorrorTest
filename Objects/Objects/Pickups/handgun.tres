@@ -1,0 +1,10 @@
+[gd_resource type="EquipmentResource" load_steps=2 format=3 uid="uid://ctynr0xr3jdo0"]
+
+[ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_d40fy"]
+
+[resource]
+equipment_scene_path = "res://Objects/Objects/Equipment/gun_equipment.tscn"
+itemTexture = ExtResource("1_d40fy")
+itemName = "Handgun"
+itemDescription = "A semi-automatic handgun."
+options = Array[String](["Examine", "Equip"])

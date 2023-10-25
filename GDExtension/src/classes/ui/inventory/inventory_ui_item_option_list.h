@@ -33,6 +33,8 @@ public:
 
     void decrement_index();
 
+    void confirm_selection();
+
 private:
     void create_option(String option_name);
 

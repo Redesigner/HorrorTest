@@ -25,6 +25,8 @@ public:
     void scroll_up();
     void scroll_down();
 
+    bool accept();
+
     void update_inventory_item_resource(Ref<InventoryItemResource> itemResource);
 
 private:

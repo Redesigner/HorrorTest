@@ -1,3 +1,4 @@
 Inventory {
 	"res://Objects/Objects/Pickups/bullets.tres" : "8"
+	"res://Objects/Objects/Pickups/handgun.tres" : "1"
 }

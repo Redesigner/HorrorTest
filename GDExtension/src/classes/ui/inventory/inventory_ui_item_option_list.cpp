@@ -7,6 +7,9 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include "inventory_ui_item_option.h"
+#include "../../game/game_instance.h"
+#include "../../pawns/nightmare_character.h"
+#include "../../inventory/equipment_resource.h"
 
 using namespace godot;
 
@@ -44,6 +47,7 @@ void InventoryUiItemOptionList::set_selected_item(Ref<InventoryItemResource> ite
     {
         return;
     }
+    currently_selected_item = item_resource;
 
     if (!ui_list_container)
     {
@@ -91,6 +95,34 @@ void InventoryUiItemOptionList::decrement_index()
         new_selection_index += option_ui_list.size();
     }
     select_option(new_selection_index);
+}
+
+void InventoryUiItemOptionList::confirm_selection()
+{
+    if (!currently_selected_item.is_valid())
+    {
+        WARN_PRINT("[InventoryUi] currently selected item is not valid.");
+        return;
+    }
+    TypedArray<String> options = currently_selected_item->get_options();
+    if (options.size() <= currently_selected_option_index)
+    {
+        WARN_PRINT("[InventoryUi] selected option index does not exist for the currently selected item.");
+        return;
+    }
+    String option = options[currently_selected_option_index];
+
+    UtilityFunctions::print(String("[InventoryUi] selected option '{0}'.").format(Array::make(option)));
+    // @todo: make a better system than string matching here
+    if (option == "Equip")
+    {
+        EquipmentResource *equipment_resource = Object::cast_to<EquipmentResource>(currently_selected_item.ptr());
+
+        GameInstance *game_instance = get_node<GameInstance>("/root/DefaultGameInstance");
+        NightmareCharacter *player = game_instance->get_player();
+        player->load_and_equip(equipment_resource->get_equipment_scene_path());
+        return;
+    }
 }
 
 void InventoryUiItemOptionList::create_option(String option_name)

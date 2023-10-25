@@ -63,6 +63,16 @@ void InventoryUiItemDisplay::scroll_down()
     _itemOptionDisplay->increment_index();
 }
 
+bool InventoryUiItemDisplay::accept()
+{
+    if (!_itemOptionDisplay)
+    {
+        return false;
+    }
+    _itemOptionDisplay->confirm_selection();
+    return false;
+}
+
 void InventoryUiItemDisplay::update_inventory_item_resource(Ref<InventoryItemResource> itemResource)
 {
     _itemResource = itemResource;

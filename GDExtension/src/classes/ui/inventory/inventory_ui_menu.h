@@ -32,6 +32,8 @@ public:
     virtual void scroll_up() override;
     virtual void scroll_down() override;
 
+    virtual bool accept() override;
+
     virtual void show() override;
     virtual void hide() override;
 

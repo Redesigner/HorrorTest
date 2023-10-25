@@ -102,6 +102,15 @@ void InventoryUiMenu::scroll_down()
     _item_display->scroll_down();
 }
 
+bool InventoryUiMenu::accept()
+{
+    if (!_item_display)
+    {
+        return false;
+    }
+    return _item_display->accept();
+}
+
 void InventoryUiMenu::show()
 {
     set_visible(true);

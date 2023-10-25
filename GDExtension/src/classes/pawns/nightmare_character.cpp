@@ -293,9 +293,26 @@ void NightmareCharacter::set_dialog(String dialog)
     emit_signal("dialog_changed", dialog);
 }
 
-Inventory *godot::NightmareCharacter::get_inventory()
+Inventory *NightmareCharacter::get_inventory()
 {
     return inventory;
+}
+
+void NightmareCharacter::equip(Equipment *equipment)
+{
+    current_equipment = equipment;
+}
+
+void NightmareCharacter::load_and_equip(String equipment_scene_path)
+{
+    /* Ref<PackedScene> scene = ResourceLoader::get_singleton()->load(equipment_scene_path);
+    Node *scene_node = scene->instantiate();
+    Equipment *equipment = Object::cast_to<Equipment>(scene_node);
+    if (!equipment)
+    {
+        return;
+    }
+    equip(equipment); */
 }
 
 float NightmareCharacter::get_max_speed() const

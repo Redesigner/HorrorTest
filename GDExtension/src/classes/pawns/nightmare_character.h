@@ -40,6 +40,9 @@ public:
 
     void equip(Equipment *equipment);
 
+    // stand-in function? maybe change this functionality later
+    void load_and_equip(String equipment_scene_path);
+
 protected:
     virtual float get_max_speed() const override;
 
