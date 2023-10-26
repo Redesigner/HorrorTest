@@ -18,7 +18,12 @@
             "options": {
                 "cwd": "${workspaceFolder}/GDExtension/"
             },
-            "problemMatcher": "$msCompile"
+            "problemMatcher": [
+              {
+                "base": "$msCompile",
+                "fileLocation": ["autoDetect", "${workspaceFolder}/GDExtension/"]
+              }
+            ]
           }
     ]
   }
