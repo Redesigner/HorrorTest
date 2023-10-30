@@ -18,6 +18,7 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
             "visualizerFile": "${workspaceFolder}/platform/windows/godot.natvis",
             "preLaunchTask": "build",
             // "symbolSearchPath": "%{workspaceFolder}/GDExtension/"

@@ -130,9 +130,9 @@ NightmareCharacter *GameInstance::get_player() const
 {
     Node *current_node = get_tree()->get_current_scene();
     Level *current_level = Object::cast_to<Level>(current_node);
-    if (current_level)
+    if (!current_level)
     {
-        UtilityFunctions::print("[GameInstance] Unable to get player. The current root scene isn't a level.");
+        UtilityFunctions::print(String("[GameInstance] Unable to get player. The current root scene '{0}' isn't a level.").format(Array::make(current_node->get_name())));
         return nullptr;
     }
     

@@ -27,6 +27,7 @@
 #include "../camera_arm.h"
 #include "enemy.h"
 #include "../inventory/inventory.h"
+#include "../equipment/equipment_resource.h"
 #include "../game/game_instance.h"
 #include "../game/game_state.h"
 #include "../equipment/equipment.h"
@@ -61,6 +62,7 @@ NightmareCharacter::NightmareCharacter()
 
     interact_debounce = false;
     weapon_debounce = false;
+    weapon_ready = false;
 }
 
 NightmareCharacter::~NightmareCharacter()
@@ -130,10 +132,7 @@ void NightmareCharacter::_input(const Ref<InputEvent> &event)
 
     if (event->is_action_pressed("weapon_fire"))
     {
-        if (is_weapon_ready())
-        {
-            fire_weapon();
-        }
+        fire_weapon();
         return;
     }
 
@@ -217,14 +216,24 @@ void NightmareCharacter::update_input()
 
 void NightmareCharacter::ready_weapon()
 {
+    if (!current_equipment)
+    {
+        return;
+    }
     camera_arm->set_focus(true);
     animation_tree->set("parameters/weapon_ready/blend_amount", 1.0f);
+    weapon_ready = true;
 }
 
 void NightmareCharacter::release_weapon()
 {
+    if (!current_equipment)
+    {
+        return;
+    }
     camera_arm->set_focus(false);
     animation_tree->set("parameters/weapon_ready/blend_amount", 0.0f);
+    weapon_ready = false;
 }
 
 void NightmareCharacter::fire_weapon()
@@ -239,7 +248,10 @@ void NightmareCharacter::fire_weapon()
         return;
     }
 
-    current_equipment->fire(get_global_transform().get_basis().get_column(2));
+    current_equipment->fire(_body->get_global_transform().get_basis().get_column(2), this);
+    weapon_debounce = true;
+    Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.5f, false);
+    timer->connect("timeout", Callable(this, "end_weapon_debounce"));
 }
 
 void NightmareCharacter::end_interact_debounce()
@@ -258,7 +270,8 @@ bool NightmareCharacter::is_weapon_ready() const
     {
         return false;
     }
-    return current_equipment->is_ready();
+    //return current_equipment->is_ready();
+    return weapon_ready;
 }
 
 void NightmareCharacter::interact()
@@ -298,21 +311,9 @@ Inventory *NightmareCharacter::get_inventory()
     return inventory;
 }
 
-void NightmareCharacter::equip(Equipment *equipment)
+void NightmareCharacter::equip(EquipmentResource *equipment)
 {
     current_equipment = equipment;
-}
-
-void NightmareCharacter::load_and_equip(String equipment_scene_path)
-{
-    /* Ref<PackedScene> scene = ResourceLoader::get_singleton()->load(equipment_scene_path);
-    Node *scene_node = scene->instantiate();
-    Equipment *equipment = Object::cast_to<Equipment>(scene_node);
-    if (!equipment)
-    {
-        return;
-    }
-    equip(equipment); */
 }
 
 float NightmareCharacter::get_max_speed() const

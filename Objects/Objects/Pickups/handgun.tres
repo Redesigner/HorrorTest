@@ -1,10 +1,9 @@
-[gd_resource type="EquipmentResource" load_steps=2 format=3 uid="uid://ctynr0xr3jdo0"]
+[gd_resource type="GunEquipment" load_steps=2 format=3 uid="uid://dybjtuuuvx3ab"]
 
-[ext_resource type="Texture2D" uid="uid://bwrfadknammve" path="res://icon.svg" id="1_d40fy"]
+[ext_resource type="Texture2D" uid="uid://dqjrw5r5y2oqf" path="res://Shared Resources/Textures/key_placeholder.png" id="1_idsgp"]
 
 [resource]
-equipment_scene_path = "res://Objects/Objects/Equipment/gun_equipment.tscn"
-itemTexture = ExtResource("1_d40fy")
+itemTexture = ExtResource("1_idsgp")
 itemName = "Handgun"
 itemDescription = "A semi-automatic handgun."
-options = Array[String](["Examine", "Equip"])
+options = Array[String](["Equip"])

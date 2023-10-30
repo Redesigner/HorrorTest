@@ -28,7 +28,8 @@
 
 #include "classes/inventory/inventory.h"
 #include "classes/inventory/inventory_item_resource.h"
-#include "classes/inventory/equipment_resource.h"
+#include "classes/equipment/equipment_resource.h"
+#include "classes/equipment/gun_equipment.h"
 
 #include "classes/interactable/interactable.h"
 #include "classes/interactable/npc.h"
@@ -73,6 +74,7 @@ void initialize_example_module(ModuleInitializationLevel p_level)
     ClassDB::register_class<Inventory>();
     ClassDB::register_class<InventoryItemResource>();
     ClassDB::register_class<EquipmentResource>();
+    ClassDB::register_class<GunEquipment>();
 
     // INTERACTABLE CLASSES
     ClassDB::register_class<Interactable>(); // this class should be registered as an abstract, but I can't figure out how to do that correctly at the moment

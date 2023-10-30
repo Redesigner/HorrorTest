@@ -9,7 +9,7 @@
 
 namespace godot
 {
-class Equipment;
+class EquipmentResource;
 class NightmareCharacter : public Pawn
 {
     GDCLASS(NightmareCharacter, Pawn)
@@ -38,10 +38,7 @@ public:
 
     class Inventory* get_inventory();
 
-    void equip(Equipment *equipment);
-
-    // stand-in function? maybe change this functionality later
-    void load_and_equip(String equipment_scene_path);
+    void equip(EquipmentResource *equipment);
 
 protected:
     virtual float get_max_speed() const override;
@@ -76,7 +73,7 @@ private:
     class NightmareUi* ui;
     class Inventory *inventory;
 
-    Equipment *current_equipment;
+    EquipmentResource *current_equipment;
 
     Ref<class PackedScene> bullet_scene;
 
@@ -87,6 +84,7 @@ private:
 
     bool interact_debounce;
     bool weapon_debounce;
+    bool weapon_ready;
 };
 }
 

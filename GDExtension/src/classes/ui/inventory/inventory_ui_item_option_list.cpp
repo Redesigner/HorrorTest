@@ -9,7 +9,7 @@
 #include "inventory_ui_item_option.h"
 #include "../../game/game_instance.h"
 #include "../../pawns/nightmare_character.h"
-#include "../../inventory/equipment_resource.h"
+#include "../../equipment/equipment_resource.h"
 
 using namespace godot;
 
@@ -117,10 +117,14 @@ void InventoryUiItemOptionList::confirm_selection()
     if (option == "Equip")
     {
         EquipmentResource *equipment_resource = Object::cast_to<EquipmentResource>(currently_selected_item.ptr());
+        if (!equipment_resource)
+        {
+            return;
+        }
 
         GameInstance *game_instance = get_node<GameInstance>("/root/DefaultGameInstance");
         NightmareCharacter *player = game_instance->get_player();
-        player->load_and_equip(equipment_resource->get_equipment_scene_path());
+        player->equip(equipment_resource);
         return;
     }
 }
