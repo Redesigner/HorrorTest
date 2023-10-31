@@ -4,6 +4,7 @@
 #include "pawn.h"
 
 #include <godot_cpp/classes/input_event.hpp>
+#include <godot_cpp/classes/audio_stream.hpp>
 
 #include "class_macros.h"
 
@@ -39,6 +40,8 @@ public:
     class Inventory* get_inventory();
 
     void equip(EquipmentResource *equipment);
+
+    void play_sound_at_location(Ref<AudioStream> sound);
 
 protected:
     virtual float get_max_speed() const override;

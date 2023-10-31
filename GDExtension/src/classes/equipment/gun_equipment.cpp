@@ -1,7 +1,9 @@
 #include "gun_equipment.h"
 
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/physics_direct_space_state3d.hpp>
 #include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
+#include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/world3D.hpp>
 
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -22,10 +24,30 @@ GunEquipment::~GunEquipment()
 void GunEquipment::_bind_methods()
 {
     BIND_PROPERTY_HINT(Variant::FLOAT, damage, GunEquipment, PROPERTY_HINT_RANGE, "0,10,0.5");
+    BIND_PROPERTY_HINT(Variant::STRING, fire_sound_path, GunEquipment, PROPERTY_HINT_FILE, "");
+}
+
+void GunEquipment::load_assets()
+{
+    if (IN_EDITOR())
+    {
+        return;
+    }
+
+    fire_sound = ResourceLoader::get_singleton()->load(_fire_sound_path);
+    if (!fire_sound.is_valid())
+    {
+        UtilityFunctions::print("[GunEquipment] failed to load fire sound.");
+        return;
+    }
 }
 
 void GunEquipment::fire(Vector3 direction, NightmareCharacter *owner)
 {
+    if (fire_sound.is_valid())
+    {
+        owner->play_sound_at_location(fire_sound);
+    }
     const Vector3 start_location = owner->get_global_position();
     const Vector3 end_location = start_location + direction * -50.0f;
     PhysicsDirectSpaceState3D *space_state = owner->get_world_3d()->get_direct_space_state();

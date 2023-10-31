@@ -16,6 +16,8 @@ protected:
     static void _bind_methods();
 
 public:
+    virtual void load_assets();
+
     virtual void fire(Vector3 direction, class NightmareCharacter *owner);
 
 private:

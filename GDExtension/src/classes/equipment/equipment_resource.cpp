@@ -14,6 +14,10 @@ void EquipmentResource::_bind_methods()
 {
 }
 
+void EquipmentResource::load_assets()
+{
+}
+
 void EquipmentResource::fire(Vector3 direction, NightmareCharacter *owner)
 {
 }

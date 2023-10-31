@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://dqjrw5r5y2oqf" path="res://Shared Resources/Textures/key_placeholder.png" id="1_idsgp"]
 
 [resource]
+fire_sound_path = "res://Shared Resources/Sounds/pistol-shot.wav"
 itemTexture = ExtResource("1_idsgp")
 itemName = "Handgun"
 itemDescription = "A semi-automatic handgun."

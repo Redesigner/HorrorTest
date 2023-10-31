@@ -84,7 +84,8 @@ void NightmareCharacter::_ready()
     audio_stream_player = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
 
     ui = get_node<NightmareUi>("/root/ActiveUi");
-    inventory = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->get_inventory();
+    Ref<GameState> game_state = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state();
+    inventory = game_state->get_inventory();
 
     bullet_scene = ResourceLoader::get_singleton()->load(_bulletScenePath);
 
@@ -96,6 +97,7 @@ void NightmareCharacter::_ready()
     {
         Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
     }
+
 }
 
 void NightmareCharacter::_input(const Ref<InputEvent> &event)
@@ -223,6 +225,7 @@ void NightmareCharacter::ready_weapon()
     camera_arm->set_focus(true);
     animation_tree->set("parameters/weapon_ready/blend_amount", 1.0f);
     weapon_ready = true;
+    current_equipment->load_assets();
 }
 
 void NightmareCharacter::release_weapon()
@@ -250,7 +253,7 @@ void NightmareCharacter::fire_weapon()
 
     current_equipment->fire(_body->get_global_transform().get_basis().get_column(2), this);
     weapon_debounce = true;
-    Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.5f, false);
+    Ref<SceneTreeTimer> timer = get_tree()->create_timer(0.1f, false);
     timer->connect("timeout", Callable(this, "end_weapon_debounce"));
 }
 
@@ -314,6 +317,24 @@ Inventory *NightmareCharacter::get_inventory()
 void NightmareCharacter::equip(EquipmentResource *equipment)
 {
     current_equipment = equipment;
+}
+
+void NightmareCharacter::play_sound_at_location(Ref<AudioStream> sound)
+{
+    if (!audio_stream_player)
+    {
+        UtilityFunctions::print("[NightmareCharacter] attempted to play sound, but the audiostreamplayer was null.");
+        return;
+    }
+
+    if (!sound.is_valid())
+    {
+        UtilityFunctions::print("[NightmareCharacter] attempted to play sound, but the sound was invalid.");
+        return;
+    }
+
+    audio_stream_player->set_stream(sound);
+    audio_stream_player->play();
 }
 
 float NightmareCharacter::get_max_speed() const
