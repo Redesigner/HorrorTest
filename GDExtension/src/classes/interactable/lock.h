@@ -1,6 +1,6 @@
 #pragma once
 
-#include "interactable.h"
+#include "door.h"
 
 #include "../../class_macros.h"
 
@@ -11,9 +11,9 @@ namespace godot
 class InventoryItemResource;
 // class AudioStream;
 class NightmareCharacter;
-class Lock : public Interactable
+class Lock : public Door
 {
-    GDCLASS(Lock, Interactable);
+    GDCLASS(Lock, Door);
 
 public:
     Lock();

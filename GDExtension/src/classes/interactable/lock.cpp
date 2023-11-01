@@ -56,6 +56,7 @@ void Lock::trigger_interaction(NightmareCharacter *source)
 {
     if (!_locked)
     {
+        Door::trigger_interaction(source);
         return;
     }
     Inventory *inventory = source->get_inventory();

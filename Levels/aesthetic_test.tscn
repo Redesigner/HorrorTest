@@ -217,6 +217,8 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 13, 2,
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 16, 2, -5.1)
 
 [node name="Lock" parent="Worldmap" groups=["locks"] instance=ExtResource("3_50sox")]
+next_level_path = "res://Levels/test_room.tscn"
+spawn_location = "Entrance"
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.4, 2, -3)
 
 [node name="Enemy" parent="." instance=ExtResource("3_e860j")]

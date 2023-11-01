@@ -90,8 +90,9 @@ void NightmareCharacter::_ready()
     bullet_scene = ResourceLoader::get_singleton()->load(_bulletScenePath);
 
     connect("dialog_changed",  Callable(ui, "set_dialog"));
-    inventory->connect("inventory_changed", Callable(ui, "update_inventory"));
-    ui->set_inventory(inventory);
+    // With instanced players, this should be connected by the game state
+    // inventory->connect("inventory_changed", Callable(ui, "update_inventory"));
+    // ui->set_inventory(inventory);
 
     current_equipment = game_state->player_state.current_equipment.ptr();
 

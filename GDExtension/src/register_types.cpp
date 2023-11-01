@@ -80,8 +80,8 @@ void initialize_example_module(ModuleInitializationLevel p_level)
     ClassDB::register_class<Interactable>(); // this class should be registered as an abstract, but I can't figure out how to do that correctly at the moment
     ClassDB::register_class<NPC>();
     ClassDB::register_class<Pickup>();
-    ClassDB::register_class<Lock>();
     ClassDB::register_class<Door>();
+    ClassDB::register_class<Lock>();
 
     // LEVEL CLASSES
     ClassDB::register_class<SpawnLocation>();

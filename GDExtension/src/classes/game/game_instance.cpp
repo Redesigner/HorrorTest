@@ -4,6 +4,7 @@
 #include "../level/level.h"
 #include "../ui/nightmare_ui.h"
 #include "../ui/effects/fade_ui.h"
+#include "../inventory/inventory.h"
 
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
@@ -48,6 +49,10 @@ void GameInstance::_ready()
     }
     fade_effect->connect("fade_out_complete", Callable(this, "on_fade_out"));
     fade_effect->connect("fade_in_complete", Callable(this, "on_fade_back_in"));
+
+    Inventory *inventory = game_state->get_inventory();
+    inventory->connect("inventory_changed", Callable(nightmare_ui, "update_inventory"));
+    nightmare_ui->set_inventory(inventory);
 }
 
 const Ref<GameState> GameInstance::get_game_state() const
