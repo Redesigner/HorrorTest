@@ -96,7 +96,7 @@ String Inventory::make_string_data() const
 
         data += inventory_entry_format.format(inventory_entry_data);
     }
-    data += "}";
+    data += "}\n";
     // UtilityFunctions::print("[Inventory] converted to string:\n" + data);
     return data;
 }

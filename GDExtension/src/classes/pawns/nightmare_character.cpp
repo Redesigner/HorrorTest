@@ -93,6 +93,8 @@ void NightmareCharacter::_ready()
     inventory->connect("inventory_changed", Callable(ui, "update_inventory"));
     ui->set_inventory(inventory);
 
+    current_equipment = game_state->player_state.current_equipment.ptr();
+
     if (!_inEditor)
     {
         Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
@@ -317,6 +319,7 @@ Inventory *NightmareCharacter::get_inventory()
 void NightmareCharacter::equip(EquipmentResource *equipment)
 {
     current_equipment = equipment;
+    get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->player_state.current_equipment = Ref<EquipmentResource>(equipment);
 }
 
 void NightmareCharacter::play_sound_at_location(Ref<AudioStream> sound)

@@ -59,8 +59,8 @@ void GameState::save()
         file->store_buffer(entry.second);
         file->store_string("\n");
     }
-    String inventory_data = inventory->make_string_data();
-    file ->store_string(inventory_data);
+    file->store_string(inventory->make_string_data());
+    file->store_string(player_state.make_string());
     UtilityFunctions::print("[GameState] Saving game...");
     file->close();
 }
@@ -86,16 +86,22 @@ void GameState::load()
     }
 
     String inventory_control_string = "Inventory {";
+    String player_control_string = "Player {";
     while (file->get_position() < file->get_length())
     {
         // @todo: make this not hardcoded, it should equal the string added in inventory's make_string_data function
-        if (data.length() >= inventory_control_string.length())
+        UtilityFunctions::print(data);
+        if (match_control_string(data, inventory_control_string))
         {
-            if (data.right(inventory_control_string.length()) == inventory_control_string)
-            {
-                load_inventory(file);
-                continue;
-            }
+            load_inventory(file);
+            data = "";
+            continue;
+        }
+        if (match_control_string(data, player_control_string))
+        {
+            player_state.load_from_json_pairs(load_json_style_pairs(file));
+            data = "";
+            continue;
         }
 
         uint8_t next_char = file->get_8();
@@ -168,73 +174,9 @@ StringName GameState::convert_node_to_key(Node *node)
 
 void GameState::load_inventory(Ref<FileAccess> file)
 {
-    uint8_t current_char = '0';
-    String string_buffer = "";
-    bool writing_string = false;
-    bool writing_amount = false;
-
-    bool reference_valid = false;
-    bool amount_valid = false;
-
-    String inventory_reference_string = "";
-    String amount_string = "";
-    while (file->get_position() < file->get_length() && current_char != '}') // '}' should close out our entry
+    for (std::pair<String, String> inventory_pair : load_json_style_pairs(file))
     {
-        // The file will always open in single byte intervals
-        current_char = file->get_8();
-
-        if (current_char == '\"') // quotation marks
-        {
-            if (writing_string)
-            {
-                writing_string = false;
-                // write one of our two values
-                if (writing_amount)
-                {
-                    amount_string = string_buffer;
-                    amount_valid = true;
-                }
-                else
-                {
-                    inventory_reference_string = string_buffer;
-                    reference_valid = true;
-                }
-            }
-            else
-            {
-                // if we haven't been writing strings, clear the buffer for a new string
-                writing_string = true;
-                string_buffer = "";
-            }
-            continue;
-        }
-
-        if (current_char == ':' && !writing_string) // allow string names to have colons in them
-        {
-            // switch writing mode
-            writing_amount = true;
-            continue;
-        }
-
-        if (current_char == '\n')
-        {
-            if (amount_valid && reference_valid)
-            {
-                load_inventory_item_from_string(inventory_reference_string, amount_string);
-                amount_valid = false;
-                reference_valid = false;
-                writing_amount = false;
-            }
-            continue;
-        }
-
-        if (current_char == '\t')
-        {
-            continue;
-        }
-
-        // this will ignore psuedo-control characters like : or " becacuse of the previous continue statements
-        string_buffer += current_char;
+        load_inventory_item_from_string(inventory_pair.first, inventory_pair.second);
     }
 }
 
@@ -250,4 +192,83 @@ void GameState::load_inventory_item_from_string(String resource_string, String a
     }
     const int amount = amount_string.to_int();
     inventory->add_item(item_resource, amount);
+}
+
+std::vector<std::pair<String, String>> GameState::load_json_style_pairs(Ref<FileAccess> file)
+{
+    std::vector<std::pair<String, String>> data = std::vector<std::pair<String, String>>();
+    uint8_t current_char = '0';
+    String string_buffer = "";
+    bool writing_id = false;
+    bool writing_value = false;
+
+    bool reference_valid = false;
+    bool value_valid = false;
+
+    String id_string = "";
+    String value_string = "";
+    while (file->get_position() < file->get_length() && current_char != '}') // '}' should close out our entry
+    {
+        // The file will always open in single byte intervals
+        current_char = file->get_8();
+
+        if (current_char == '\"') // quotation marks
+        {
+            if (writing_id)
+            {
+                writing_id = false;
+                // write one of our two values
+                if (writing_value)
+                {
+                    value_string = string_buffer;
+                    value_valid = true;
+                }
+                else
+                {
+                    id_string = string_buffer;
+                    reference_valid = true;
+                }
+            }
+            else
+            {
+                // if we haven't been writing strings, clear the buffer for a new string
+                writing_id = true;
+                string_buffer = "";
+            }
+            continue;
+        }
+
+        if (current_char == ':' && !writing_id) // allow string names to have colons in them
+        {
+            // switch writing mode
+            writing_value = true;
+            continue;
+        }
+
+        if (current_char == '\n')
+        {
+            if (value_valid && reference_valid)
+            {
+                data.push_back(std::pair<String, String>(id_string, value_string));
+                value_valid = false;
+                reference_valid = false;
+                writing_value = false;
+            }
+            continue;
+        }
+
+        if (current_char == '\t')
+        {
+            continue;
+        }
+
+        // this will ignore psuedo-control characters like : or " becacuse of the previous continue statements
+        string_buffer += current_char;
+    }
+    return data;
+}
+
+bool GameState::match_control_string(String data, String control_string)
+{
+    return data.length() >= control_string.length() && data.right(control_string.length()) == control_string;
 }
