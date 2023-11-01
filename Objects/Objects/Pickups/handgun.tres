@@ -7,4 +7,3 @@ fire_sound_path = "res://Shared Resources/Sounds/pistol-shot.wav"
 itemTexture = ExtResource("1_idsgp")
 itemName = "Handgun"
 itemDescription = "A semi-automatic handgun."
-options = Array[String](["Equip"])

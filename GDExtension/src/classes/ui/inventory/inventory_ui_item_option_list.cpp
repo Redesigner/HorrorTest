@@ -8,6 +8,7 @@
 
 #include "inventory_ui_item_option.h"
 #include "../../game/game_instance.h"
+#include "../../game/game_state.h"
 #include "../../pawns/nightmare_character.h"
 #include "../../equipment/equipment_resource.h"
 
@@ -59,12 +60,17 @@ void InventoryUiItemOptionList::set_selected_item(Ref<InventoryItemResource> ite
         option->queue_free();
     }
     option_ui_list.clear();
+    option_list.clear();
     // Assume this array is the order of options we want it displayed.
     TypedArray<String> new_item_options = item_resource->get_options();
     for (int i = 0; i < new_item_options.size(); i++)
     {
         String new_item_option = new_item_options[i];
         create_option(new_item_option);
+    }
+    if (EquipmentResource *equipment_resource = Object::cast_to<EquipmentResource>(currently_selected_item.ptr()))
+    {
+        create_equip_option(equipment_resource);
     }
     
     if (currently_selected_option_index >= new_item_options.size())
@@ -104,7 +110,7 @@ void InventoryUiItemOptionList::confirm_selection()
         WARN_PRINT("[InventoryUi] currently selected item is not valid.");
         return;
     }
-    TypedArray<String> options = currently_selected_item->get_options();
+    std::vector<String> options = option_list;
     if (options.size() <= currently_selected_option_index)
     {
         WARN_PRINT("[InventoryUi] selected option index does not exist for the currently selected item.");
@@ -125,6 +131,22 @@ void InventoryUiItemOptionList::confirm_selection()
         GameInstance *game_instance = get_node<GameInstance>("/root/DefaultGameInstance");
         NightmareCharacter *player = game_instance->get_player();
         player->equip(equipment_resource);
+        option_ui_list[currently_selected_option_index]->set_text("Unequip");
+        option_list[currently_selected_option_index] = "Unequip";
+        return;
+    }
+    if (option == "Unequip")
+    {
+        EquipmentResource *equipment_resource = Object::cast_to<EquipmentResource>(currently_selected_item.ptr());
+        if (!equipment_resource)
+        {
+            return;
+        }
+        GameInstance *game_instance = get_node<GameInstance>("/root/DefaultGameInstance");
+        NightmareCharacter *player = game_instance->get_player();
+        player->unequip();
+        option_ui_list[currently_selected_option_index]->set_text("Equip");
+        option_list[currently_selected_option_index] = "Equip";
         return;
     }
 }
@@ -154,6 +176,20 @@ void InventoryUiItemOptionList::create_option(String option_name)
     new_option->set_text(option_name);
     new_option->set_v_size_flags(SIZE_EXPAND_FILL);
     option_ui_list.push_back(new_option);
+    option_list.push_back(option_name);
+}
+
+void InventoryUiItemOptionList::create_equip_option(EquipmentResource *equipment)
+{
+    Ref<GameState> game_state = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state();
+    if (equipment == game_state->player_state.current_equipment.ptr())
+    {
+        create_option("Unequip");
+    }
+    else
+    {
+        create_option("Equip");
+    }
 }
 
 void InventoryUiItemOptionList::select_option(int option_index)

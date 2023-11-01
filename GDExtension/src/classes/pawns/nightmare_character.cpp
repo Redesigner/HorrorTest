@@ -322,6 +322,12 @@ void NightmareCharacter::equip(EquipmentResource *equipment)
     get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->player_state.current_equipment = Ref<EquipmentResource>(equipment);
 }
 
+void NightmareCharacter::unequip()
+{
+    current_equipment = nullptr;
+    get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state()->player_state.current_equipment = Ref<EquipmentResource>(nullptr);
+}
+
 void NightmareCharacter::play_sound_at_location(Ref<AudioStream> sound)
 {
     if (!audio_stream_player)

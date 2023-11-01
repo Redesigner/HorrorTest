@@ -13,6 +13,7 @@ namespace godot
 {
 class VBoxContainer;
 class InventoryUiItemOption;
+class EquipmentResource;
 class InventoryUiItemOptionList : public Control
 {
     GDCLASS(InventoryUiItemOptionList, Control);
@@ -38,6 +39,8 @@ public:
 private:
     void create_option(String option_name);
 
+    void create_equip_option(EquipmentResource *equipment);
+
     void select_option(int option_index);
 
 
@@ -50,6 +53,8 @@ private:
     Ref<PackedScene> option_scene;
 
     std::vector<InventoryUiItemOption *> option_ui_list;
+
+    std::vector<String> option_list;
 
     int currently_selected_option_index;
 };

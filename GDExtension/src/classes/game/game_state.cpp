@@ -162,7 +162,7 @@ void GameState::on_level_enter()
 {
 }
 
-Inventory * GameState::get_inventory()
+Inventory *GameState::get_inventory()
 {
     return inventory.ptr();
 }

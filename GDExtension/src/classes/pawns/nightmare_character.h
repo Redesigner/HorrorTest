@@ -41,6 +41,8 @@ public:
 
     void equip(EquipmentResource *equipment);
 
+    void unequip();
+
     void play_sound_at_location(Ref<AudioStream> sound);
 
 protected:
