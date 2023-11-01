@@ -23,9 +23,13 @@ public:
     virtual void fire(Vector3 direction, NightmareCharacter *owner) override;
 
 private:
+    bool try_consume_ammo(NightmareCharacter *owner);
+
     DECLARE_PROPERTY(float, damage, 1.0f);
 
     DECLARE_PROPERTY_NODEFAULT(String, fire_sound_path);
     Ref<AudioStream> fire_sound;
+
+    DECLARE_PROPERTY_NODEFAULT(Ref<InventoryItemResource>, ammo_type);
 };
 }

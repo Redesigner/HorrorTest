@@ -10,6 +10,7 @@
 
 #include "../pawns/enemy.h"
 #include "../pawns/nightmare_character.h"
+#include "../inventory/inventory.h"
 
 using namespace godot;
 
@@ -25,6 +26,7 @@ void GunEquipment::_bind_methods()
 {
     BIND_PROPERTY_HINT(Variant::FLOAT, damage, GunEquipment, PROPERTY_HINT_RANGE, "0,10,0.5");
     BIND_PROPERTY_HINT(Variant::STRING, fire_sound_path, GunEquipment, PROPERTY_HINT_FILE, "");
+    BIND_PROPERTY(Variant::OBJECT, ammo_type, GunEquipment);
 }
 
 void GunEquipment::load_assets()
@@ -44,6 +46,16 @@ void GunEquipment::load_assets()
 
 void GunEquipment::fire(Vector3 direction, NightmareCharacter *owner)
 {
+    if (!_ammo_type.is_valid())
+    {
+        WARN_PRINT("[GunEquipment] gun ammo type invalid.");
+        return;
+    }
+    if (!try_consume_ammo(owner))
+    {
+        UtilityFunctions::print(String("[GunEquipment] tried to fire weapon, but had no ammo of type '{0}'").format(Array::make(_ammo_type->get_path())));
+        return;
+    }
     if (fire_sound.is_valid())
     {
         owner->play_sound_at_location(fire_sound);
@@ -77,4 +89,10 @@ void GunEquipment::fire(Vector3 direction, NightmareCharacter *owner)
         return;
     }
     enemy->take_damage(_damage);
+}
+
+bool GunEquipment::try_consume_ammo(NightmareCharacter *owner)
+{
+    Inventory *inventory = owner->get_inventory();
+    return inventory->try_consume_item(_ammo_type);
 }

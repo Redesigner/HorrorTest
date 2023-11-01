@@ -1,9 +1,11 @@
-[gd_resource type="GunEquipment" load_steps=2 format=3 uid="uid://dybjtuuuvx3ab"]
+[gd_resource type="GunEquipment" load_steps=3 format=3 uid="uid://dybjtuuuvx3ab"]
 
 [ext_resource type="Texture2D" uid="uid://dqjrw5r5y2oqf" path="res://Shared Resources/Textures/key_placeholder.png" id="1_idsgp"]
+[ext_resource type="InventoryItemResource" uid="uid://cw04nw8cwh0rb" path="res://Objects/Objects/Pickups/bullets.tres" id="1_pd07i"]
 
 [resource]
 fire_sound_path = "res://Shared Resources/Sounds/pistol-shot.wav"
+ammo_type = ExtResource("1_pd07i")
 itemTexture = ExtResource("1_idsgp")
 itemName = "Handgun"
 itemDescription = "A semi-automatic handgun."

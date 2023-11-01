@@ -33,38 +33,69 @@ TypedArray<Dictionary> Inventory::get_inventory_array() const
     return _inventory;
 }
 
-void Inventory::add_item(Ref<InventoryItemResource> inventoryResource, int amount)
+void Inventory::add_item(Ref<InventoryItemResource> inventory_resource, int amount)
 {
-    const int itemIndex = get_item_index(inventoryResource);
-    if (itemIndex >= 0)
+    const int item_index = get_item_index(inventory_resource);
+    if (item_index >= 0)
     {
-        Dictionary inventoryEntry = _inventory[itemIndex];
-        inventoryEntry["amount"] = static_cast<float>(inventoryEntry["amount"]) + amount;
+        Dictionary inventory_entry = _inventory[item_index];
+        inventory_entry["amount"] = static_cast<float>(inventory_entry["amount"]) + amount;
 
         emit_signal("inventory_changed");
         return;
     }
-    Dictionary newItem = Dictionary();
-    newItem["resource"] = inventoryResource;
-    newItem["amount"] = amount;
-    _inventory.append(newItem);
+    Dictionary new_item = Dictionary();
+    new_item["resource"] = inventory_resource;
+    new_item["amount"] = amount;
+    _inventory.append(new_item);
     emit_signal("inventory_changed");
 }
 
-bool Inventory::has_item(Ref<InventoryItemResource> inventoryResource) const
+bool Inventory::has_item(Ref<InventoryItemResource> inventory_resource) const
 {
-    const int itemIndex = get_item_index(inventoryResource);
+    const int itemIndex = get_item_index(inventory_resource);
     UtilityFunctions::print(String("[Inventory] Checking for item, item index is '{0}'").format(Array::make(itemIndex)));
     return itemIndex >= 0;
 }
 
-int Inventory::get_item_index(Ref<InventoryItemResource> inventoryResource) const
+int Inventory::get_item_count(Ref<InventoryItemResource> inventory_resource) const
+{
+    int item_index = get_item_index(inventory_resource);
+    if (item_index < 0)
+    {
+        return 0;
+    }
+    return _inventory[item_index]["amount"];
+}
+
+bool Inventory::try_consume_item(Ref<InventoryItemResource> inventory_resource) const
+{
+    int item_index = get_item_index(inventory_resource);
+    if (item_index < 0)
+    {
+        return false;
+    }
+    Dictionary item = _inventory[item_index];
+    int item_count = item["amount"];
+    if (item_count <= 0)
+    {
+        return false;
+    }
+    item_count--;
+    item["amount"] = item_count;
+    
+    Ref<InventoryItemResource> item_resource = item["resource"];
+    UtilityFunctions::print(String("[Inventory] consuming item '{0}', remaining count: {1}").format(Array::make(item_resource->get_path(), item_count)));
+    return true;
+}
+
+int Inventory::get_item_index(Ref<InventoryItemResource> inventory_resource) const
 {
     for (int i = 0; i < _inventory.size(); i++)
     {
-        Dictionary inventoryEntry = _inventory[i];
-        Ref<InventoryItemResource> entryInventoryResource = inventoryEntry["resource"];
-        if (entryInventoryResource == inventoryResource)
+        Dictionary inventory_entry = _inventory[i];
+        Ref<InventoryItemResource> entryInventoryResource = inventory_entry["resource"];
+        if (entryInventoryResource == inventory_resource)
         {
             return i;
         }

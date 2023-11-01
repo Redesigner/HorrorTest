@@ -7,7 +7,10 @@
 namespace godot
 {
 class InventoryItemResource;
-
+class Label;
+class RichTextLabel;
+class TextureRect;
+class InventoryUiItemOptionList;
 class InventoryUiItemDisplay : public Control
 {
     GDCLASS(InventoryUiItemDisplay, Control);
@@ -30,10 +33,10 @@ public:
     void update_inventory_item_resource(Ref<InventoryItemResource> itemResource);
 
 private:
-    class Label *_itemNameDisplay;
-    class RichTextLabel *_itemDescriptionDisplay;
-    class TextureRect *_itemPictureDisplay;
-    class InventoryUiItemOptionList *_itemOptionDisplay;
+    Label *_itemNameDisplay;
+    RichTextLabel *_itemDescriptionDisplay;
+    TextureRect *_itemPictureDisplay;
+    InventoryUiItemOptionList *_itemOptionDisplay;
 
     DECLARE_PROPERTY_NODEFAULT(Ref<InventoryItemResource>, itemResource);
 
