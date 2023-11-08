@@ -7,6 +7,8 @@
 namespace godot
 {
 class InventoryItemResource;
+class TextureRect;
+class Label;
 class InventoryUiItemPreview : public Control
 {
     GDCLASS(InventoryUiItemPreview, Control);
@@ -28,8 +30,10 @@ public:
 private:
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemPictureDisplayPath);
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemHighlightPath);
+    DECLARE_PROPERTY_NODEFAULT(NodePath, itemCountDisplayPath);
 
-    class TextureRect *_itemPictureDisplay;
-    class Control *_itemHighlight;
+    TextureRect *_itemPictureDisplay;
+    Control *_itemHighlight;
+    Label *_itemCountDisplay;
 };
 }

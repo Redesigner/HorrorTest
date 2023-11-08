@@ -27,7 +27,7 @@ public:
 
     int get_item_count(Ref<InventoryItemResource> inventory_resource) const;
 
-    bool try_consume_item(Ref<InventoryItemResource> inventory_resource) const;
+    bool try_consume_item(Ref<InventoryItemResource> inventory_resource);
 
     String make_string_data() const;
 

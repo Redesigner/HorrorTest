@@ -4,6 +4,8 @@
 
 #include "../../../class_macros.h"
 
+#include "../../inventory/inventory_item_resource.h"
+
 namespace godot
 {
 class InventoryUiItemPreviewList : public Control
@@ -25,6 +27,8 @@ public:
     void update();
 
     void set_selected_index(int index);
+
+    void item_count_changed(int count, Ref<InventoryItemResource> item);
 
 private:
     void bind_previews_to_array();

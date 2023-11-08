@@ -1,6 +1,7 @@
 #include "inventory_ui_item_preview.h"
 
 #include <godot_cpp/classes/texture_rect.hpp>
+#include <godot_cpp/classes/label.hpp>
 
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -12,6 +13,7 @@ InventoryUiItemPreview::InventoryUiItemPreview()
 {
     _itemPictureDisplay = nullptr;
     _itemHighlight = nullptr;
+    _itemCountDisplay = nullptr;
 }
 
 InventoryUiItemPreview::~InventoryUiItemPreview()
@@ -22,18 +24,37 @@ void InventoryUiItemPreview::_bind_methods()
 {
     BIND_PROPERTY(Variant::NODE_PATH, itemPictureDisplayPath, InventoryUiItemPreview);
     BIND_PROPERTY(Variant::NODE_PATH, itemHighlightPath, InventoryUiItemPreview);
+    BIND_PROPERTY(Variant::NODE_PATH, itemCountDisplayPath, InventoryUiItemPreview);
 }
 
 void InventoryUiItemPreview::_ready()
 {
-    _itemPictureDisplay = Object::cast_to<TextureRect>(get_node_or_null(_itemPictureDisplayPath));
-    _itemHighlight = Object::cast_to<Control>(get_node_or_null(_itemHighlightPath));
+    _itemPictureDisplay = get_node<TextureRect>(_itemPictureDisplayPath);
+    _itemHighlight = get_node<Control>(_itemHighlightPath);
+    _itemCountDisplay = get_node<Label>(_itemCountDisplayPath);
 }
 
 void InventoryUiItemPreview::set_item_resource(Ref<InventoryItemResource> itemResource)
 {
-    //UtilityFunctions::print( String("[InventoryUi] previewing item {0}").format(Array::make(itemResource->get_itemName())) );
+    if (!_itemPictureDisplay)
+    {
+        return;
+    }
     _itemPictureDisplay->set_texture(itemResource->get_itemTexture());
+
+    if (!_itemCountDisplay)
+    {
+        return;
+    }
+    if (itemResource->get_stackable())
+    {
+        _itemCountDisplay->set_visible(true);
+        _itemCountDisplay->set_text(String::num_uint64(0));
+    }
+    else
+    {
+        _itemCountDisplay->set_visible(false);
+    }
 }
 
 void InventoryUiItemPreview::set_selected(bool selected)

@@ -26,6 +26,8 @@ InventoryUiItemPreviewList::~InventoryUiItemPreviewList()
 void InventoryUiItemPreviewList::_bind_methods()
 {
     BIND_PROPERTY(Variant::NODE_PATH, containerNodePath, InventoryUiItemPreviewList);
+
+    ClassDB::bind_method(D_METHOD("item_count_changed", "p_item_count", "p_item"), &InventoryUiItemPreviewList::item_count_changed);
 }
 
 void InventoryUiItemPreviewList::_ready()
@@ -42,6 +44,7 @@ void InventoryUiItemPreviewList::_ready()
 void InventoryUiItemPreviewList::set_inventory(Inventory *inventory)
 {
     _inventory = inventory;
+    _inventory->connect("item_count_changed", Callable(this, "item_count_changed"));
 }
 
 void InventoryUiItemPreviewList::update()
@@ -74,6 +77,11 @@ void InventoryUiItemPreviewList::set_selected_index(int index)
     
     InventoryUiItemPreview *newPreview = dynamic_cast<InventoryUiItemPreview *>(static_cast<Object *>(_itemPreviews[index]));
     newPreview->set_selected(true);
+}
+
+void InventoryUiItemPreviewList::item_count_changed(int count, Ref<InventoryItemResource> item)
+{
+    UtilityFunctions::print("Item count changed.");
 }
 
 void InventoryUiItemPreviewList::bind_previews_to_array()

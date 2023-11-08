@@ -21,6 +21,7 @@ void Inventory::_bind_methods()
     ClassDB::add_property("Inventory", PropertyInfo((Variant::ARRAY), "inventory"), "set_inventory", "get_inventory");
     
     ADD_SIGNAL(MethodInfo("inventory_changed"));
+    ADD_SIGNAL(MethodInfo("item_count_changed", PropertyInfo(Variant::INT, "new_count"), PropertyInfo(Variant::OBJECT, "item")));
 }
 
 void Inventory::set_inventory_array(TypedArray<Dictionary> inventory)
@@ -39,9 +40,11 @@ void Inventory::add_item(Ref<InventoryItemResource> inventory_resource, int amou
     if (item_index >= 0)
     {
         Dictionary inventory_entry = _inventory[item_index];
-        inventory_entry["amount"] = static_cast<float>(inventory_entry["amount"]) + amount;
+        int new_amount = static_cast<float>(inventory_entry["amount"]) + amount;
+        inventory_entry["amount"] = new_amount;
 
-        emit_signal("inventory_changed");
+        // emit_signal("inventory_changed");
+        emit_signal("item_count_changed", new_amount, inventory_resource);
         return;
     }
     Dictionary new_item = Dictionary();
@@ -68,7 +71,7 @@ int Inventory::get_item_count(Ref<InventoryItemResource> inventory_resource) con
     return _inventory[item_index]["amount"];
 }
 
-bool Inventory::try_consume_item(Ref<InventoryItemResource> inventory_resource) const
+bool Inventory::try_consume_item(Ref<InventoryItemResource> inventory_resource)
 {
     int item_index = get_item_index(inventory_resource);
     if (item_index < 0)
@@ -86,6 +89,7 @@ bool Inventory::try_consume_item(Ref<InventoryItemResource> inventory_resource) 
     
     Ref<InventoryItemResource> item_resource = item["resource"];
     UtilityFunctions::print(String("[Inventory] consuming item '{0}', remaining count: {1}").format(Array::make(item_resource->get_path(), item_count)));
+    emit_signal("item_count_changed", item_count, item_resource);
     return true;
 }
 
