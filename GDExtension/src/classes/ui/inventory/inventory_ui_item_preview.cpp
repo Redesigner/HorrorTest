@@ -34,19 +34,20 @@ void InventoryUiItemPreview::_ready()
     _itemCountDisplay = get_node<Label>(_itemCountDisplayPath);
 }
 
-void InventoryUiItemPreview::set_item_resource(Ref<InventoryItemResource> itemResource)
+void InventoryUiItemPreview::set_item_resource(Ref<InventoryItemResource> item)
 {
+    item_resource = item;
     if (!_itemPictureDisplay)
     {
         return;
     }
-    _itemPictureDisplay->set_texture(itemResource->get_itemTexture());
+    _itemPictureDisplay->set_texture(item->get_itemTexture());
 
     if (!_itemCountDisplay)
     {
         return;
     }
-    if (itemResource->get_stackable())
+    if (item->get_stackable())
     {
         _itemCountDisplay->set_visible(true);
         _itemCountDisplay->set_text(String::num_uint64(0));
@@ -55,6 +56,19 @@ void InventoryUiItemPreview::set_item_resource(Ref<InventoryItemResource> itemRe
     {
         _itemCountDisplay->set_visible(false);
     }
+}
+
+Ref<InventoryItemResource> InventoryUiItemPreview::get_item_resource() const
+{
+    return item_resource;
+}
+
+void InventoryUiItemPreview::set_item_count(int count)
+{
+    if (_itemCountDisplay)
+    {
+        _itemCountDisplay->set_text(String::num_uint64(count));
+    };
 }
 
 void InventoryUiItemPreview::set_selected(bool selected)

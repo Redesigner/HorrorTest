@@ -23,7 +23,10 @@ protected:
 public:
     virtual void _ready() override;
 
-    void set_item_resource(Ref<InventoryItemResource> itemResource);
+    void set_item_resource(Ref<InventoryItemResource> item);
+    Ref<InventoryItemResource> get_item_resource() const;
+
+    void set_item_count(int count);
 
     void set_selected(bool selected);
 
@@ -35,5 +38,7 @@ private:
     TextureRect *_itemPictureDisplay;
     Control *_itemHighlight;
     Label *_itemCountDisplay;
+
+    Ref<InventoryItemResource> item_resource;
 };
 }

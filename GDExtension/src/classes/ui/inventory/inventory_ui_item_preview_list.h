@@ -8,6 +8,7 @@
 
 namespace godot
 {
+class InventoryUiItemPreview;
 class InventoryUiItemPreviewList : public Control
 {
     GDCLASS(InventoryUiItemPreviewList, Control);
@@ -33,8 +34,10 @@ public:
 private:
     void bind_previews_to_array();
 
-private:
-    TypedArray<class InventoryUiItemPreview> _itemPreviews;
+    InventoryUiItemPreview *get_preview_for_item(Ref<InventoryItemResource> item) const;
+
+
+    std::vector<InventoryUiItemPreview *> item_previews;
 
     class Inventory *_inventory;
 
@@ -42,7 +45,7 @@ private:
 
     DECLARE_PROPERTY_NODEFAULT(NodePath, containerNodePath);
 
-    int _currentlySelectedItemIndex;
+    int currently_selected_item_index;
 
 };
 }

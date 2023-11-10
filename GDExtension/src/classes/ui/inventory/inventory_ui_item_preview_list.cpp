@@ -16,7 +16,7 @@ InventoryUiItemPreviewList::InventoryUiItemPreviewList()
     _inventory = nullptr;
     _containerNode = nullptr;
 
-    _currentlySelectedItemIndex = 0;
+    currently_selected_item_index = 0;
 }
 
 InventoryUiItemPreviewList::~InventoryUiItemPreviewList()
@@ -56,7 +56,7 @@ void InventoryUiItemPreviewList::update()
 
     TypedArray<Dictionary> inventoryArray = _inventory->get_inventory_array();
     UtilityFunctions::print( String("[InventoryUi] Attaching inventory items to previews - found {0} items in inventory.").format(Array::make(inventoryArray.size())) );
-    for (int i = 0; i < _itemPreviews.size(); i++)
+    for (int i = 0; i < item_previews.size(); i++)
     {
         // Return if we're trying to fill the previews beyond the actual size of the array
         if (i >= inventoryArray.size())
@@ -64,24 +64,25 @@ void InventoryUiItemPreviewList::update()
             return;
         }
         Dictionary item = inventoryArray[i];
-        InventoryUiItemPreview *itemPreview = dynamic_cast<InventoryUiItemPreview *>(static_cast<Object *>(_itemPreviews[i]));
+        InventoryUiItemPreview *itemPreview = item_previews[i];
         itemPreview->set_item_resource(item["resource"]);
+        itemPreview->set_item_count(item["amount"]);
     }
 }
 
 void InventoryUiItemPreviewList::set_selected_index(int index)
 {
-    InventoryUiItemPreview *oldPreview = dynamic_cast<InventoryUiItemPreview *>(static_cast<Object *>(_itemPreviews[_currentlySelectedItemIndex]));
+    InventoryUiItemPreview *oldPreview = item_previews[currently_selected_item_index];
     oldPreview->set_selected(false);
-    _currentlySelectedItemIndex = index;
+    currently_selected_item_index = index;
     
-    InventoryUiItemPreview *newPreview = dynamic_cast<InventoryUiItemPreview *>(static_cast<Object *>(_itemPreviews[index]));
+    InventoryUiItemPreview *newPreview = item_previews[index];
     newPreview->set_selected(true);
 }
 
 void InventoryUiItemPreviewList::item_count_changed(int count, Ref<InventoryItemResource> item)
 {
-    UtilityFunctions::print("Item count changed.");
+    get_preview_for_item(item)->set_item_count(count);
 }
 
 void InventoryUiItemPreviewList::bind_previews_to_array()
@@ -100,7 +101,20 @@ void InventoryUiItemPreviewList::bind_previews_to_array()
         Object *child = children[i];
         if (InventoryUiItemPreview *itemPreview = dynamic_cast<InventoryUiItemPreview *>(child) )
         {
-            _itemPreviews.append(itemPreview);
+            item_previews.push_back(itemPreview);
         }
     }
+}
+
+InventoryUiItemPreview *InventoryUiItemPreviewList::get_preview_for_item(Ref<InventoryItemResource> item) const
+{
+    for (InventoryUiItemPreview * item_preview : item_previews)
+    {
+        if (item_preview->get_item_resource() == item)
+        {
+            return item_preview;
+        }
+    }
+    WARN_PRINT(String("[InventoryUI] Unable to find preview associated with {0}").format(Array::make(item->get_path())));
+    return nullptr;
 }

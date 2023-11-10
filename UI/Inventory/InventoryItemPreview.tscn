@@ -6,6 +6,7 @@ bg_color = Color(0, 0, 0, 1)
 [node name="InventoryItemDisplay" type="InventoryUiItemPreview"]
 itemPictureDisplayPath = NodePath("Panel/TextureRect")
 itemHighlightPath = NodePath("ReferenceRect")
+itemCountDisplayPath = NodePath("ItemCountDisplay")
 anchors_preset = -1
 anchor_left = 0.1
 anchor_top = 0.1
@@ -53,3 +54,20 @@ grow_horizontal = 2
 grow_vertical = 2
 border_width = 5.0
 editor_only = false
+
+[node name="ItemCountDisplay" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -51.5999
+offset_top = -26.0
+offset_right = -11.5999
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+text = "100"
+horizontal_alignment = 2
