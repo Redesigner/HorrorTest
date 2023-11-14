@@ -17,7 +17,6 @@ Inventory::~Inventory()
 void Inventory::_bind_methods()
 {    
     ADD_SIGNAL(MethodInfo("inventory_changed"));
-    ADD_SIGNAL(MethodInfo("item_count_changed", PropertyInfo(Variant::INT, "new_count"), PropertyInfo(Variant::OBJECT, "item")));
 }
 
 void Inventory::add_item(Ref<InventoryItemResource> inventory_resource, int amount)
@@ -33,7 +32,8 @@ void Inventory::add_item(InventoryEntry entry)
     {
         InventoryEntry &inventory_entry = _inventory[item_index];
         inventory_entry.count += entry.count;
-        emit_signal("item_count_changed", inventory_entry.count, inventory_entry.item);
+        // emit_signal("item_count_changed", inventory_entry.count, inventory_entry.item);
+        emit_signal("inventory_changed");
         return;
     }
     _inventory.push_back(entry);
@@ -73,7 +73,8 @@ bool Inventory::try_consume_item(Ref<InventoryItemResource> inventory_resource)
     
     Ref<InventoryItemResource> item_resource = item.item;
     UtilityFunctions::print(String("[Inventory] consuming item '{0}', remaining count: {1}").format(Array::make(item_resource->get_path(), item.count)));
-    emit_signal("item_count_changed", item.count, item_resource);
+    //emit_signal("item_count_changed", item.count, item_resource);
+    emit_signal("inventory_changed");
     return true;
 }
 

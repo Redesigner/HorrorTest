@@ -40,13 +40,14 @@ private:
     static TypedArray<String> process_string(String string);
 
 private:
-    class RichTextLabel *_textElement;
+    class RichTextLabel *text_element;
 
-    String _pendingText;
-    TypedArray<String> _pendingTokens;
-    float _currentTick = 0.0f;
-    int _currentTokenIndex = 0;
-    bool _textAnimating = false;
+    String pending_text;
+    TypedArray<String> pending_tokens;
+    float current_tick = 0.0f;
+    int current_token_index = 0;
+    bool text_animating = false;
+    bool skip_text_debounce = false;
 
     DECLARE_PROPERTY(float, characterRate, 10.0f);
 };

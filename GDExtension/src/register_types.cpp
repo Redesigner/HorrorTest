@@ -19,6 +19,7 @@
 #include "classes/ui/nightmare_ui.h"
 #include "classes/ui/effects/fade_ui.h"
 #include "classes/ui/viewmodel/viewmodel.h"
+#include "classes/ui/viewmodel/inventory_viewmodel.h"
 
 #include "classes/ui/inventory/inventory_ui_menu.h"
 #include "classes/ui/inventory/inventory_ui_item_display.h"
@@ -64,6 +65,7 @@ void initialize_example_module(ModuleInitializationLevel p_level)
     ClassDB::register_class<NightmareUi>();
     ClassDB::register_class<FadeUi>();
     ClassDB::register_class<ViewModel>();
+    ClassDB::register_class<InventoryViewModel>();
 
     // Inventory ui
     ClassDB::register_class<InventoryUiMenu>();

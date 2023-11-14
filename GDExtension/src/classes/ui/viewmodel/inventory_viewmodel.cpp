@@ -30,6 +30,7 @@ void InventoryViewModel::bind_view(InventoryUiMenu *menu)
 void InventoryViewModel::bind_model(Inventory *inventory)
 {
     model = inventory;
+    model->connect("inventory_changed", Callable(this, "update_model"));
 }
 
 void InventoryViewModel::update_model()

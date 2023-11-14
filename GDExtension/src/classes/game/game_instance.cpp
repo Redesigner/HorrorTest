@@ -6,6 +6,7 @@
 #include "../ui/effects/fade_ui.h"
 #include "../ui/viewmodel/inventory_viewmodel.h"
 #include "../inventory/inventory.h"
+#include "../pawns/nightmare_character.h"
 
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
@@ -33,6 +34,8 @@ void GameInstance::_bind_methods()
 {
     ClassDB::bind_method(D_METHOD("on_fade_out"), &GameInstance::on_fade_out);
     ClassDB::bind_method(D_METHOD("on_fade_back_in"), &GameInstance::on_fade_back_in);
+
+    ClassDB::bind_method(D_METHOD("on_node_added"), &GameInstance::on_node_added);
 }
 
 void GameInstance::_ready()
@@ -51,7 +54,10 @@ void GameInstance::_ready()
     }
     fade_effect->connect("fade_out_complete", Callable(this, "on_fade_out"));
     fade_effect->connect("fade_in_complete", Callable(this, "on_fade_back_in"));
+    // get_tree()->connect("node_added", Callable(this, "on_node_added"));
     setup_inventory_view_model();
+
+    UtilityFunctions::print("[GameInstance] game instance loaded.");
 }
 
 const Ref<GameState> GameInstance::get_game_state() const
@@ -84,6 +90,8 @@ void GameInstance::request_level_change(StringName scene_path, String spawn_loca
 void GameInstance::change_level(StringName scene_path, String spawn_location)
 {
     UtilityFunctions::print(String("[GameInstance] Loading level scene '{0}'.").format(Array::make(scene_path)));
+
+    current_player = nullptr;
     Ref<PackedScene> next_level_packed = ResourceLoader::get_singleton()->load(scene_path);
     // @todo load levels asynchronously?
     Node *next_scene = next_level_packed->instantiate();
@@ -155,15 +163,33 @@ void GameInstance::on_fade_back_in()
     get_tree()->set_pause(false);
 }
 
+void GameInstance::on_node_added(Node *node)
+{
+    NightmareCharacter *player = Object::cast_to<NightmareCharacter>(node);
+    if (!player)
+    {
+        return;
+    }
+    on_player_spawned(player);
+}
+
+// Called by level when player is spawned?
+// this dependency isn't great, but there seems to be reliablity issues with the node_added signal
+void GameInstance::on_player_spawned(NightmareCharacter *player)
+{
+    current_player = player;
+    if (NightmareUi *nightmare_ui = get_node<NightmareUi>("/root/ActiveUi/"))
+    {
+        player->connect("dialog_changed", Callable(nightmare_ui, "set_dialog"));
+        UtilityFunctions::print("[GameInstance] connected ui to player successfully");
+    }
+    else
+    {
+        WARN_PRINT("[GameInstance] Attempting to connect dialog ui to player, but dialog ui was nullptr");
+    }
+}
+
 NightmareCharacter *GameInstance::get_player() const
 {
-    Node *current_node = get_tree()->get_current_scene();
-    Level *current_level = Object::cast_to<Level>(current_node);
-    if (!current_level)
-    {
-        UtilityFunctions::print(String("[GameInstance] Unable to get player. The current root scene '{0}' isn't a level.").format(Array::make(current_node->get_name())));
-        return nullptr;
-    }
-    
-    return current_level->get_player();
+    return current_player;
 }

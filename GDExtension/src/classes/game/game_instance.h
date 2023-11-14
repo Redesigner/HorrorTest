@@ -32,6 +32,10 @@ public:
 
     void on_fade_back_in();
 
+    void on_node_added(Node *node);
+
+    void on_player_spawned(NightmareCharacter *player);
+
     NightmareCharacter *get_player() const;
 
 private:
@@ -49,5 +53,7 @@ private:
     StringName next_scene_path;
 
     String next_spawn_location;
+
+    NightmareCharacter *current_player;
 };
 }

@@ -22,7 +22,7 @@ DialogTextDisplay::~DialogTextDisplay()
 
 void DialogTextDisplay::_ready()
 {
-    _textElement = Object::cast_to<RichTextLabel>(get_node_or_null("DialogPanel/RichTextLabel"));
+    text_element = Object::cast_to<RichTextLabel>(get_node_or_null("DialogPanel/RichTextLabel"));
     set_process_mode(PROCESS_MODE_WHEN_PAUSED);
 
     // Hide this element by default when we're not loaded, and clear any text that's in here
@@ -30,56 +30,67 @@ void DialogTextDisplay::_ready()
     {
         return;
     }
-    _textElement->set_text(String());
+    text_element->set_text(String());
     set_visible(false);
 }
 
 void DialogTextDisplay::_process(double delta)
 {
-    if (!_textAnimating)
+    if (!text_animating)
     {
         return;
     }
 
-    _currentTick += delta * _characterRate;
-
-    if (_currentTick >= 1.0f)
+    if (skip_text_debounce)
     {
-        String currentText = _textElement->get_text();
-        currentText += static_cast<String>(_pendingTokens[_currentTokenIndex]);
-        _textElement->set_text(currentText);
-        _currentTick--;
-        if (_currentTokenIndex >= _pendingTokens.size() - 1)
+        skip_text_debounce = false;
+    }
+
+    current_tick += delta * _characterRate;
+
+    if (current_tick >= 1.0f)
+    {
+        String currentText = text_element->get_text();
+        currentText += static_cast<String>(pending_tokens[current_token_index]);
+        text_element->set_text(currentText);
+        current_tick--;
+        if (current_token_index >= pending_tokens.size() - 1)
         {
-            _textAnimating = false;
+            text_animating = false;
             return;
         }
-        _currentTokenIndex++;
+        current_token_index++;
     }
 }
 
 void DialogTextDisplay::set_dialog(String dialog)
 {
-    _pendingTokens = process_string(dialog);
-    _textElement->set_text("");
-    _pendingText = dialog;
-    _currentTick = 0.0f;
-    _currentTokenIndex = 0;
+    pending_tokens = process_string(dialog);
+    text_element->set_text("");
+    pending_text = dialog;
+    current_tick = 0.0f;
+    current_token_index = 0;
+    skip_text_debounce = true;
     if (dialog.is_empty())
     {
         set_visible(false);
         return;
     }
     set_visible(true);
-    _textAnimating = true;
+    text_animating = true;
 }
 
 bool DialogTextDisplay::advance_dialog()
 {
-    if (_textAnimating)
+    if (skip_text_debounce)
     {
-        _textAnimating = false;
-        _textElement->set_text(_pendingText);
+        return false;
+    }
+    if (text_animating)
+    {
+        text_animating = false;
+        text_element->set_text(pending_text);
+        UtilityFunctions::print("[DialogTextDisplay] player skipped dialog animation.");
         return false;
     }
     // set_visible(false);
@@ -88,7 +99,7 @@ bool DialogTextDisplay::advance_dialog()
 
 bool DialogTextDisplay::is_dialog_playing() const
 {
-    return _textAnimating;
+    return text_animating;
 }
 
 bool DialogTextDisplay::accept()

@@ -9,6 +9,8 @@ class Inventory;
 
 class InventoryViewModel : public ViewModel
 {
+    GDCLASS(InventoryViewModel, ViewModel);
+    
 public:
     InventoryViewModel();
     ~InventoryViewModel();

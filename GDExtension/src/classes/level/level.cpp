@@ -8,6 +8,7 @@
 
 #include "../pawns/nightmare_character.h"
 #include "spawn_location.h"
+#include "../game/game_instance.h"
 
 using namespace godot;
 
@@ -87,4 +88,10 @@ void Level::spawn_player()
 
     player->set_global_position(current_spawn_location->get_global_position());
     player->set_global_rotation(current_spawn_location->get_global_rotation());
+    UtilityFunctions::print("[Level] player spawned.");
+
+    if (GameInstance *game_instance = get_node<GameInstance>("/root/DefaultGameInstance"))
+    {
+        game_instance->on_player_spawned(player);
+    }
 }

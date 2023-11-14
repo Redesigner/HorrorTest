@@ -45,10 +45,14 @@ void InventoryUiItemPreviewList::set_items(std::vector<InventoryEntry> items)
 {
     for (int i = 0; i < item_previews.size(); i++)
     {
-        if (i > items.size())
+        if (i >= items.size())
         {
             item_previews[i]->set_item_resource(nullptr);
             item_previews[i]->set_item_count(0);
+            continue;
+        }
+        if (!items[i].item.is_valid())
+        {
             continue;
         }
 
