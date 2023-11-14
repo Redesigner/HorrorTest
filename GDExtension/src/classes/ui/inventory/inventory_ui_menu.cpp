@@ -18,9 +18,8 @@ InventoryUiMenu::InventoryUiMenu()
     _item_display = nullptr;
     _item_previews = nullptr;
 
-    _inventory = nullptr;
-
     currently_selected_item_index = 0;
+    start_index = 0;
 }
 
 InventoryUiMenu::~InventoryUiMenu()
@@ -31,6 +30,9 @@ void InventoryUiMenu::_bind_methods()
 {
     BIND_PROPERTY(Variant::NODE_PATH, item_display_path, InventoryUiMenu);
     BIND_PROPERTY(Variant::NODE_PATH, item_previews_path, InventoryUiMenu);
+
+    ADD_SIGNAL(MethodInfo("inventory_start_index_increased"));
+    ADD_SIGNAL(MethodInfo("inventory_start_index_decreased"));
 }
 
 void InventoryUiMenu::_ready()
@@ -43,35 +45,9 @@ void InventoryUiMenu::_ready()
     _item_previews = get_node<InventoryUiItemPreviewList>(_item_previews_path);
 }
 
-void InventoryUiMenu::set_inventory(Inventory *inventory)
+void InventoryUiMenu::set_items(std::vector<InventoryEntry> items)
 {
-    _inventory = inventory;
-    if (_item_previews)
-    {
-        _item_previews->set_inventory(inventory);
-    }
-    update();
-}
-
-void InventoryUiMenu::update()
-{
-    if (!_inventory)
-    {
-        WARN_PRINT("[InventoryUi] Cannot find inventory instance. Make sure to call set_inventory.");
-    }
-    UtilityFunctions::print("[InventoryUi] Inventory changed, updating ui elements.");
-    if (_inventory->get_inventory_array().size() <= 0)
-    {
-        UtilityFunctions::print("[InventoryUi] Inventory instance does not contain any items.");
-        return;
-    }
-    update_currently_selected_item();
-    
-    if (!_item_previews)
-    {
-        return;
-    }
-    _item_previews->update();
+    _item_previews->set_items(items);
 }
 
 void InventoryUiMenu::scroll_left()
@@ -123,48 +99,10 @@ void InventoryUiMenu::hide()
 
 void InventoryUiMenu::increase_index()
 {
-    int new_index = currently_selected_item_index + 1;
-    int inventory_size = _inventory->get_inventory_array().size();
-    
-    if (new_index >= inventory_size)
-    {
-        new_index -= inventory_size;
-    }
-    currently_selected_item_index = new_index;
-    update_currently_selected_item();
+    emit_signal("inventory_start_index_increased");
 }
 
 void InventoryUiMenu::decrease_index()
 {
-    int new_index = currently_selected_item_index - 1;
-    int inventorySize = _inventory->get_inventory_array().size();
-    
-    if (new_index < 0)
-    {
-        new_index += inventorySize;
-    }
-    currently_selected_item_index = new_index;
-    update_currently_selected_item();
-}
-
-void InventoryUiMenu::update_currently_selected_item()
-{
-    TypedArray<Dictionary> inventory_dictionary = _inventory->get_inventory_array();
-    if (currently_selected_item_index >= inventory_dictionary.size() || currently_selected_item_index < 0)
-    {
-        UtilityFunctions::print("[InventoryUi] Currently selected item index out of range.");
-        return;
-    }
-    Dictionary inventory_item = inventory_dictionary[currently_selected_item_index];
-    Ref<InventoryItemResource> currentlySelectedItem = inventory_item["resource"];
-
-    if (_item_display)
-    {
-        _item_display->update_inventory_item_resource(currentlySelectedItem);
-    }
-
-    if (_item_previews)
-    {
-        _item_previews->set_selected_index(currently_selected_item_index);
-    }
+    emit_signal("inventory_start_index_decreased");
 }

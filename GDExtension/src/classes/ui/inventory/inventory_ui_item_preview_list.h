@@ -5,6 +5,7 @@
 #include "../../../class_macros.h"
 
 #include "../../inventory/inventory_item_resource.h"
+#include "../../inventory/inventory_entry.h"
 
 namespace godot
 {
@@ -23,9 +24,8 @@ protected:
 public:
     virtual void _ready() override;
 
-    void set_inventory(class Inventory *inventory);
 
-    void update();
+    void set_items(std::vector<InventoryEntry> items);
 
     void set_selected_index(int index);
 
@@ -41,7 +41,7 @@ private:
 
     class Inventory *_inventory;
 
-    class Control *_containerNode;
+    class Control *_container_node;
 
     DECLARE_PROPERTY_NODEFAULT(NodePath, containerNodePath);
 

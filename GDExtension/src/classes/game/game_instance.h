@@ -7,6 +7,9 @@ namespace godot
 class GameState;
 class Level;
 class NightmareCharacter;
+class ViewModel;
+class InventoryViewModel;
+
 class GameInstance : public Node
 {
     GDCLASS(GameInstance, Node);
@@ -33,6 +36,11 @@ public:
 
 private:
     void change_level(StringName scene_path, String spawn_location);
+
+    void setup_inventory_view_model();
+
+
+    Ref<InventoryViewModel> inventory_view_model;
 
     Ref<GameState> game_state;
 

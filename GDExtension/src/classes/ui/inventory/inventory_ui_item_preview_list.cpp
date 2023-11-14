@@ -14,7 +14,7 @@ using namespace godot;
 InventoryUiItemPreviewList::InventoryUiItemPreviewList()
 {
     _inventory = nullptr;
-    _containerNode = nullptr;
+    _container_node = nullptr;
 
     currently_selected_item_index = 0;
 }
@@ -32,8 +32,8 @@ void InventoryUiItemPreviewList::_bind_methods()
 
 void InventoryUiItemPreviewList::_ready()
 {
-    _containerNode = Object::cast_to<Control>(get_node_or_null(_containerNodePath));
-    if (!_containerNode)
+    _container_node = Object::cast_to<Control>(get_node_or_null(_containerNodePath));
+    if (!_container_node)
     {
         UtilityFunctions::print("[InventoryUi] Item preview list could not find a container.");
         return;
@@ -41,32 +41,19 @@ void InventoryUiItemPreviewList::_ready()
     bind_previews_to_array();
 }
 
-void InventoryUiItemPreviewList::set_inventory(Inventory *inventory)
+void InventoryUiItemPreviewList::set_items(std::vector<InventoryEntry> items)
 {
-    _inventory = inventory;
-    _inventory->connect("item_count_changed", Callable(this, "item_count_changed"));
-}
-
-void InventoryUiItemPreviewList::update()
-{
-    if (!_inventory)
-    {
-        return;
-    }
-
-    TypedArray<Dictionary> inventoryArray = _inventory->get_inventory_array();
-    UtilityFunctions::print( String("[InventoryUi] Attaching inventory items to previews - found {0} items in inventory.").format(Array::make(inventoryArray.size())) );
     for (int i = 0; i < item_previews.size(); i++)
     {
-        // Return if we're trying to fill the previews beyond the actual size of the array
-        if (i >= inventoryArray.size())
+        if (i > items.size())
         {
-            return;
+            item_previews[i]->set_item_resource(nullptr);
+            item_previews[i]->set_item_count(0);
+            continue;
         }
-        Dictionary item = inventoryArray[i];
-        InventoryUiItemPreview *itemPreview = item_previews[i];
-        itemPreview->set_item_resource(item["resource"]);
-        itemPreview->set_item_count(item["amount"]);
+
+        item_previews[i]->set_item_resource(items[i].item);
+        item_previews[i]->set_item_count(items[i].count);
     }
 }
 
@@ -87,12 +74,12 @@ void InventoryUiItemPreviewList::item_count_changed(int count, Ref<InventoryItem
 
 void InventoryUiItemPreviewList::bind_previews_to_array()
 {
-    if (!_containerNode)
+    if (!_container_node)
     {
         return;
     }
 
-    TypedArray<Node> children = _containerNode->get_children();
+    TypedArray<Node> children = _container_node->get_children();
 
     //UtilityFunctions::print( String("[InventoryUi] Searching for inventory preview slots.. found {0} suitable nodes.").format(Array::make(children.size())) );
     // Parse our nodes and store the relevant ones in our local array

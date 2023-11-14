@@ -2,6 +2,7 @@
 
 #include <godot_cpp/classes/control.hpp>
 #include "../stackable_ui_element.h"
+#include "../../inventory/inventory_entry.h"
 
 #include "../../../class_macros.h"
 
@@ -21,9 +22,7 @@ protected:
 public:
     virtual void _ready() override;
 
-    void set_inventory(class Inventory *inventory);
-
-    void update();
+    void set_items(std::vector<InventoryEntry> items);
 
     // StackableUiElement Interface
     virtual void scroll_left() override;
@@ -42,16 +41,14 @@ private:
 
     void decrease_index();
 
-    void update_currently_selected_item();
-
     class InventoryUiItemDisplay *_item_display;
     class InventoryUiItemPreviewList  *_item_previews;
 
     DECLARE_PROPERTY_NODEFAULT(NodePath, item_display_path);
     DECLARE_PROPERTY_NODEFAULT(NodePath, item_previews_path);
 
-    class Inventory *_inventory;
-
     int currently_selected_item_index;
+
+    int start_index;
 };
 }

@@ -13,6 +13,7 @@ namespace godot
 {
 class FadeUi;
 class StackableUiElement;
+class InventoryUiMenu;
 class NightmareUi : public Control
 {
     GDCLASS(NightmareUi, Control);
@@ -40,11 +41,9 @@ public:
 
     bool is_dialog_playing() const;
 
-    void set_inventory(class Inventory *inventory);
-
-    void update_inventory();
-
     FadeUi * get_fade_effect() const;
+
+    InventoryUiMenu *get_inventory_menu() const;
 
 private:
     void toggle_inventory();
@@ -53,7 +52,7 @@ private:
     std::stack<StackableUiElement *> ui_stack;
 
     class DialogTextDisplay *_dialog_text_display;
-    class InventoryUiMenu *_inventory_menu;
+    InventoryUiMenu *_inventory_menu;
     FadeUi *_fade_ui;
 };
 }

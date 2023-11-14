@@ -83,13 +83,11 @@ void NightmareCharacter::_ready()
     animation_tree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     audio_stream_player = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
 
-    ui = get_node<NightmareUi>("/root/ActiveUi");
     Ref<GameState> game_state = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state();
     inventory = game_state->get_inventory();
 
     bullet_scene = ResourceLoader::get_singleton()->load(_bulletScenePath);
 
-    connect("dialog_changed",  Callable(ui, "set_dialog"));
     // With instanced players, this should be connected by the game state
     // inventory->connect("inventory_changed", Callable(ui, "update_inventory"));
     // ui->set_inventory(inventory);

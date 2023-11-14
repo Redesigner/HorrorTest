@@ -3,6 +3,10 @@
 
 #include <godot_cpp/classes/ref_counted.hpp>
 
+#include <vector>
+
+#include "inventory_entry.h"
+
 #include "../../class_macros.h"
 
 namespace godot
@@ -17,11 +21,12 @@ public:
     Inventory();
     ~Inventory();
 
-    void set_inventory_array(TypedArray<Dictionary> inventory);
+protected:
+    static void _bind_methods();
 
-    TypedArray<Dictionary> get_inventory_array() const;
-
+public:
     void add_item(Ref<InventoryItemResource> inventory_resource, int amount);
+    void add_item(InventoryEntry entry);
 
     bool has_item(Ref<InventoryItemResource> inventory_resource) const;
 
@@ -31,16 +36,12 @@ public:
 
     String make_string_data() const;
 
-protected:
-    static void _bind_methods();
+    std::vector<InventoryEntry> get_inventory_entries() const;
 
 private:
-    int get_item_index(Ref<InventoryItemResource> inventory_resource) const;
+    int get_item_index(Ref<InventoryItemResource> inventory_resource) const;    
 
-
-    void unpack_state_data(PackedByteArray state_data);
-
-    TypedArray<Dictionary> _inventory;
+    std::vector<InventoryEntry> _inventory;
 };
 }
 

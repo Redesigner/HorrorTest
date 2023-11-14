@@ -15,42 +15,28 @@ Inventory::~Inventory()
 }
 
 void Inventory::_bind_methods()
-{
-    ClassDB::bind_method(D_METHOD("get_inventory"), &Inventory::get_inventory_array);
-    ClassDB::bind_method(D_METHOD("set_inventory", "p_inventory"), &Inventory::set_inventory_array);
-    ClassDB::add_property("Inventory", PropertyInfo((Variant::ARRAY), "inventory"), "set_inventory", "get_inventory");
-    
+{    
     ADD_SIGNAL(MethodInfo("inventory_changed"));
     ADD_SIGNAL(MethodInfo("item_count_changed", PropertyInfo(Variant::INT, "new_count"), PropertyInfo(Variant::OBJECT, "item")));
 }
 
-void Inventory::set_inventory_array(TypedArray<Dictionary> inventory)
-{
-    _inventory = inventory;
-}
-
-TypedArray<Dictionary> Inventory::get_inventory_array() const
-{
-    return _inventory;
-}
-
 void Inventory::add_item(Ref<InventoryItemResource> inventory_resource, int amount)
 {
-    const int item_index = get_item_index(inventory_resource);
+    InventoryEntry new_item = InventoryEntry(inventory_resource, amount);
+    add_item(new_item);
+}
+
+void Inventory::add_item(InventoryEntry entry)
+{
+    const int item_index = get_item_index(entry.item);
     if (item_index >= 0)
     {
-        Dictionary inventory_entry = _inventory[item_index];
-        int new_amount = static_cast<float>(inventory_entry["amount"]) + amount;
-        inventory_entry["amount"] = new_amount;
-
-        // emit_signal("inventory_changed");
-        emit_signal("item_count_changed", new_amount, inventory_resource);
+        InventoryEntry &inventory_entry = _inventory[item_index];
+        inventory_entry.count += entry.count;
+        emit_signal("item_count_changed", inventory_entry.count, inventory_entry.item);
         return;
     }
-    Dictionary new_item = Dictionary();
-    new_item["resource"] = inventory_resource;
-    new_item["amount"] = amount;
-    _inventory.append(new_item);
+    _inventory.push_back(entry);
     emit_signal("inventory_changed");
 }
 
@@ -68,7 +54,7 @@ int Inventory::get_item_count(Ref<InventoryItemResource> inventory_resource) con
     {
         return 0;
     }
-    return _inventory[item_index]["amount"];
+    return _inventory[item_index].count;
 }
 
 bool Inventory::try_consume_item(Ref<InventoryItemResource> inventory_resource)
@@ -78,18 +64,16 @@ bool Inventory::try_consume_item(Ref<InventoryItemResource> inventory_resource)
     {
         return false;
     }
-    Dictionary item = _inventory[item_index];
-    int item_count = item["amount"];
-    if (item_count <= 0)
+    InventoryEntry &item = _inventory[item_index];
+    if (item.count <= 0)
     {
         return false;
     }
-    item_count--;
-    item["amount"] = item_count;
+    item.count--;
     
-    Ref<InventoryItemResource> item_resource = item["resource"];
-    UtilityFunctions::print(String("[Inventory] consuming item '{0}', remaining count: {1}").format(Array::make(item_resource->get_path(), item_count)));
-    emit_signal("item_count_changed", item_count, item_resource);
+    Ref<InventoryItemResource> item_resource = item.item;
+    UtilityFunctions::print(String("[Inventory] consuming item '{0}', remaining count: {1}").format(Array::make(item_resource->get_path(), item.count)));
+    emit_signal("item_count_changed", item.count, item_resource);
     return true;
 }
 
@@ -97,8 +81,8 @@ int Inventory::get_item_index(Ref<InventoryItemResource> inventory_resource) con
 {
     for (int i = 0; i < _inventory.size(); i++)
     {
-        Dictionary inventory_entry = _inventory[i];
-        Ref<InventoryItemResource> entryInventoryResource = inventory_entry["resource"];
+        InventoryEntry inventory_entry = _inventory[i];
+        Ref<InventoryItemResource> entryInventoryResource = inventory_entry.item;
         if (entryInventoryResource == inventory_resource)
         {
             return i;
@@ -121,13 +105,11 @@ String Inventory::make_string_data() const
 
     for (int i = 0; i < _inventory.size(); i++)
     {
-        Dictionary inventory_entry = _inventory[i];
-        Ref<InventoryItemResource> entry_inventory_resource = inventory_entry["resource"];
-        StringName entry_name = entry_inventory_resource->get_path();
-        int entry_amount = inventory_entry["amount"];
+        InventoryEntry inventory_entry = _inventory[i];
+        StringName entry_name = inventory_entry.item->get_path();
 
         inventory_entry_data[0] = entry_name;
-        inventory_entry_data[1] = entry_amount;
+        inventory_entry_data[1] = inventory_entry.count;
 
         data += inventory_entry_format.format(inventory_entry_data);
     }
@@ -136,6 +118,7 @@ String Inventory::make_string_data() const
     return data;
 }
 
-void Inventory::unpack_state_data(PackedByteArray state_data)
+std::vector<InventoryEntry> godot::Inventory::get_inventory_entries() const
 {
+    return _inventory;
 }

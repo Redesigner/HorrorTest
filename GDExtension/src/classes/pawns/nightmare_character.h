@@ -75,7 +75,6 @@ private:
     class RichTextLabel *debug_text;
     class AnimationTree *animation_tree;
     class AudioStreamPlayer3D *audio_stream_player;
-    class NightmareUi* ui;
     class Inventory *inventory;
 
     EquipmentResource *current_equipment;

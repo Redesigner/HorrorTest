@@ -4,6 +4,7 @@
 #include "../level/level.h"
 #include "../ui/nightmare_ui.h"
 #include "../ui/effects/fade_ui.h"
+#include "../ui/viewmodel/inventory_viewmodel.h"
 #include "../inventory/inventory.h"
 
 #include <godot_cpp/classes/engine.hpp>
@@ -18,6 +19,7 @@ using namespace godot;
 GameInstance::GameInstance()
 {
     game_state = Ref(memnew(GameState));
+    inventory_view_model = Ref(memnew(InventoryViewModel));
 
     next_scene_path = "";
     next_spawn_location = "";
@@ -49,10 +51,6 @@ void GameInstance::_ready()
     }
     fade_effect->connect("fade_out_complete", Callable(this, "on_fade_out"));
     fade_effect->connect("fade_in_complete", Callable(this, "on_fade_back_in"));
-
-    Inventory *inventory = game_state->get_inventory();
-    inventory->connect("inventory_changed", Callable(nightmare_ui, "update_inventory"));
-    nightmare_ui->set_inventory(inventory);
 }
 
 const Ref<GameState> GameInstance::get_game_state() const
@@ -109,6 +107,30 @@ void GameInstance::change_level(StringName scene_path, String spawn_location)
     get_parent()->add_child(current_level);
     get_tree()->set_current_scene(current_level);
     UtilityFunctions::print(String("[GameInstance] Switched level to '{0}'.").format(Array::make(current_level->get_name())) );
+}
+
+void GameInstance::setup_inventory_view_model()
+{
+    Inventory *inventory = get_game_state()->get_inventory();
+    if (!inventory)
+    {
+        WARN_PRINT("[GameInstance] failed to setup ui InventoryViewModel. Unable to bind Inventory to ViewModel: inventory was null.");
+        return;
+    }
+    NightmareUi *nightmare_ui = get_node<NightmareUi>("/root/ActiveUi/");
+    if (!nightmare_ui)
+    {
+        WARN_PRINT("[GameInstance] failed to setup ui InventoryViewModel. Unable to get child of NightmareUi: ui was null.");
+        return;
+    }
+    InventoryUiMenu *inventory_ui = nightmare_ui->get_inventory_menu();
+    if (!inventory_ui)
+    {
+        WARN_PRINT("[GameInstance] failed to setup ui InventoryViewModel. Unable to bind model NightmareUi to ViewModel: ui was null.");
+        return;
+    }
+    inventory_view_model->bind_model(inventory);
+    inventory_view_model->bind_view(inventory_ui);
 }
 
 void GameInstance::on_fade_out()

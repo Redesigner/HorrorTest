@@ -25,7 +25,6 @@ NightmareUi::~NightmareUi()
 void NightmareUi::_bind_methods()
 {
     ClassDB::bind_method(D_METHOD("set_dialog"), &NightmareUi::set_dialog);
-    ClassDB::bind_method(D_METHOD("update_inventory"), &NightmareUi::update_inventory);
 }
 
 void NightmareUi::_ready()
@@ -167,19 +166,14 @@ bool NightmareUi::is_dialog_playing() const
     return _dialog_text_display->is_dialog_playing();
 }
 
-void NightmareUi::set_inventory(Inventory *inventory)
-{
-    _inventory_menu->set_inventory(inventory);
-}
-
-void NightmareUi::update_inventory()
-{
-    _inventory_menu->update();
-}
-
 FadeUi *NightmareUi::get_fade_effect() const
 {
     return _fade_ui;
+}
+
+InventoryUiMenu *godot::NightmareUi::get_inventory_menu() const
+{
+    return _inventory_menu;
 }
 
 void NightmareUi::toggle_inventory()

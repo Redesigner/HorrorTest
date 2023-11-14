@@ -90,7 +90,6 @@ void GameState::load()
     while (file->get_position() < file->get_length())
     {
         // @todo: make this not hardcoded, it should equal the string added in inventory's make_string_data function
-        UtilityFunctions::print(data);
         if (match_control_string(data, inventory_control_string))
         {
             load_inventory(file);
