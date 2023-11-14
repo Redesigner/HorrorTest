@@ -8,6 +8,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include "../../inventory/inventory_item_resource.h"
+#include "../../inventory/inventory_entry.h"
 
 #include "inventory_ui_item_option_list.h"
 
@@ -26,7 +27,6 @@ InventoryUiItemDisplay::~InventoryUiItemDisplay()
 
 void InventoryUiItemDisplay::_bind_methods()
 {
-    BIND_PROPERTY(Variant::OBJECT, itemResource, InventoryUiItemDisplay);
     BIND_PROPERTY(Variant::NODE_PATH, itemNameDisplayPath, InventoryUiItemDisplay);
     BIND_PROPERTY(Variant::NODE_PATH, itemDescriptionDisplayPath, InventoryUiItemDisplay);
     BIND_PROPERTY(Variant::NODE_PATH, itemPictureDisplayPath, InventoryUiItemDisplay);
@@ -73,17 +73,16 @@ bool InventoryUiItemDisplay::accept()
     return false;
 }
 
-void InventoryUiItemDisplay::update_inventory_item_resource(Ref<InventoryItemResource> itemResource)
+void InventoryUiItemDisplay::set_item(InventoryEntry item)
 {
-    _itemResource = itemResource;
     if (!_itemNameDisplay || !_itemDescriptionDisplay || !_itemPictureDisplay || !_itemOptionDisplay)
     {
         UtilityFunctions::push_error("Unable to find one or more ui elements for InventoryUiItemDisplay. Check that the path is set correctly.");
         return;
     }
-
-    _itemNameDisplay->set_text(itemResource->get_itemName());
-    _itemDescriptionDisplay->set_text(itemResource->get_itemDescription());
-    _itemPictureDisplay->set_texture(itemResource->get_itemTexture());
-    _itemOptionDisplay->set_selected_item(itemResource);
+    Ref<InventoryItemResource> item_resource = item.item;
+    _itemNameDisplay->set_text(item_resource->get_itemName());
+    _itemDescriptionDisplay->set_text(item_resource->get_itemDescription());
+    _itemPictureDisplay->set_texture(item_resource->get_itemTexture());
+    _itemOptionDisplay->set_selected_item(item_resource);
 }

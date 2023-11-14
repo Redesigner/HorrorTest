@@ -36,6 +36,10 @@ void InventoryUiItemPreview::_ready()
 
 void InventoryUiItemPreview::set_item_resource(Ref<InventoryItemResource> item)
 {
+    if (!item.is_valid())
+    {
+        return;
+    }
     item_resource = item;
     if (!_itemPictureDisplay)
     {

@@ -50,6 +50,11 @@ void InventoryUiMenu::set_items(std::vector<InventoryEntry> items)
     _item_previews->set_items(items);
 }
 
+void InventoryUiMenu::set_selected_item(InventoryEntry item)
+{
+    _item_display->set_item(item);
+}
+
 void InventoryUiMenu::scroll_left()
 {
     decrease_index();

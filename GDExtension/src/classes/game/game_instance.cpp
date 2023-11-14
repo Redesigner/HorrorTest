@@ -51,6 +51,7 @@ void GameInstance::_ready()
     }
     fade_effect->connect("fade_out_complete", Callable(this, "on_fade_out"));
     fade_effect->connect("fade_in_complete", Callable(this, "on_fade_back_in"));
+    setup_inventory_view_model();
 }
 
 const Ref<GameState> GameInstance::get_game_state() const
@@ -131,6 +132,7 @@ void GameInstance::setup_inventory_view_model()
     }
     inventory_view_model->bind_model(inventory);
     inventory_view_model->bind_view(inventory_ui);
+    inventory_view_model->update_model(); // manually trigger to initialize state
 }
 
 void GameInstance::on_fade_out()

@@ -2,6 +2,8 @@
 
 #include <godot_cpp/classes/control.hpp>
 
+#include "../../inventory/inventory_entry.h"
+
 #include "../../../class_macros.h"
 
 namespace godot
@@ -11,6 +13,7 @@ class Label;
 class RichTextLabel;
 class TextureRect;
 class InventoryUiItemOptionList;
+
 class InventoryUiItemDisplay : public Control
 {
     GDCLASS(InventoryUiItemDisplay, Control);
@@ -30,15 +33,13 @@ public:
 
     bool accept();
 
-    void update_inventory_item_resource(Ref<InventoryItemResource> itemResource);
+    void set_item(InventoryEntry item);
 
 private:
     Label *_itemNameDisplay;
     RichTextLabel *_itemDescriptionDisplay;
     TextureRect *_itemPictureDisplay;
     InventoryUiItemOptionList *_itemOptionDisplay;
-
-    DECLARE_PROPERTY_NODEFAULT(Ref<InventoryItemResource>, itemResource);
 
     // Paths are properties so we can freely move the layout around
     DECLARE_PROPERTY_NODEFAULT(NodePath, itemNameDisplayPath);
