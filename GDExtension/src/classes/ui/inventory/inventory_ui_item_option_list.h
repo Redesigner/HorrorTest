@@ -28,18 +28,16 @@ protected:
 public:
     virtual void _ready() override;
 
-    void set_selected_item(Ref<InventoryItemResource> item_resource);
-
     void increment_index();
 
     void decrement_index();
 
-    void confirm_selection();
+    void set_options(std::vector<String> options);
+
+    String confirm_selection();
 
 private:
     void create_option(String option_name);
-
-    void create_equip_option(EquipmentResource *equipment);
 
     void select_option(int option_index);
 

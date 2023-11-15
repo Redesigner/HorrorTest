@@ -26,6 +26,10 @@ public:
 
     void set_selected_item(InventoryEntry item);
 
+    void set_highlighted_preview(int index);
+
+    void set_options(std::vector<String> options);
+
     // StackableUiElement Interface
     virtual void scroll_left() override;
     virtual void scroll_right() override;

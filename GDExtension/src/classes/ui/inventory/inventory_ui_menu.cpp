@@ -31,8 +31,9 @@ void InventoryUiMenu::_bind_methods()
     BIND_PROPERTY(Variant::NODE_PATH, item_display_path, InventoryUiMenu);
     BIND_PROPERTY(Variant::NODE_PATH, item_previews_path, InventoryUiMenu);
 
-    ADD_SIGNAL(MethodInfo("inventory_start_index_increased"));
-    ADD_SIGNAL(MethodInfo("inventory_start_index_decreased"));
+    ADD_SIGNAL(MethodInfo("inventory_index_increased"));
+    ADD_SIGNAL(MethodInfo("inventory_index_decreased"));
+    ADD_SIGNAL(MethodInfo("option_selected", PropertyInfo(Variant::STRING, "option")));
 }
 
 void InventoryUiMenu::_ready()
@@ -53,6 +54,16 @@ void InventoryUiMenu::set_items(std::vector<InventoryEntry> items)
 void InventoryUiMenu::set_selected_item(InventoryEntry item)
 {
     _item_display->set_item(item);
+}
+
+void InventoryUiMenu::set_highlighted_preview(int index)
+{
+    _item_previews->set_selected_index(index);
+}
+
+void InventoryUiMenu::set_options(std::vector<String> options)
+{
+    _item_display->set_options(options);
 }
 
 void InventoryUiMenu::scroll_left()
@@ -89,7 +100,9 @@ bool InventoryUiMenu::accept()
     {
         return false;
     }
-    return _item_display->accept();
+    String selected_option = _item_display->accept();
+    emit_signal("option_selected", selected_option);
+    return selected_option.is_empty();
 }
 
 void InventoryUiMenu::show()
@@ -104,10 +117,10 @@ void InventoryUiMenu::hide()
 
 void InventoryUiMenu::increase_index()
 {
-    emit_signal("inventory_start_index_increased");
+    emit_signal("inventory_index_increased");
 }
 
 void InventoryUiMenu::decrease_index()
 {
-    emit_signal("inventory_start_index_decreased");
+    emit_signal("inventory_index_decreased");
 }

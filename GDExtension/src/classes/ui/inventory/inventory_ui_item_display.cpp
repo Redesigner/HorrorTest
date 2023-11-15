@@ -63,14 +63,13 @@ void InventoryUiItemDisplay::scroll_down()
     _itemOptionDisplay->increment_index();
 }
 
-bool InventoryUiItemDisplay::accept()
+String InventoryUiItemDisplay::accept()
 {
     if (!_itemOptionDisplay)
     {
-        return false;
+        return "";
     }
-    _itemOptionDisplay->confirm_selection();
-    return false;
+    return _itemOptionDisplay->confirm_selection();
 }
 
 void InventoryUiItemDisplay::set_item(InventoryEntry item)
@@ -81,8 +80,16 @@ void InventoryUiItemDisplay::set_item(InventoryEntry item)
         return;
     }
     Ref<InventoryItemResource> item_resource = item.item;
+    if (!item_resource.is_valid())
+    {
+        return;
+    }
     _itemNameDisplay->set_text(item_resource->get_itemName());
     _itemDescriptionDisplay->set_text(item_resource->get_itemDescription());
     _itemPictureDisplay->set_texture(item_resource->get_itemTexture());
-    _itemOptionDisplay->set_selected_item(item_resource);
+}
+
+void InventoryUiItemDisplay::set_options(std::vector<String> options)
+{
+    _itemOptionDisplay->set_options(options);
 }

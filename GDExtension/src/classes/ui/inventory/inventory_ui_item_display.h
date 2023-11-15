@@ -31,9 +31,11 @@ public:
     void scroll_up();
     void scroll_down();
 
-    bool accept();
+    String accept();
 
     void set_item(InventoryEntry item);
+
+    void set_options(std::vector<String> options);
 
 private:
     Label *_itemNameDisplay;
