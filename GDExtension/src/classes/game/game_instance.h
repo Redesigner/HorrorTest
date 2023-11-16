@@ -9,6 +9,7 @@ class Level;
 class NightmareCharacter;
 class ViewModel;
 class InventoryViewModel;
+class HealthViewModel;
 
 class GameInstance : public Node
 {
@@ -45,6 +46,7 @@ private:
 
 
     Ref<InventoryViewModel> inventory_view_model;
+    Ref<HealthViewModel> health_view_model;
 
     Ref<GameState> game_state;
 

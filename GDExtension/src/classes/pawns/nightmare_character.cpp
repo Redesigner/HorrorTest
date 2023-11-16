@@ -30,6 +30,7 @@
 #include "../equipment/equipment_resource.h"
 #include "../game/game_instance.h"
 #include "../game/game_state.h"
+#include "../game/player_state.h"
 #include "../equipment/equipment.h"
 
 using namespace godot;
@@ -42,6 +43,8 @@ void NightmareCharacter::_bind_methods()
     BIND_PROPERTY(Variant::STRING, bulletScenePath, NightmareCharacter);
 
     ADD_SIGNAL(MethodInfo("dialog_changed", PropertyInfo(Variant::STRING, "dialog")));
+    ADD_SIGNAL(MethodInfo("health_changed", PropertyInfo(Variant::FLOAT, "new_health")));
+    ADD_SIGNAL(MethodInfo("character_died"));
 
     // expose this method to the api for the timer to work
     ClassDB::bind_method(D_METHOD("end_interact_debounce"), &NightmareCharacter::end_interact_debounce);
@@ -83,7 +86,7 @@ void NightmareCharacter::_ready()
     animation_tree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
     audio_stream_player = Object::cast_to<AudioStreamPlayer3D>(get_node_or_null("AudioStreamPlayer3D"));
 
-    Ref<GameState> game_state = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state();
+    game_state = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state();
     inventory = game_state->get_inventory();
 
     bullet_scene = ResourceLoader::get_singleton()->load(_bulletScenePath);
@@ -276,6 +279,51 @@ bool NightmareCharacter::is_weapon_ready() const
     }
     //return current_equipment->is_ready();
     return weapon_ready;
+}
+
+float NightmareCharacter::get_current_health() const
+{
+    if (!game_state.is_valid())
+    {
+        return 0.0f;
+    }
+    return game_state->player_state.current_health;
+}
+
+void NightmareCharacter::add_health(float health)
+{
+    if (!game_state.is_valid())
+    {
+        return;
+    }
+    PlayerState &player_state = game_state->player_state;
+    const float max_health = player_state.max_health;
+    float &current_health = player_state.current_health;
+    // we're taking damage, but can't take any more anyways, don't emit signal here
+    if (current_health <= 0.0f && health <= 0.0f)
+    {
+        return;
+    }
+    if (current_health + health <= 0.0f)
+    {
+        current_health = 0.0f;
+        emit_signal("health_changed", current_health);
+        emit_signal("died");
+        return;
+    }
+    // health is already maxed out, don't emit a signal
+    if (current_health >= max_health)
+    {
+        return;
+    }
+    if (current_health + health >= max_health)
+    {
+        current_health = max_health;
+        emit_signal("health_changed", current_health);
+        return;
+    }
+    current_health += health;
+    emit_signal("health_changed", current_health);
 }
 
 void NightmareCharacter::interact()

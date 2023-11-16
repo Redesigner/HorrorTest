@@ -74,6 +74,10 @@ void InventoryUiItemOptionList::set_options(std::vector<String> options)
     {
         create_option(option);
     }
+    if (options.size() > 0)
+    {
+        select_option(0);
+    }
 }
 
 String InventoryUiItemOptionList::confirm_selection()

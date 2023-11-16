@@ -11,7 +11,7 @@
             "request": "launch",
             // Set this to wherever the Godot executable is -- you will need to use the godot source in order to use the symbols
             // "program": "${env:APPDATA}/Godot/export_templates/4.1.1.stable.mono/windows_debug_x86_64_console.exe",
-            "program": "F:/Game Development/Godot/godot/bin/godot.windows.editor.x86_64.exe",
+            "program": "E:/Game Development/Godot/godot/bin/godot.windows.editor.x86_64.exe",
             // To run the project instead of editing it, remove the "--editor" argument.
             "args": ["--path", "${workspaceFolder}/"],
             "stopAtEntry": false,

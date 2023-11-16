@@ -5,6 +5,8 @@
 #include "../ui/nightmare_ui.h"
 #include "../ui/effects/fade_ui.h"
 #include "../ui/viewmodel/inventory_viewmodel.h"
+#include "../ui/viewmodel/health_viewmodel.h"
+#include "../ui/inventory/inventory_ui_menu.h"
 #include "../inventory/inventory.h"
 #include "../pawns/nightmare_character.h"
 
@@ -21,6 +23,7 @@ GameInstance::GameInstance()
 {
     game_state = Ref(memnew(GameState));
     inventory_view_model = Ref(memnew(InventoryViewModel));
+    health_view_model = Ref(memnew(HealthViewModel));
 
     next_scene_path = "";
     next_spawn_location = "";
@@ -54,8 +57,9 @@ void GameInstance::_ready()
     }
     fade_effect->connect("fade_out_complete", Callable(this, "on_fade_out"));
     fade_effect->connect("fade_in_complete", Callable(this, "on_fade_back_in"));
-    // get_tree()->connect("node_added", Callable(this, "on_node_added"));
     setup_inventory_view_model();
+
+    health_view_model->bind_view(nightmare_ui->get_inventory_menu()->get_health_ui());
 
     UtilityFunctions::print("[GameInstance] game instance loaded.");
 }
@@ -182,6 +186,7 @@ void GameInstance::on_player_spawned(NightmareCharacter *player)
     {
         player->connect("dialog_changed", Callable(nightmare_ui, "set_dialog"));
         UtilityFunctions::print("[GameInstance] connected ui to player successfully");
+        health_view_model->bind_model(player);
     }
     else
     {

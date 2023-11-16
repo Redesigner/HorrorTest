@@ -1,11 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://bu6d5l6f23bv3"]
+[gd_scene load_steps=4 format=3 uid="uid://bu6d5l6f23bv3"]
 
 [ext_resource type="PackedScene" uid="uid://c2de0i2hsj2g5" path="res://UI/Inventory/InventoryItemMainDisplay.tscn" id="2_gcrm1"]
 [ext_resource type="PackedScene" uid="uid://boojals3agg4r" path="res://UI/Inventory/InventoryItemPreviewList.tscn" id="2_p2b1j"]
+[ext_resource type="PackedScene" uid="uid://dftpl08d3pn80" path="res://UI/Health/HealthUi.tscn" id="3_xikh4"]
 
 [node name="InventoryUiMenu" type="InventoryUiMenu"]
 item_display_path = NodePath("Panel/VBoxContainer/InventoryItemMainDisplay")
 item_previews_path = NodePath("Panel/VBoxContainer/InventoryItemPreviewList")
+health_ui_path = NodePath("Panel/HealthUi")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -35,3 +37,9 @@ size_flags_vertical = 3
 
 [node name="InventoryItemPreviewList" parent="Panel/VBoxContainer" instance=ExtResource("2_p2b1j")]
 layout_mode = 2
+
+[node name="HealthUi" parent="Panel" instance=ExtResource("3_xikh4")]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.1
+anchor_bottom = 0.1

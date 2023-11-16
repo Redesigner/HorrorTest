@@ -4,4 +4,6 @@ Inventory {
 }
 Player {
 	"Equipped" : "res://Objects/Objects/Pickups/handgun.tres"
+	"CurrentHealth" : "3"
+	"MaxHealth" : "3"
 }

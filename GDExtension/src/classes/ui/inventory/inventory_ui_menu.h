@@ -8,6 +8,10 @@
 
 namespace godot
 {
+class InventoryUiItemDisplay;
+class InventoryUiItemPreviewList;
+class HealthUi;
+
 class InventoryUiMenu : public Control, public StackableUiElement
 {
     GDCLASS(InventoryUiMenu, Control);
@@ -30,6 +34,8 @@ public:
 
     void set_options(std::vector<String> options);
 
+    HealthUi *get_health_ui() const;
+
     // StackableUiElement Interface
     virtual void scroll_left() override;
     virtual void scroll_right() override;
@@ -47,11 +53,14 @@ private:
 
     void decrease_index();
 
-    class InventoryUiItemDisplay *_item_display;
-    class InventoryUiItemPreviewList  *_item_previews;
-
+    InventoryUiItemDisplay *item_display;
     DECLARE_PROPERTY_NODEFAULT(NodePath, item_display_path);
+
+    InventoryUiItemPreviewList  *item_previews;
     DECLARE_PROPERTY_NODEFAULT(NodePath, item_previews_path);
+
+    HealthUi *health_ui;
+    DECLARE_PROPERTY_NODEFAULT(NodePath, health_ui_path);
 
     int currently_selected_item_index;
 

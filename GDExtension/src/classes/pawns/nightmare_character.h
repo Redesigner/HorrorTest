@@ -10,7 +10,15 @@
 
 namespace godot
 {
+class CameraArm;
 class EquipmentResource;
+class Area3D;
+class RichTextLabel;
+class AnimationTree;
+class AudioStreamPlayer3D;
+class Inventory;
+class GameState;
+
 class NightmareCharacter : public Pawn
 {
     GDCLASS(NightmareCharacter, Pawn)
@@ -45,6 +53,10 @@ public:
 
     void play_sound_at_location(Ref<AudioStream> sound);
 
+    
+    float get_current_health() const;
+    void add_health(float health);
+
 protected:
     virtual float get_max_speed() const override;
 
@@ -69,13 +81,15 @@ private:
     bool is_weapon_ready() const;
 
 
-    class CameraArm *camera_arm;
-    class Node3D *input_vector_display;
-    class Area3D *interact_volume;
-    class RichTextLabel *debug_text;
-    class AnimationTree *animation_tree;
-    class AudioStreamPlayer3D *audio_stream_player;
-    class Inventory *inventory;
+    CameraArm *camera_arm;
+    Node3D *input_vector_display;
+    Area3D *interact_volume;
+    RichTextLabel *debug_text;
+    AnimationTree *animation_tree;
+    AudioStreamPlayer3D *audio_stream_player;
+    Inventory *inventory;
+
+    Ref<GameState> game_state;
 
     EquipmentResource *current_equipment;
 
