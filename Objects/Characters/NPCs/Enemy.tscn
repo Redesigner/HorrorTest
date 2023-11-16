@@ -1,6 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://dw8mrj653mfym"]
+[gd_scene load_steps=17 format=3 uid="uid://dw8mrj653mfym"]
 
 [ext_resource type="SphereMesh" uid="uid://0j4nlt3c2xdg" path="res://Objects/Characters/Player/sphere_mesh.tres" id="1_avl7w"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_djda2"]
+size = Vector3(1, 1, 2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r73yy"]
 albedo_color = Color(0.321569, 0.0313726, 0.0313726, 1)
@@ -114,6 +117,7 @@ states/death_animation/position = Vector2(636, 41)
 transitions = ["Start", "RESET", SubResource("AnimationNodeStateMachineTransition_btrc0"), "RESET", "death_animation", SubResource("AnimationNodeStateMachineTransition_u5egl"), "death_animation", "dead", SubResource("AnimationNodeStateMachineTransition_mwn6k")]
 
 [node name="Enemy" type="Enemy"]
+attack_hitbox_shape = SubResource("BoxShape3D_djda2")
 maxWalkSpeed = 2.0
 groundAcceleration = 4.0
 groundFriction = 8.0

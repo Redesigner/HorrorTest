@@ -7,6 +7,13 @@
 
 namespace godot
 {
+class NavigationAgent3D;
+class NightmareCharacter;
+class Label3D;
+class AnimationTree;
+class Timer;
+class Resource;
+
 class Enemy : public Pawn
 {
     GDCLASS(Enemy, Pawn)
@@ -47,17 +54,33 @@ public:
     void unpack_state_data(PackedByteArray data);
 
 private:
-    class NavigationAgent3D *_navigationAgent;
-    class NightmareCharacter *_target;
-    class Label3D *_label;
-    class AnimationTree *_animationTree;
+    void attack();
 
-    bool _navMapReady = false;
-    bool _hasSeenTarget;
-    bool _alive;
+    bool can_attack();
 
-    float _maxHealth = 10.0f;
-    float _currentHealth = 10.0f;
+    void update_debug_label();
+
+
+    NavigationAgent3D *navigation_agent;
+
+    NightmareCharacter *target;
+
+    Label3D *debug_label;
+
+    AnimationTree *animation_tree;
+
+    Timer *attack_cooldown_timer;
+
+    bool nav_map_ready = false;
+    bool has_seen_target;
+    bool alive;
+
+    float max_health = 10.0f;
+    float current_health = 10.0f;
+
+    DECLARE_PROPERTY(float, attack_cooldown_length, 2.0f);
+
+    DECLARE_PROPERTY_NODEFAULT(Ref<Resource>, attack_hitbox_shape);
 };
 }
 

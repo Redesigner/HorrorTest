@@ -28,6 +28,8 @@ public:
 
     virtual void _physics_process(double delta) override;
 
+    Transform3D get_mesh_transform() const;
+
 
 protected:
     void look_at_walk_direction(double delta);

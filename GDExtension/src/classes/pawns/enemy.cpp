@@ -8,7 +8,10 @@
 #include <godot_cpp/classes/label3d.hpp>
 #include <godot_cpp/classes/world3d.hpp>
 #include <godot_cpp/classes/physics_ray_query_parameters3d.hpp>
+#include <godot_cpp/classes/physics_shape_query_parameters3d.hpp>
 #include <godot_cpp/classes/physics_direct_space_state3d.hpp>
+#include <godot_cpp/classes/resource.hpp>
+#include <godot_cpp/classes/timer.hpp>
 
 #include <godot_cpp/core/math.hpp>
 
@@ -22,40 +25,48 @@ using namespace godot;
 
 Enemy::Enemy()
 {
-    _navigationAgent = nullptr;
-    _target = nullptr;
-    _animationTree = nullptr;
+    navigation_agent = nullptr;
+    target = nullptr;
+    animation_tree = nullptr;
 
-    _hasSeenTarget = false;
-    _alive = true;
+    has_seen_target = false;
+    alive = true;
+
+    attack_cooldown_timer = nullptr;
 }
 
 Enemy::~Enemy()
 {
+    attack_cooldown_timer->queue_free();
 }
 
 void Enemy::_bind_methods()
 {
     BIND_PROPERTY(Variant::FLOAT, maxHealth, Enemy);
     BIND_PROPERTY(Variant::FLOAT, currentHealth, Enemy);
+
+    BIND_PROPERTY_HINT(Variant::FLOAT, attack_cooldown_length, Enemy, PROPERTY_HINT_NONE, "suffix:s");
+    BIND_PROPERTY_HINT(Variant::OBJECT, attack_hitbox_shape, Enemy, PROPERTY_HINT_RESOURCE_TYPE, "Shape3D");
 }
 
 void Enemy::_ready()
 {
-    Pawn::_ready();
-
-    if (Engine::get_singleton()->is_editor_hint())
+    if (IN_EDITOR())
     {
         return;
     }
-    _navigationAgent = Object::cast_to<NavigationAgent3D>(get_node_or_null("NavigationAgent3D"));
-    _label = Object::cast_to<Label3D>(get_node_or_null("Label3D"));
-    // there's only ever one target here -- the player
-    _target = dynamic_cast<NightmareCharacter *>(get_node_or_null("../Player"));
-    _animationTree = Object::cast_to<AnimationTree>(get_node_or_null("AnimationTree"));
+    Pawn::_ready();
+
+    navigation_agent = get_node<NavigationAgent3D>("NavigationAgent3D");
+    debug_label = get_node<Label3D>("Label3D");
+    animation_tree = get_node<AnimationTree>("AnimationTree");
+    attack_cooldown_timer = memnew(Timer);
+    attack_cooldown_timer->set_one_shot(true);
+    add_child(attack_cooldown_timer);
 
     Ref<GameState> game_state = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state();
     game_state->register_enemy(this);
+
     PackedByteArray data = PackedByteArray();
     if (game_state->get_node_state(this, data))
     {
@@ -65,6 +76,10 @@ void Enemy::_ready()
 
 void godot::Enemy::_process(double delta)
 {
+    if (can_attack())
+    {
+        attack();
+    }
 }
 
 void Enemy::_physics_process(double delta)
@@ -73,7 +88,7 @@ void Enemy::_physics_process(double delta)
     {
         return;
     }
-    if (!_alive)
+    if (!alive)
     {
         return;
     }
@@ -83,60 +98,45 @@ void Enemy::_physics_process(double delta)
 
     Pawn::_physics_process(delta);
 
-    // Don't bother formatting the string if there is nothing there, it could get expensive
-    if (!_label->is_visible())
-    {
-        return;
-    }
-
-    String text = String("Velocity: '{0}' m/s").format(Array::make(
-        Math::round(get_velocity().length() * 100.0f) / 100.0f
-        ));
-    text += !_hasSeenTarget ? "\nNo target" : "\nTarget seen";
-    text += _navigationAgent->is_navigation_finished() ? "\nNavigation finished" : "\nCurrently navigating";
-    text += String("\nDistance to target: '{0}'m").format(Array::make(
-        Math::round(_navigationAgent->distance_to_target() * 10.0f) / 10.0f
-        ));
-    text += String("\nInputvector: X:'{0}', Y:'{1}'").format(Array::make(_inputVector.x, _inputVector.y));
-    _label->set_text(text);
+    update_debug_label();
 }
 
 void Enemy::check_nav_map_ready() 
 {
-    _navMapReady = true;
+    nav_map_ready = true;
     UtilityFunctions::print("[Enemy] Nav map ready");
 }
 
-void godot::Enemy::update_navigation()
+void Enemy::update_navigation()
 {
     Vector3 velocity = get_velocity();
-    if (!_navMapReady)
+    if (!nav_map_ready)
     {
         UtilityFunctions::print("[Enemy] NavMap not yet ready, checking again");
         check_nav_map_ready();
         return;
     }
-    if (!_hasSeenTarget)
+    if (!has_seen_target)
     {
         return;
     }
-    if (_navigationAgent->is_navigation_finished())
+    if (navigation_agent->is_navigation_finished())
     {
         _inputVector = Vector2(0.0f, 0.0f);
     }
-    const Vector3 targetPosition = _target->get_position();
+    const Vector3 targetPosition = target->get_position();
     const Vector3 position = get_position();
     const Vector3 delta = targetPosition - position;
 
-    const float maxTargetDistance = _navigationAgent->get_target_desired_distance();
+    const float maxTargetDistance = navigation_agent->get_target_desired_distance();
     if (delta.length_squared() < maxTargetDistance * maxTargetDistance)
     {
-        _navigationAgent->set_target_position(position);
+        navigation_agent->set_target_position(position);
         return;
     }
-    _navigationAgent->set_target_position(targetPosition);
+    navigation_agent->set_target_position(targetPosition);
 
-    Vector3 nextPathPosition = _navigationAgent->get_next_path_position();
+    Vector3 nextPathPosition = navigation_agent->get_next_path_position();
     Vector3 newVelocity = (nextPathPosition - position);
     Vector2 requestedInput = Vector2(newVelocity.x, newVelocity.z).normalized();
     _inputVector = requestedInput;
@@ -145,64 +145,64 @@ void godot::Enemy::update_navigation()
 void Enemy::update_target()
 {
     // for now, we're active as soon as we see the target, so it doesn't matter if we lose sight of it
-    if (_hasSeenTarget)
+    if (has_seen_target)
     {
         return;
     }
-    if (!_target)
+    if (!target)
     {
         UtilityFunctions::print(String("[Enemy] Enemy '{0}' was unable to find player. Check that the player can be found in the level tree.").format(Array::make(get_name())));
-        _target = dynamic_cast<NightmareCharacter *>(get_node_or_null("../Player"));
+        target = dynamic_cast<NightmareCharacter *>(get_node_or_null("../Player"));
         return;
     }
     // can we see the target?
-    PhysicsDirectSpaceState3D *spaceState = get_world_3d()->get_direct_space_state();
-    Ref<PhysicsRayQueryParameters3D> rayQueryParameters = PhysicsRayQueryParameters3D::create(get_position(), _target->get_position());
+    PhysicsDirectSpaceState3D *space_state = get_world_3d()->get_direct_space_state();
+    Ref<PhysicsRayQueryParameters3D> ray_query_parameters = PhysicsRayQueryParameters3D::create(get_position(), target->get_position());
     // ignore both self and target
-    rayQueryParameters->set_exclude(TypedArray<RID>::make(get_rid(), _target->get_rid() ));
-    Dictionary rayTraceResult = spaceState->intersect_ray(rayQueryParameters);
+    ray_query_parameters->set_exclude(TypedArray<RID>::make(get_rid(), target->get_rid() ));
+    Dictionary rayTraceResult = space_state->intersect_ray(ray_query_parameters);
     if (rayTraceResult.size() == 0)
     {
-        _hasSeenTarget = true;
+        has_seen_target = true;
         return;
     }
 }
 
-void Enemy::set_maxHealth(float maxHealth)
+void Enemy::set_maxHealth(float health)
 {
-    _maxHealth = Math::max(maxHealth, 0.0f);
-    _currentHealth = Math::min(_currentHealth, _maxHealth);
+    max_health = Math::max(health, 0.0f);
+    current_health = Math::min(current_health, max_health);
 }
 
 float Enemy::get_maxHealth() const
 {
-    return _maxHealth;
+    return max_health;
 }
 
-void Enemy::set_currentHealth(float currentHealth)
+void Enemy::set_currentHealth(float health)
 {
-    _currentHealth = Math::clamp(currentHealth, 0.0f, _maxHealth);
+    current_health = Math::clamp(health, 0.0f, max_health);
 }
 
 float Enemy::get_currentHealth() const
 {
-    return _currentHealth;
+    return current_health;
 }
 
 void Enemy::take_damage(float damage)
 {
     // Can't take any more damage
-    if (!_alive)
+    if (!alive)
     {
         return;
     }
-    _currentHealth -= damage;
-    if (_currentHealth <= 0.0f)
+    current_health -= damage;
+    if (current_health <= 0.0f)
     {
-        _currentHealth = 0.0f;
+        current_health = 0.0f;
         die();
     }
-    UtilityFunctions::print(String("[Enemy] Enemy taken '{0}' damage, '{1}' health remaining").format(Array::make(damage, _currentHealth)) );
+    UtilityFunctions::print(String("[Enemy] Enemy taken '{0}' damage, '{1}' health remaining").format(Array::make(damage, current_health)) );
 }
 
 PackedByteArray Enemy::make_state_data() const
@@ -222,7 +222,7 @@ PackedByteArray Enemy::make_state_data() const
     data.encode_float(12, global_rotation.x);
     data.encode_float(16, global_rotation.y);
     data.encode_float(20, global_rotation.z);
-    data.encode_float(24, _currentHealth);
+    data.encode_float(24, current_health);
     return data;
 }
 
@@ -242,21 +242,101 @@ void Enemy::unpack_state_data(PackedByteArray data)
     set_global_position(global_position);
     set_global_rotation(global_rotation);
 
-    _currentHealth = data.decode_float(24);
-    if (_currentHealth <= 0.0f)
+    current_health = data.decode_float(24);
+    if (current_health <= 0.0f)
     {
-        _alive = false;
+        alive = false;
     }
+}
+
+void Enemy::attack()
+{
+    attack_cooldown_timer->start(_attack_cooldown_length);
+
+    PhysicsDirectSpaceState3D *space_state = get_world_3d()->get_direct_space_state();
+    Ref<PhysicsShapeQueryParameters3D> shape_query_parameters = Ref(memnew(PhysicsShapeQueryParameters3D));
+    shape_query_parameters->set_transform(get_mesh_transform());
+    shape_query_parameters->set_shape(_attack_hitbox_shape);
+    shape_query_parameters->set_exclude(TypedArray<RID>::make(get_rid()));
+
+    TypedArray<Dictionary> overlap_results = space_state->intersect_shape(shape_query_parameters);
+    if (overlap_results.size() == 0)
+    {
+        return;
+    }
+
+    UtilityFunctions::print(String("[Enemy] Enemy hit {0} objects with attack.").format(Array::make(overlap_results.size())));
+    for (int i = 0; i < overlap_results.size(); i++)
+    {
+        Dictionary result = overlap_results[i];
+        Object *hit_object = result["collider"];
+        Node3D *hit_node = Object::cast_to<Node3D>(hit_object);
+        if (NightmareCharacter *character = Object::cast_to<NightmareCharacter>(hit_object))
+        {
+            character->add_health(-1.0f);
+            // UtilityFunctions::print("[Enemy] Enemy hit player.");
+            continue;
+        }
+        Node *owner = hit_node->get_owner();
+        if (NightmareCharacter *character_owner = Object::cast_to<NightmareCharacter>(owner))
+        {
+            character_owner->add_health(-1.0f);
+            // UtilityFunctions::print("[Enemy] Enemy hit player.");
+        }
+    }
+}
+
+bool Enemy::can_attack()
+{
+    if (!target)
+    {
+        return false;
+    }
+    if (!has_seen_target)
+    {
+        return false;
+    }
+    if (attack_cooldown_timer->get_time_left() > 0.0f)
+    {
+        return false;
+    }
+    const Vector3 target_position = target->get_global_position();
+    const Vector3 enemy_position = get_global_position();
+    const float distance_to_target = target_position.distance_squared_to(enemy_position);
+    const float minimum_distance_to_target = 2.0f;
+    if (distance_to_target > minimum_distance_to_target * minimum_distance_to_target)
+    {
+        return false;
+    }
+    return true;
+}
+
+void Enemy::update_debug_label()
+{
+    if (!debug_label->is_visible())
+    {
+        return;
+    }
+
+    String text = String("Velocity: '{0}' m/s").format(Array::make(
+        Math::round(get_velocity().length() * 100.0f) / 100.0f
+        ));
+    text += !has_seen_target ? "\nNo target" : "\nTarget seen";
+    text += navigation_agent->is_navigation_finished() ? "\nNavigation finished" : "\nCurrently navigating";
+    text += String("\nDistance to target: '{0}'m").format(Array::make(
+        Math::round(navigation_agent->distance_to_target() * 10.0f) / 10.0f
+        ));
+    text += String("\nInputvector: X:'{0}', Y:'{1}'").format(Array::make(_inputVector.x, _inputVector.y));
+    debug_label->set_text(text);
 }
 
 void Enemy::die()
 {
     UtilityFunctions::print("[Enemy] enemy died");
-    _alive = false;
+    alive = false;
     // this also disables collisions as long as the "disable mode" property is set to remove
     set_process_mode(PROCESS_MODE_DISABLED);
-    Object *animationStateObject = _animationTree->get("parameters/playback");
-    AnimationNodeStateMachinePlayback *stateMachine = Object::cast_to<AnimationNodeStateMachinePlayback>(animationStateObject);
-    stateMachine->travel("death_animation");
-    
+    Object *animation_state_object = animation_tree->get("parameters/playback");
+    AnimationNodeStateMachinePlayback *state_machine = Object::cast_to<AnimationNodeStateMachinePlayback>(animation_state_object);
+    state_machine->travel("death_animation");   
 }

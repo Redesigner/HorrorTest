@@ -312,7 +312,7 @@ void NightmareCharacter::add_health(float health)
         return;
     }
     // health is already maxed out, don't emit a signal
-    if (current_health >= max_health)
+    if (current_health >= max_health && health > 0.0f)
     {
         return;
     }

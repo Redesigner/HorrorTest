@@ -110,6 +110,11 @@ void Pawn::_physics_process(double delta)
     move_and_slide();
 }
 
+Transform3D Pawn::get_mesh_transform() const
+{
+    return _pawnMesh->get_global_transform();
+}
+
 bool Pawn::input_pressed() const
 {
 	return !(_inputVector.x == 0.0f && _inputVector.y == 0.0f);
