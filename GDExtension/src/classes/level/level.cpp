@@ -60,6 +60,11 @@ void Level::populate_spawn_locations()
 
 void Level::spawn_player()
 {
+    if (_player_scene_path.is_empty())
+    {
+        ERR_PRINT("[Level] Attempting to spawn player, but player scene was not set.");
+        return;
+    }
     Ref<PackedScene> player_scene = ResourceLoader::get_singleton()->load(_player_scene_path);
     Node *player_node = player_scene->instantiate();
     player = Object::cast_to<NightmareCharacter>(player_node);

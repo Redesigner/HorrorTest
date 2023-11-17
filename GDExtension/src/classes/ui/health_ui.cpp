@@ -34,5 +34,5 @@ void HealthUi::set_health(float health)
     {
         return;
     }
-    label->set_text(String::num(health));
+    label->set_text("Health: " + String::num(health));
 }

@@ -13,6 +13,11 @@
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/classes/timer.hpp>
 
+#include <godot_cpp/classes/mesh_instance3d.hpp>
+#include <godot_cpp/classes/shape3d.hpp>
+#include <godot_cpp/classes/array_mesh.hpp>
+#include <godot_cpp/classes/scene_tree.hpp>
+
 #include <godot_cpp/core/math.hpp>
 
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -37,7 +42,10 @@ Enemy::Enemy()
 
 Enemy::~Enemy()
 {
-    attack_cooldown_timer->queue_free();
+    if (attack_cooldown_timer)
+    {
+        attack_cooldown_timer->queue_free();
+    }
 }
 
 void Enemy::_bind_methods()
@@ -253,11 +261,22 @@ void Enemy::attack()
 {
     attack_cooldown_timer->start(_attack_cooldown_length);
 
+    const Vector3 hitbox_offset = Vector3(0.0f, 0.0f, -1.0f);
+
     PhysicsDirectSpaceState3D *space_state = get_world_3d()->get_direct_space_state();
     Ref<PhysicsShapeQueryParameters3D> shape_query_parameters = Ref(memnew(PhysicsShapeQueryParameters3D));
-    shape_query_parameters->set_transform(get_mesh_transform());
+    Transform3D hitbox_transform = get_mesh_transform();
+    hitbox_transform = hitbox_transform.translated_local(hitbox_offset);
+    shape_query_parameters->set_transform(hitbox_transform);
     shape_query_parameters->set_shape(_attack_hitbox_shape);
     shape_query_parameters->set_exclude(TypedArray<RID>::make(get_rid()));
+
+    MeshInstance3D *debug_mesh = memnew(MeshInstance3D);
+    get_tree()->get_current_scene()->add_child(debug_mesh);
+    debug_mesh->set_transform(hitbox_transform);
+    Shape3D *hitbox_shape = Object::cast_to<Shape3D>(_attack_hitbox_shape.ptr());
+    Ref<Mesh> hitbox_mesh = hitbox_shape->get_debug_mesh();
+    debug_mesh->set_mesh(hitbox_mesh);
 
     TypedArray<Dictionary> overlap_results = space_state->intersect_shape(shape_query_parameters);
     if (overlap_results.size() == 0)

@@ -22,6 +22,21 @@
             "visualizerFile": "${workspaceFolder}/platform/windows/godot.natvis",
             "preLaunchTask": "build",
             // "symbolSearchPath": "%{workspaceFolder}/GDExtension/"
-          }
+        },
+
+        {
+            "name": "Launch Project with Editor",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "E:/Game Development/Godot/godot/bin/godot.windows.editor.x86_64.exe",
+            "args": ["--path", "${workspaceFolder}/", "--editor"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "visualizerFile": "${workspaceFolder}/platform/windows/godot.natvis",
+            "preLaunchTask": "build",
+        }
     ]
 }

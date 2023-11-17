@@ -1,6 +1,5 @@
-[gd_scene load_steps=11 format=3 uid="uid://c6r2oh536jldu"]
+[gd_scene load_steps=10 format=3 uid="uid://c6r2oh536jldu"]
 
-[ext_resource type="PackedScene" uid="uid://cxlg8lsvfwsqg" path="res://Objects/Characters/Player/player.tscn" id="1_hc275"]
 [ext_resource type="Environment" uid="uid://ct1w5mwhqf4in" path="res://Shared Resources/Environments/test_environment.tres" id="2_jpsu0"]
 [ext_resource type="PackedScene" uid="uid://cn8o1emfnht1t" path="res://Objects/Geometry/wall.tscn" id="3_bp2e2"]
 [ext_resource type="PackedScene" uid="uid://elcgphpx0dh7" path="res://Objects/Characters/NPCs/NPC.tscn" id="4_ousnx"]
@@ -22,9 +21,8 @@ albedo_color = Color(0.109804, 0.160784, 0.113725, 1)
 material = SubResource("StandardMaterial3D_8402w")
 size = Vector2(25, 25)
 
-[node name="TestLevel" type="Node3D"]
-
-[node name="Player" parent="." instance=ExtResource("1_hc275")]
+[node name="TestLevel" type="Level"]
+player_scene_path = "res://Objects/Characters/Player/player.tscn"
 
 [node name="Enemy" parent="." instance=ExtResource("5_5gtjo")]
 maxWalkSpeed = 0.5
