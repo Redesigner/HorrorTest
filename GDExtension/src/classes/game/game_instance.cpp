@@ -9,6 +9,7 @@
 #include "../ui/inventory/inventory_ui_menu.h"
 #include "../inventory/inventory.h"
 #include "../pawns/nightmare_character.h"
+#include "../debug_renderer/debug_renderer.h"
 
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
@@ -24,6 +25,7 @@ GameInstance::GameInstance()
     game_state = Ref(memnew(GameState));
     inventory_view_model = Ref(memnew(InventoryViewModel));
     health_view_model = Ref(memnew(HealthViewModel));
+    debug_renderer = memnew(DebugRenderer);
 
     next_scene_path = "";
     next_spawn_location = "";
@@ -43,10 +45,13 @@ void GameInstance::_bind_methods()
 
 void GameInstance::_ready()
 {
-    if (Engine::get_singleton()->is_editor_hint())
+    if (IN_EDITOR())
     {
         return;
     }
+
+    add_child(debug_renderer);
+
     game_state->load();
     NightmareUi *nightmare_ui = get_node<NightmareUi>("/root/ActiveUi/");
     FadeUi *fade_effect = nightmare_ui->get_fade_effect();
@@ -147,6 +152,11 @@ void GameInstance::setup_inventory_view_model()
     inventory_view_model->update_model(); // manually trigger to initialize state
 }
 
+String GameInstance::default_path()
+{
+    return "/root/DefaultGameInstance";
+}
+
 void GameInstance::on_fade_out()
 {
     change_level(next_scene_path, next_spawn_location);
@@ -197,4 +207,9 @@ void GameInstance::on_player_spawned(NightmareCharacter *player)
 NightmareCharacter *GameInstance::get_player() const
 {
     return current_player;
+}
+
+DebugRenderer *GameInstance::get_debug_renderer() const
+{
+    return debug_renderer;
 }

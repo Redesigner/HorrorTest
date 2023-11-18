@@ -25,6 +25,7 @@
 #include "nightmare_character.h"
 #include "../game/game_instance.h"
 #include "../game/game_state.h"
+#include "../debug_renderer/debug_renderer.h"
 
 using namespace godot;
 
@@ -72,7 +73,7 @@ void Enemy::_ready()
     attack_cooldown_timer->set_one_shot(true);
     add_child(attack_cooldown_timer);
 
-    Ref<GameState> game_state = get_node<GameInstance>("/root/DefaultGameInstance")->get_game_state();
+    Ref<GameState> game_state = get_node<GameInstance>(GameInstance::default_path())->get_game_state();
     game_state->register_enemy(this);
 
     PackedByteArray data = PackedByteArray();
@@ -271,12 +272,8 @@ void Enemy::attack()
     shape_query_parameters->set_shape(_attack_hitbox_shape);
     shape_query_parameters->set_exclude(TypedArray<RID>::make(get_rid()));
 
-    MeshInstance3D *debug_mesh = memnew(MeshInstance3D);
-    get_tree()->get_current_scene()->add_child(debug_mesh);
-    debug_mesh->set_transform(hitbox_transform);
     Shape3D *hitbox_shape = Object::cast_to<Shape3D>(_attack_hitbox_shape.ptr());
-    Ref<Mesh> hitbox_mesh = hitbox_shape->get_debug_mesh();
-    debug_mesh->set_mesh(hitbox_mesh);
+    get_node<GameInstance>(GameInstance::default_path())->get_debug_renderer()->draw_mesh(hitbox_shape->get_debug_mesh(), hitbox_transform, 0.5f);
 
     TypedArray<Dictionary> overlap_results = space_state->intersect_shape(shape_query_parameters);
     if (overlap_results.size() == 0)

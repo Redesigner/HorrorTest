@@ -10,6 +10,7 @@ class NightmareCharacter;
 class ViewModel;
 class InventoryViewModel;
 class HealthViewModel;
+class DebugRenderer;
 
 class GameInstance : public Node
 {
@@ -39,6 +40,10 @@ public:
 
     NightmareCharacter *get_player() const;
 
+    DebugRenderer *get_debug_renderer() const;
+
+    static String default_path();
+
 private:
     void change_level(StringName scene_path, String spawn_location);
 
@@ -57,5 +62,7 @@ private:
     String next_spawn_location;
 
     NightmareCharacter *current_player;
+
+    DebugRenderer *debug_renderer;
 };
 }

@@ -10,6 +10,9 @@
 #include "classes/game/game_instance.h"
 #include "classes/game/game_state.h"
 
+#include "classes/debug_renderer/debug_renderer.h"
+#include "classes/debug_renderer/debug_mesh.h"
+
 #include "classes/pawns/pawn.h"
 #include "classes/pawns/nightmare_character.h"
 #include "classes/pawns/enemy.h"
@@ -55,6 +58,9 @@ void initialize_example_module(ModuleInitializationLevel p_level)
     }
     ClassDB::register_class<GameInstance>();
     ClassDB::register_class<GameState>();
+
+    ClassDB::register_class<DebugRenderer>();
+    ClassDB::register_class<DebugMesh>();
 
     // BASE CLASSES
     ClassDB::register_class<Pawn>();
